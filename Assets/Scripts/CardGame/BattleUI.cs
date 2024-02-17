@@ -6,6 +6,11 @@ using TMPro;
 
 public class BattleUI : MonoBehaviour
 {
+    public float cardSpaceMin;
+    public float cardSpaceMax;
+    public float cardCenterMin;
+    public float cardCenterMax;
+
     public BattleSystem battleSystem;
     public Hand hand => battleSystem.hand;
     public List<GameObject> handObjects;
@@ -17,6 +22,10 @@ public class BattleUI : MonoBehaviour
     public List<GameObject> playerComboObjects;
     public EnemyCombo enemyCombo => battleSystem.enemyCombo;
     public List<GameObject> enemyComboObjects;
+
+    public List<GameObject> playerStatusEffectIcons;
+    public List<GameObject> enemyStatusEffectIcons;
+
     public Image playerHealthBar;
     public Image playerBlockBar;
     public Image enemyHealthBar;
@@ -31,14 +40,15 @@ public class BattleUI : MonoBehaviour
 
     private void Update()
     {
-        CardsDisplay(hand.cards, handObjects);
-        CardsDisplay(playArea.cards, playAreaObjects);
-        CardsDisplay(playerCombo.cards, playerComboObjects);
+        CardsDisplay(hand.cards, handObjects, hand.gameObject);
+        CardsDisplay(playArea.cards, playAreaObjects, playArea.gameObject);
+        CardsDisplay(playerCombo.cards, playerComboObjects, playerCombo.gameObject);
         EnemyCardsDisplay(enemyPlayArea.intents, enemyPlayAreaObjects);
         EnemyCardsDisplay(enemyCombo.intents, enemyComboObjects);
         CardCountDisplay();
         EnergyDisplay();
         HealthBarDisplay();
+        StatusEffectDisplay();
     }
     public void PrintLog(string log)
     {
@@ -49,13 +59,18 @@ public class BattleUI : MonoBehaviour
     {
         battleSystem.EndTurn();
     }
-    public void CardsDisplay(List<Card> cards, List<GameObject> objects)
+    public void CardsDisplay(List<Card> cards, List<GameObject> objects, GameObject container)
     {
         for (int i = 0; i < objects.Count; i++)
         { 
             if (i < cards.Count)
             {
                 objects[i].SetActive(true);
+                Vector3 _pos = new Vector3();
+                float scaledSpacing = Mathf.Lerp(cardSpaceMin, cardSpaceMax, cards.Count / 10);
+                _pos.x = scaledSpacing * i;
+                _pos.y = objects[i].transform.localPosition.y;
+                objects[i].transform.localPosition = _pos;
                 if (cards[i] != null)
                 {
                     objects[i].GetComponent<CardDisplay>().card = cards[i];
@@ -66,6 +81,10 @@ public class BattleUI : MonoBehaviour
                 objects[i].SetActive(false);
             }
         }
+        Vector3 pos = new Vector3();
+        pos.x = Mathf.Lerp(cardCenterMin, cardCenterMax, cards.Count / 10f);
+        pos.y = container.transform.localPosition.y;
+        container.transform.localPosition = pos;
     }
     public void EnemyCardsDisplay(List<Enemy.Intents> intents, List<GameObject> objects)
     {
@@ -74,6 +93,7 @@ public class BattleUI : MonoBehaviour
             if (i < intents.Count)
             {
                 objects[i].SetActive(true);
+                objects[i].GetComponent<EnemyCardDisplay>().intent = intents[i];
             }
             else
             {
@@ -93,8 +113,26 @@ public class BattleUI : MonoBehaviour
     public void HealthBarDisplay()
     {
         playerHealthBar.fillAmount = (float)battleSystem.player.health / (float)battleSystem.player.maxHealth;
-        playerBlockBar.fillAmount = (float)battleSystem.player.block / (float)battleSystem.player.health;
+        playerBlockBar.fillAmount = (float)battleSystem.player.block / (float)battleSystem.player.maxHealth;
         enemyHealthBar.fillAmount = (float)battleSystem.enemy.health / (float)battleSystem.enemy.maxHealth;
-        enemyBlockBar.fillAmount = (float)battleSystem.enemy.block / (float)battleSystem.enemy.health;
+        enemyBlockBar.fillAmount = (float)battleSystem.enemy.block / (float)battleSystem.enemy.maxHealth;
+    }
+
+    public void StatusEffectDisplay()
+    {
+        for (int i = 0; i < playerStatusEffectIcons.Count; i++)
+        {
+            if (battleSystem.player.activeStatusEffects != null)
+            {
+                if (i < battleSystem.player.activeStatusEffects.Count)
+                {
+                    playerStatusEffectIcons[i].SetActive(true);
+                }
+                else
+                {
+                    playerStatusEffectIcons[i].SetActive(false);
+                }
+            }
+        }
     }
 }

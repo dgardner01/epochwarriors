@@ -9,12 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 086a04e9f5f48df4294f081bf3ed9d1a, type: 3}
-  m_Name: Draw Attack
+  m_Script: {fileID: 11500000, guid: 9dd17d54f0723a84f962b3351c8fa4d4, type: 3}
+  m_Name: CardDrawStatusData
   m_EditorClassIdentifier: 
-  name: Draw Attack
-  description: Deal 1 damage. Draw 1 card next turn.
-  energyCost: 1
-  damage: 1
-  block: 0
-  statusEffect: {fileID: 11400000, guid: 0d26ae609267d454b838426d768f07f8, type: 2}
+  duration: 1
+  cardsDrawn: 2

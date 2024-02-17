@@ -5,7 +5,7 @@ using UnityEngine;
 public class Hand : MonoBehaviour
 {
     public BattleSystem battleSystem;
-    public Player player;
+    public Player player => battleSystem.player;
     public List<Card> cards;
 
     public IEnumerator DrawCard(int numCards)
@@ -36,6 +36,6 @@ public class Hand : MonoBehaviour
             battleSystem.player.drawPile.Add(card);
             battleSystem.discard.cards.Remove(card);
         }
-        StartCoroutine(DrawCard(5-battleSystem.hand.cards.Count));
+        StartCoroutine(DrawCard(battleSystem.player.cardsDrawnPerTurn-battleSystem.hand.cards.Count));
     }
 }
