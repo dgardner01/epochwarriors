@@ -13,7 +13,7 @@ public class PlayerTurn : State
             BattleSystem.ui.fightPanel.SetActive(false);
             BattleSystem.ui.cardGamePanel.SetActive(true);
             BattleSystem.AssignEnemyIntent();
-            BattleSystem.StartCoroutine(BattleSystem.hand.DrawCard(5));
+            BattleSystem.StartCoroutine(BattleSystem.hand.DrawCard(BattleSystem.player.cardsDrawnPerTurn));
             BattleSystem.player.energy += BattleSystem.player.energyPerTurn;
             yield break;
         }
