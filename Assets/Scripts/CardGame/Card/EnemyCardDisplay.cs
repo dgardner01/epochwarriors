@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class EnemyCardDisplay : MonoBehaviour
 {
@@ -9,24 +10,28 @@ public class EnemyCardDisplay : MonoBehaviour
     public Enemy enemy;
     public Enemy.Intents intent;
     public TextMeshProUGUI enemyIntent;
+    public Sprite[] sprites;
+    public Image image;
     private void Update()
-    {
-        enemyIntent.text = IntentText();
-    }
-
-    public string IntentText()
     {
         switch (intent)
         {
             case Enemy.Intents.Attack:
-                return enemy.damage + " damage";
+                image.sprite = sprites[0];
+                enemyIntent.text = "" + enemy.damage;
+                break;
             case Enemy.Intents.Block:
-                return 2 + " block";
+                image.sprite = sprites[1];
+                enemyIntent.text = "2";
+                break;
             case Enemy.Intents.Buff:
-                return "Buff";
+                image.sprite = sprites[2];
+                enemyIntent.text = "1";
+                break;
             case Enemy.Intents.Debuff:
-                return "Debuff";
+                image.sprite = sprites[2];
+                enemyIntent.text = "1";
+                break;
         }
-        return null;
     }
 }

@@ -40,9 +40,9 @@ public class BattleUI : MonoBehaviour
 
     private void Update()
     {
-        CardsDisplay(hand.cards, handObjects, hand.gameObject);
-        CardsDisplay(playArea.cards, playAreaObjects, playArea.gameObject);
-        CardsDisplay(playerCombo.cards, playerComboObjects, playerCombo.gameObject);
+        CardsDisplay(hand.cards, handObjects, hand.gameObject, true);
+        CardsDisplay(playArea.cards, playAreaObjects, playArea.gameObject, true);
+        CardsDisplay(playerCombo.cards, playerComboObjects, playerCombo.gameObject, false);
         EnemyCardsDisplay(enemyPlayArea.intents, enemyPlayAreaObjects);
         EnemyCardsDisplay(enemyCombo.intents, enemyComboObjects);
         CardCountDisplay();
@@ -59,21 +59,24 @@ public class BattleUI : MonoBehaviour
     {
         battleSystem.EndTurn();
     }
-    public void CardsDisplay(List<Card> cards, List<GameObject> objects, GameObject container)
+    public void CardsDisplay(List<Card> cards, List<GameObject> objects, GameObject container, bool scaled)
     {
         for (int i = 0; i < objects.Count; i++)
         { 
             if (i < cards.Count)
             {
                 objects[i].SetActive(true);
-                Vector3 _pos = new Vector3();
-                float scaledSpacing = Mathf.Lerp(cardSpaceMin, cardSpaceMax, cards.Count / 10);
-                _pos.x = scaledSpacing * i;
-                _pos.y = objects[i].transform.localPosition.y;
-                objects[i].transform.localPosition = _pos;
                 if (cards[i] != null)
                 {
                     objects[i].GetComponent<CardDisplay>().card = cards[i];
+                }
+                if (scaled)
+                {
+                    Vector3 _pos = new Vector3();
+                    float scaledSpacing = Mathf.Lerp(cardSpaceMin, cardSpaceMax, cards.Count / 10);
+                    _pos.x = scaledSpacing * i;
+                    _pos.y = objects[i].transform.localPosition.y;
+                    objects[i].transform.localPosition = _pos;
                 }
             }
             else
@@ -81,10 +84,13 @@ public class BattleUI : MonoBehaviour
                 objects[i].SetActive(false);
             }
         }
-        Vector3 pos = new Vector3();
-        pos.x = Mathf.Lerp(cardCenterMin, cardCenterMax, cards.Count / 10f);
-        pos.y = container.transform.localPosition.y;
-        container.transform.localPosition = pos;
+        if (scaled)
+        {
+            Vector3 pos = new Vector3();
+            pos.x = Mathf.Lerp(cardCenterMin, cardCenterMax, cards.Count / 10f);
+            pos.y = container.transform.localPosition.y;
+            container.transform.localPosition = pos;
+        }
     }
     public void EnemyCardsDisplay(List<Enemy.Intents> intents, List<GameObject> objects)
     {

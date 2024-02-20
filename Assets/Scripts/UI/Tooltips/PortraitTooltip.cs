@@ -8,6 +8,7 @@ public class PortraitTooltip : TooltipTrigger
     private void Update()
     {
         header = fighter.name;
-        content = "HP: " + fighter.health + "/" + fighter.maxHealth;
+        content = "HP: " + fighter.health + "/" + fighter.maxHealth
+            +"\nBlock: " + fighter.block;
     }
 }
