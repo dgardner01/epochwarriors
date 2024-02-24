@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CardDrawStatus : StatusEffect
 {
-    public string id = "CardDraw";
+    string id = "CardDraw";
     int cardsDrawn;
     int cardsDrawnAtStart;
     public CardDrawStatus(int duration, int cardsDrawn) : base(duration)
