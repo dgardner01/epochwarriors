@@ -48,7 +48,6 @@ public class BattleUI : MonoBehaviour
         CardCountDisplay();
         EnergyDisplay();
         HealthBarDisplay();
-        StatusEffectDisplay();
     }
     public void PrintLog(string log)
     {
@@ -122,23 +121,5 @@ public class BattleUI : MonoBehaviour
         playerBlockBar.fillAmount = (float)battleSystem.player.block / (float)battleSystem.player.maxHealth;
         enemyHealthBar.fillAmount = (float)battleSystem.enemy.health / (float)battleSystem.enemy.maxHealth;
         enemyBlockBar.fillAmount = (float)battleSystem.enemy.block / (float)battleSystem.enemy.maxHealth;
-    }
-
-    public void StatusEffectDisplay()
-    {
-        for (int i = 0; i < playerStatusEffectIcons.Count; i++)
-        {
-            if (battleSystem.player.activeStatusEffects != null)
-            {
-                if (i < battleSystem.player.activeStatusEffects.Count)
-                {
-                    playerStatusEffectIcons[i].SetActive(true);
-                }
-                else
-                {
-                    playerStatusEffectIcons[i].SetActive(false);
-                }
-            }
-        }
     }
 }
