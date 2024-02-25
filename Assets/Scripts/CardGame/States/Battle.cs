@@ -26,9 +26,13 @@ public class Battle : State
             BattleSystem.enemy.Damage(playerCard.damage);
             BattleSystem.player.block += playerCard.block;
             BattleSystem.playerCombo.cards.Remove(playerCard);
-            if (playerCard.statusEffect != null)
+            if (playerCard.friendlyStatusEffect != null)
             {
-                BattleSystem.player.ApplyStatusEffect(playerCard.statusEffect.CreateStatusEffect());
+                BattleSystem.player.ApplyStatusEffect(playerCard.friendlyStatusEffect.CreateStatusEffect());
+            }
+            if (playerCard.targetingStatusEffect != null)
+            {
+                BattleSystem.enemy.ApplyStatusEffect(playerCard.targetingStatusEffect.CreateStatusEffect());
             }
             yield return new WaitForSeconds(1);
         }

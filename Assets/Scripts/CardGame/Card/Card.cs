@@ -10,5 +10,6 @@ public class Card : ScriptableObject
     public int energyCost;
     public int damage;
     public int block;
-    public StatusEffectData statusEffect;
+    public StatusEffectData friendlyStatusEffect;
+    public StatusEffectData targetingStatusEffect;
 }

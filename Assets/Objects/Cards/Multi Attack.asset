@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Multi Attack
   m_EditorClassIdentifier: 
   name: Multi Attack
-  description: Deal 1 damage twice.
+  description: Deal 2 damage.
   energyCost: 1
   damage: 2
   block: 0
+  friendlyStatusEffect: {fileID: 0}
+  targetingStatusEffect: {fileID: 0}

@@ -17,3 +17,5 @@ MonoBehaviour:
   energyCost: 1
   damage: 1
   block: 1
+  friendlyStatusEffect: {fileID: 0}
+  targetingStatusEffect: {fileID: 0}

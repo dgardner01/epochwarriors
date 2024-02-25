@@ -40,15 +40,14 @@ public class BattleUI : MonoBehaviour
 
     private void Update()
     {
-        CardsDisplay(hand.cards, handObjects, hand.gameObject);
-        CardsDisplay(playArea.cards, playAreaObjects, playArea.gameObject);
-        CardsDisplay(playerCombo.cards, playerComboObjects, playerCombo.gameObject);
+        CardsDisplay(hand.cards, handObjects, hand.gameObject, true);
+        CardsDisplay(playArea.cards, playAreaObjects, playArea.gameObject, true);
+        CardsDisplay(playerCombo.cards, playerComboObjects, playerCombo.gameObject, false);
         EnemyCardsDisplay(enemyPlayArea.intents, enemyPlayAreaObjects);
         EnemyCardsDisplay(enemyCombo.intents, enemyComboObjects);
         CardCountDisplay();
         EnergyDisplay();
         HealthBarDisplay();
-        StatusEffectDisplay();
     }
     public void PrintLog(string log)
     {
@@ -59,21 +58,24 @@ public class BattleUI : MonoBehaviour
     {
         battleSystem.EndTurn();
     }
-    public void CardsDisplay(List<Card> cards, List<GameObject> objects, GameObject container)
+    public void CardsDisplay(List<Card> cards, List<GameObject> objects, GameObject container, bool scaled)
     {
         for (int i = 0; i < objects.Count; i++)
         { 
             if (i < cards.Count)
             {
                 objects[i].SetActive(true);
-                Vector3 _pos = new Vector3();
-                float scaledSpacing = Mathf.Lerp(cardSpaceMin, cardSpaceMax, cards.Count / 10);
-                _pos.x = scaledSpacing * i;
-                _pos.y = objects[i].transform.localPosition.y;
-                objects[i].transform.localPosition = _pos;
                 if (cards[i] != null)
                 {
                     objects[i].GetComponent<CardDisplay>().card = cards[i];
+                }
+                if (scaled)
+                {
+                    Vector3 _pos = new Vector3();
+                    float scaledSpacing = Mathf.Lerp(cardSpaceMin, cardSpaceMax, cards.Count / 10);
+                    _pos.x = scaledSpacing * i;
+                    _pos.y = objects[i].transform.localPosition.y;
+                    objects[i].transform.localPosition = _pos;
                 }
             }
             else
@@ -81,10 +83,13 @@ public class BattleUI : MonoBehaviour
                 objects[i].SetActive(false);
             }
         }
-        Vector3 pos = new Vector3();
-        pos.x = Mathf.Lerp(cardCenterMin, cardCenterMax, cards.Count / 10f);
-        pos.y = container.transform.localPosition.y;
-        container.transform.localPosition = pos;
+        if (scaled)
+        {
+            Vector3 pos = new Vector3();
+            pos.x = Mathf.Lerp(cardCenterMin, cardCenterMax, cards.Count / 10f);
+            pos.y = container.transform.localPosition.y;
+            container.transform.localPosition = pos;
+        }
     }
     public void EnemyCardsDisplay(List<Enemy.Intents> intents, List<GameObject> objects)
     {
@@ -116,23 +121,5 @@ public class BattleUI : MonoBehaviour
         playerBlockBar.fillAmount = (float)battleSystem.player.block / (float)battleSystem.player.maxHealth;
         enemyHealthBar.fillAmount = (float)battleSystem.enemy.health / (float)battleSystem.enemy.maxHealth;
         enemyBlockBar.fillAmount = (float)battleSystem.enemy.block / (float)battleSystem.enemy.maxHealth;
-    }
-
-    public void StatusEffectDisplay()
-    {
-        for (int i = 0; i < playerStatusEffectIcons.Count; i++)
-        {
-            if (battleSystem.player.activeStatusEffects != null)
-            {
-                if (i < battleSystem.player.activeStatusEffects.Count)
-                {
-                    playerStatusEffectIcons[i].SetActive(true);
-                }
-                else
-                {
-                    playerStatusEffectIcons[i].SetActive(false);
-                }
-            }
-        }
     }
 }

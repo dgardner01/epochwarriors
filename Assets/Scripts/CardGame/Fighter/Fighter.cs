@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class Fighter : MonoBehaviour
 {
+    public string name;
     public int health;
     public int maxHealth;
+    public float damageModifier = 1;
     public int block;
     public int cardsDrawnPerTurn;
     public List<StatusEffect> activeStatusEffects;
