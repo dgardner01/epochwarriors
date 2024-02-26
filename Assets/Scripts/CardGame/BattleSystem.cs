@@ -35,7 +35,7 @@ public class BattleSystem : StateMachine
     }
     public void AssignEnemyIntent()
     {
-        StartCoroutine(enemy.AssignIntent());
+        //StartCoroutine(enemy.AssignIntent());
     }
     public void EndTurn()
     {

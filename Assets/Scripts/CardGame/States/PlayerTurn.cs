@@ -10,8 +10,6 @@ public class PlayerTurn : State
         public override IEnumerator Start()
         {
             BattleSystem.ui.PrintLog("player turn begin");
-            BattleSystem.ui.fightPanel.SetActive(false);
-            BattleSystem.ui.cardGamePanel.SetActive(true);
             BattleSystem.AssignEnemyIntent();
             BattleSystem.StartCoroutine(BattleSystem.hand.DrawCard(BattleSystem.player.cardsDrawnPerTurn));
             BattleSystem.player.energy += BattleSystem.player.energyPerTurn;

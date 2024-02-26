@@ -12,16 +12,12 @@ public class BattleUI : MonoBehaviour
     public float cardCenterMax;
 
     public BattleSystem battleSystem;
+    public GameObject cardDisplayPrefab;
     public Hand hand => battleSystem.hand;
-    public List<GameObject> handObjects;
     public PlayArea playArea => battleSystem.playArea;
-    public List<GameObject> playAreaObjects;
     public EnemyPlayArea enemyPlayArea => battleSystem.enemyPlayArea;
-    public List<GameObject> enemyPlayAreaObjects;
     public PlayerCombo playerCombo => battleSystem.playerCombo;
-    public List<GameObject> playerComboObjects;
     public EnemyCombo enemyCombo => battleSystem.enemyCombo;
-    public List<GameObject> enemyComboObjects;
 
     public List<GameObject> playerStatusEffectIcons;
     public List<GameObject> enemyStatusEffectIcons;
@@ -40,11 +36,11 @@ public class BattleUI : MonoBehaviour
 
     private void Update()
     {
-        CardsDisplay(hand.cards, handObjects, hand.gameObject, true);
-        CardsDisplay(playArea.cards, playAreaObjects, playArea.gameObject, true);
-        CardsDisplay(playerCombo.cards, playerComboObjects, playerCombo.gameObject, false);
-        EnemyCardsDisplay(enemyPlayArea.intents, enemyPlayAreaObjects);
-        EnemyCardsDisplay(enemyCombo.intents, enemyComboObjects);
+        CardsDisplay(hand.cards);
+        //CardsDisplay(playArea.cards, playAreaObjects, playArea.gameObject, true);
+        //CardsDisplay(playerCombo.cards, playerComboObjects, playerCombo.gameObject, false);
+        //EnemyCardsDisplay(enemyPlayArea.intents, enemyPlayAreaObjects);
+        //EnemyCardsDisplay(enemyCombo.intents, enemyComboObjects);
         CardCountDisplay();
         EnergyDisplay();
         HealthBarDisplay();
@@ -58,37 +54,19 @@ public class BattleUI : MonoBehaviour
     {
         battleSystem.EndTurn();
     }
-    public void CardsDisplay(List<Card> cards, List<GameObject> objects, GameObject container, bool scaled)
+    public void CardsDisplay(List<Card> cards)
     {
-        for (int i = 0; i < objects.Count; i++)
-        { 
-            if (i < cards.Count)
+        Transform _hand = hand.gameObject.transform;
+        if (_hand.childCount < hand.cards.Count)
+        {
+            for (int i = 0; i < hand.cards.Count - _hand.childCount; i++)
             {
-                objects[i].SetActive(true);
-                if (cards[i] != null)
-                {
-                    objects[i].GetComponent<CardDisplay>().card = cards[i];
-                }
-                if (scaled)
-                {
-                    Vector3 _pos = new Vector3();
-                    float scaledSpacing = Mathf.Lerp(cardSpaceMin, cardSpaceMax, cards.Count / 10);
-                    _pos.x = scaledSpacing * i;
-                    _pos.y = objects[i].transform.localPosition.y;
-                    objects[i].transform.localPosition = _pos;
-                }
-            }
-            else
-            {
-                objects[i].SetActive(false);
+                Instantiate(cardDisplayPrefab, hand.gameObject.transform);
             }
         }
-        if (scaled)
+        for (int i = 0; i < _hand.childCount; i++)
         {
-            Vector3 pos = new Vector3();
-            pos.x = Mathf.Lerp(cardCenterMin, cardCenterMax, cards.Count / 10f);
-            pos.y = container.transform.localPosition.y;
-            container.transform.localPosition = pos;
+            Transform card = _hand.GetChild(i);
         }
     }
     public void EnemyCardsDisplay(List<Enemy.Intents> intents, List<GameObject> objects)

@@ -272,7 +272,6 @@ GameObject:
   - component: {fileID: 5005060561257144420}
   - component: {fileID: 5005060561257144423}
   - component: {fileID: 5005060561257144418}
-  - component: {fileID: 1799238106489449207}
   m_Layer: 5
   m_Name: Card Display
   m_TagString: Untagged
@@ -305,7 +304,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -200, y: -147.8}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 325, y: 462}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5005060561257144421
@@ -431,21 +430,6 @@ MonoBehaviour:
   energyCostText: {fileID: 5005060562172267628}
   nameText: {fileID: 5005060561507971431}
   descriptionText: {fileID: 5005060561578763079}
---- !u!114 &1799238106489449207
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5005060561257144345}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1941b27e24bc7548bfbb1e5d7d65aa8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  header: 
-  content: 
-  tooltip: {fileID: 0}
 --- !u!1 &5005060561507971353
 GameObject:
   m_ObjectHideFlags: 0
