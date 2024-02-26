@@ -6,11 +6,8 @@ using TMPro;
 
 public class BattleUI : MonoBehaviour
 {
-    public float cardSpaceMin;
-    public float cardSpaceMax;
-    public float cardCenterMin;
-    public float cardCenterMax;
-
+    public float cardSpacing;
+    public float cardSizeDecay;
     public BattleSystem battleSystem;
     public GameObject cardDisplayPrefab;
     public Hand hand => battleSystem.hand;
@@ -36,7 +33,8 @@ public class BattleUI : MonoBehaviour
 
     private void Update()
     {
-        CardsDisplay(hand.cards);
+        CardsDisplay(hand.cards, hand.gameObject.GetComponent<RectTransform>());
+
         //CardsDisplay(playArea.cards, playAreaObjects, playArea.gameObject, true);
         //CardsDisplay(playerCombo.cards, playerComboObjects, playerCombo.gameObject, false);
         //EnemyCardsDisplay(enemyPlayArea.intents, enemyPlayAreaObjects);
@@ -54,19 +52,34 @@ public class BattleUI : MonoBehaviour
     {
         battleSystem.EndTurn();
     }
-    public void CardsDisplay(List<Card> cards)
+    public void CardsDisplay(List<Card> cards, RectTransform container)
     {
-        Transform _hand = hand.gameObject.transform;
-        if (_hand.childCount < hand.cards.Count)
+        if (container.childCount < cards.Count)
         {
-            for (int i = 0; i < hand.cards.Count - _hand.childCount; i++)
+            for (int i = 0; i < cards.Count - container.childCount; i++)
             {
                 Instantiate(cardDisplayPrefab, hand.gameObject.transform);
             }
         }
-        for (int i = 0; i < _hand.childCount; i++)
+        if (cards.Count > 0)
         {
-            Transform card = _hand.GetChild(i);
+            float middle = 0;
+            if (cards.Count > 1)
+            {
+                middle = (cards.Count - 1) * cardSpacing / 2;
+            }
+            for (int i = 0; i < container.childCount; i++)
+            {
+                Transform card = container.GetChild(i);
+                card.gameObject.SetActive(false);
+                if (i < cards.Count)
+                {
+                    float offset = (i - 1) * cardSpacing;
+                    card.gameObject.SetActive(true);
+                    Vector3 pos = new Vector2(offset-middle, 0);
+                    card.transform.localPosition = pos;
+                }
+            }
         }
     }
     public void EnemyCardsDisplay(List<Enemy.Intents> intents, List<GameObject> objects)
