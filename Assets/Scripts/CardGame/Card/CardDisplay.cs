@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 
-public class CardDisplay : MonoBehaviour
+public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public BattleSystem battleSystem => FindAnyObjectByType<BattleSystem>().GetComponent<BattleSystem>();
     public Sprite[] bgs;
@@ -15,6 +16,7 @@ public class CardDisplay : MonoBehaviour
     public int energyCost;
     public string name;
     public string description;
+    public bool hover;
 
     public TextMeshProUGUI energyCostText;
     public TextMeshProUGUI nameText;
@@ -54,5 +56,14 @@ public class CardDisplay : MonoBehaviour
     public void ReturnCard()
     { 
         battleSystem.ReturnCard(card);
+    }
+    public void OnPointerEnter(PointerEventData pointerEventData)
+    {
+        hover = true;
+    }
+
+    public void OnPointerExit(PointerEventData pointerEventData)
+    {
+        hover = false;
     }
 }

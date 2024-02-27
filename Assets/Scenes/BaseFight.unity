@@ -3023,7 +3023,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 100, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 500, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1057215103
@@ -3997,6 +3997,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardSpacing: 100
+  cardOffset: 0
   cardSizeDecay: 0.1
   battleSystem: {fileID: 1091507260}
   cardDisplayPrefab: {fileID: 5005060561257144345, guid: 5b7991c1b71973f48a59dd3b62082a7a, type: 3}

@@ -7,6 +7,7 @@ using TMPro;
 public class BattleUI : MonoBehaviour
 {
     public float cardSpacing;
+    public float cardOffset;
     public float cardSizeDecay;
     public BattleSystem battleSystem;
     public GameObject cardDisplayPrefab;
@@ -63,18 +64,43 @@ public class BattleUI : MonoBehaviour
         }
         if (cards.Count > 0)
         {
+            float containerWidth = container.sizeDelta.x;
+            float handWidth = cards.Count * cardSpacing;
             float middle = 0;
             if (cards.Count > 1)
             {
-                middle = (cards.Count - 1) * cardSpacing / 2;
+                middle = (handWidth / 2)-cardSpacing/2;
+            }
+            cardSpacing = 100;
+            if (cards.Count > 4)
+            {
+                cardSpacing = containerWidth / cards.Count;
             }
             for (int i = 0; i < container.childCount; i++)
             {
+                int hoverIndex = Mathf.RoundToInt(cards.Count / 2);
+                for (int j = 0; j < container.childCount; j++)
+                {
+                    Transform _card = container.GetChild(j);
+                    CardDisplay display = _card.gameObject.GetComponent<CardDisplay>();
+                    if (display.hover)
+                    {
+                        hoverIndex = j;
+                    }
+                }
                 Transform card = container.GetChild(i);
                 card.gameObject.SetActive(false);
+                int distanceFromHover = i - hoverIndex;
                 if (i < cards.Count)
                 {
-                    float offset = (i - 1) * cardSpacing;
+                    float hoverDist = Mathf.Abs(distanceFromHover);
+                    float maxDist = 2;
+                    float dist = 0;
+                    if (Mathf.Abs(distanceFromHover) < maxDist)
+                    {
+                        dist = distanceFromHover * Mathf.Lerp(cardSpacing/4,0,hoverDist/maxDist);
+                    }
+                    float offset = (i * cardSpacing) + dist;
                     card.gameObject.SetActive(true);
                     Vector3 pos = new Vector2(offset-middle, 0);
                     card.transform.localPosition = pos;
