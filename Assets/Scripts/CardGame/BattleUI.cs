@@ -6,9 +6,9 @@ using TMPro;
 
 public class BattleUI : MonoBehaviour
 {
-    public float cardSpacing;
-    public float cardOffset;
-    public float cardSizeDecay;
+    public float idealCardSpacing;
+    float cardSpacing;
+    public float cardSpeed;
     public BattleSystem battleSystem;
     public GameObject cardDisplayPrefab;
     public Hand hand => battleSystem.hand;
@@ -21,9 +21,7 @@ public class BattleUI : MonoBehaviour
     public List<GameObject> enemyStatusEffectIcons;
 
     public Image playerHealthBar;
-    public Image playerBlockBar;
     public Image enemyHealthBar;
-    public Image enemyBlockBar;
 
     public GameObject cardGamePanel;
     public GameObject fightPanel;
@@ -35,7 +33,7 @@ public class BattleUI : MonoBehaviour
     private void Update()
     {
         CardsDisplay(hand.cards, hand.gameObject.GetComponent<RectTransform>());
-
+        CardsDisplay(playArea.cards, playArea.gameObject.GetComponent<RectTransform>());
         //CardsDisplay(playArea.cards, playAreaObjects, playArea.gameObject, true);
         //CardsDisplay(playerCombo.cards, playerComboObjects, playerCombo.gameObject, false);
         //EnemyCardsDisplay(enemyPlayArea.intents, enemyPlayAreaObjects);
@@ -59,7 +57,7 @@ public class BattleUI : MonoBehaviour
         {
             for (int i = 0; i < cards.Count - container.childCount; i++)
             {
-                Instantiate(cardDisplayPrefab, hand.gameObject.transform);
+                Instantiate(cardDisplayPrefab, container.gameObject.transform);
             }
         }
         if (cards.Count > 0)
@@ -71,7 +69,7 @@ public class BattleUI : MonoBehaviour
             {
                 middle = (handWidth / 2)-cardSpacing/2;
             }
-            cardSpacing = 100;
+            cardSpacing = idealCardSpacing;
             if (cards.Count > 4)
             {
                 cardSpacing = containerWidth / cards.Count;
@@ -102,8 +100,11 @@ public class BattleUI : MonoBehaviour
                     }
                     float offset = (i * cardSpacing) + dist;
                     card.gameObject.SetActive(true);
-                    Vector3 pos = new Vector2(offset-middle, 0);
-                    card.transform.localPosition = pos;
+                    card.GetComponent<CardDisplay>().card = hand.cards[i];
+                    Vector3 currentPos = card.transform.localPosition;
+                    Vector3 targetPos = new Vector2(offset-middle, 0);
+                    Vector3 lerpedPos = Vector3.Lerp(currentPos, targetPos, cardSpeed);
+                    card.transform.localPosition = lerpedPos;
                 }
             }
         }
@@ -135,8 +136,6 @@ public class BattleUI : MonoBehaviour
     public void HealthBarDisplay()
     {
         playerHealthBar.fillAmount = (float)battleSystem.player.health / (float)battleSystem.player.maxHealth;
-        playerBlockBar.fillAmount = (float)battleSystem.player.block / (float)battleSystem.player.maxHealth;
         enemyHealthBar.fillAmount = (float)battleSystem.enemy.health / (float)battleSystem.enemy.maxHealth;
-        enemyBlockBar.fillAmount = (float)battleSystem.enemy.block / (float)battleSystem.enemy.maxHealth;
     }
 }
