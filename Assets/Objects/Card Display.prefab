@@ -271,7 +271,7 @@ GameObject:
   - component: {fileID: 5005060561257144421}
   - component: {fileID: 5005060561257144420}
   - component: {fileID: 5005060561257144423}
-  - component: {fileID: 5005060561257144418}
+  - component: {fileID: 6614840552643112145}
   m_Layer: 5
   m_Name: Card Display
   m_TagString: Untagged
@@ -389,7 +389,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5005060561257144418}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: CardDisplay, Assembly-CSharp
         m_MethodName: PlayCard
         m_Mode: 1
@@ -401,7 +401,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &5005060561257144418
+--- !u!114 &6614840552643112145
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -427,6 +427,7 @@ MonoBehaviour:
   energyCost: 0
   name: 
   description: 
+  hover: 0
   energyCostText: {fileID: 5005060562172267628}
   nameText: {fileID: 5005060561507971431}
   descriptionText: {fileID: 5005060561578763079}

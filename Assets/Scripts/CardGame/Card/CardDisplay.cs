@@ -14,7 +14,7 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public Image symbol;
     public Card card;
     public int energyCost;
-    public string name;
+    public string cardName;
     public string description;
     public bool hover;
 
@@ -24,6 +24,7 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     private void Update()
     {
+        print(card != null);
         if (card != null)
         {
             energyCostText.text = card.energyCost + "";
@@ -51,10 +52,11 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     }
     public void PlayCard()
     {
-        battleSystem.PlayCard(card);
-    }
-    public void ReturnCard()
-    { 
+        if (transform.parent.GetComponent<Hand>())
+        {
+            battleSystem.PlayCard(card);
+            return;
+        }
         battleSystem.ReturnCard(card);
     }
     public void OnPointerEnter(PointerEventData pointerEventData)

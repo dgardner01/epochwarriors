@@ -30,7 +30,7 @@ public class BattleSystem : StateMachine
     public void ReturnCard(Card card)
     {
         player.energy += card.energyCost;
-        playArea.cards.Remove(card);
+        playArea.cards.Clear();
         hand.cards.Add(card);
     }
     public void AssignEnemyIntent()

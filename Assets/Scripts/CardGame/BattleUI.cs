@@ -53,6 +53,7 @@ public class BattleUI : MonoBehaviour
     }
     public void CardsDisplay(List<Card> cards, RectTransform container)
     {
+        //if there are not enough card display objects for the number of cards, instantiate new ones
         if (container.childCount < cards.Count)
         {
             for (int i = 0; i < cards.Count - container.childCount; i++)
@@ -63,44 +64,43 @@ public class BattleUI : MonoBehaviour
         if (cards.Count > 0)
         {
             float containerWidth = container.sizeDelta.x;
+            float idealHandWidth = cards.Count * idealCardSpacing;
             float handWidth = cards.Count * cardSpacing;
-            float middle = 0;
-            if (cards.Count > 1)
-            {
-                middle = (handWidth / 2)-cardSpacing/2;
-            }
+            float middle = (handWidth / 2)-cardSpacing/2;
             cardSpacing = idealCardSpacing;
-            if (cards.Count > 4)
+            //if the total width of the cards with ideal spacing is greater than the container, scale the spacing
+            if (idealHandWidth > containerWidth)
             {
                 cardSpacing = containerWidth / cards.Count;
             }
             for (int i = 0; i < container.childCount; i++)
             {
+                //hoverIndex is the list index of the card currently being hovered over
+                //by default the middle card is considered hovered over
                 int hoverIndex = Mathf.RoundToInt(cards.Count / 2);
                 for (int j = 0; j < container.childCount; j++)
                 {
                     Transform _card = container.GetChild(j);
-                    CardDisplay display = _card.gameObject.GetComponent<CardDisplay>();
-                    if (display.hover)
+                    CardDisplay _display = _card.gameObject.GetComponent<CardDisplay>();
+                    if (_display.hover)
                     {
                         hoverIndex = j;
                     }
                 }
                 Transform card = container.GetChild(i);
+                CardDisplay display = card.GetComponent<CardDisplay>();
+                //by default, displays are inactive
                 card.gameObject.SetActive(false);
                 int distanceFromHover = i - hoverIndex;
-                if (i < cards.Count)
+                //only use as many displays as there are cards
+                if (cards.Count > 0 && i < cards.Count)
                 {
+                    card.gameObject.SetActive(true);
+                    display.card = cards[i];
                     float hoverDist = Mathf.Abs(distanceFromHover);
                     float maxDist = 2;
-                    float dist = 0;
-                    if (Mathf.Abs(distanceFromHover) < maxDist)
-                    {
-                        dist = distanceFromHover * Mathf.Lerp(cardSpacing/4,0,hoverDist/maxDist);
-                    }
+                    float dist = distanceFromHover * Mathf.Lerp(cardSpacing / 4, 0, hoverDist / maxDist);
                     float offset = (i * cardSpacing) + dist;
-                    card.gameObject.SetActive(true);
-                    card.GetComponent<CardDisplay>().card = hand.cards[i];
                     Vector3 currentPos = card.transform.localPosition;
                     Vector3 targetPos = new Vector2(offset-middle, 0);
                     Vector3 lerpedPos = Vector3.Lerp(currentPos, targetPos, cardSpeed);
