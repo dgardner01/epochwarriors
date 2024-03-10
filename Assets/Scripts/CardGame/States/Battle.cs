@@ -10,8 +10,8 @@ public class Battle : State
     public override IEnumerator Start()
     {
         BattleSystem.ui.PrintLog("battle begin");
-        BattleSystem.ui.cardGamePanel.SetActive(false);
-        BattleSystem.ui.fightPanel.SetActive(true);
+        BattleSystem.ui.lowerThird.SetActive(false);
+        BattleSystem.ui.middleThird.SetActive(false);
         BattleSystem.player.UpdateStatusEffects();
         BattleSystem.enemy.UpdateStatusEffects();
         BattleSystem.InitializeCombos();
@@ -20,44 +20,26 @@ public class Battle : State
     }
     public IEnumerator ResolveCard()
     {
+        Player player = BattleSystem.player;
+        Enemy enemy = BattleSystem.enemy;
+        PlayerCombo playerCombo = BattleSystem.playerCombo;
         if (BattleSystem.playerCombo.cards.Count > 0)
         {
-            Card playerCard = BattleSystem.playerCombo.cards[0];
-            BattleSystem.enemy.Damage(playerCard.damage);
-            BattleSystem.player.block += playerCard.block;
-            BattleSystem.playerCombo.cards.Remove(playerCard);
-            if (playerCard.friendlyStatusEffect != null)
+            Card playerCard = playerCombo.cards[0];
+            enemy.Damage(playerCard.damage+player.strength);
+            player.block += playerCard.block;
+            playerCombo.cards.Remove(playerCard);
+            if (playerCard.statusEffect != null)
             {
-                BattleSystem.player.ApplyStatusEffect(playerCard.friendlyStatusEffect.CreateStatusEffect());
+                player.ApplyStatusEffect(playerCard.statusEffect.CreateStatusEffect());
             }
-            if (playerCard.targetingStatusEffect != null)
+            if (playerCard.animation != null)
             {
-                BattleSystem.enemy.ApplyStatusEffect(playerCard.targetingStatusEffect.CreateStatusEffect());
+                player.animator.PlayAnimationClip(playerCard.animation);
             }
             yield return new WaitForSeconds(1);
         }
-        if (BattleSystem.enemyCombo.intents.Count > 0)
-        {
-            Enemy.Intents enemyIntent = BattleSystem.enemyCombo.intents[0];
-            switch (enemyIntent)
-            {
-                case Enemy.Intents.Attack:
-                    BattleSystem.player.Damage(BattleSystem.enemy.damage);
-                    break;
-                case Enemy.Intents.Block:
-                    BattleSystem.enemy.block += 2;
-                    break;
-                case Enemy.Intents.Buff:
-                    BattleSystem.enemy.damage++;
-                    break;
-                case Enemy.Intents.Debuff:
-                    BattleSystem.player.energy -= 1;
-                    break;
-            }
-            BattleSystem.enemyCombo.intents.Remove(enemyIntent);
-            yield return new WaitForSeconds(1);
-        }
-        if (BattleSystem.playerCombo.cards.Count == 0 && BattleSystem.enemyCombo.intents.Count == 0)
+        if (playerCombo.cards.Count == 0)
         {
             BattleSystem.SetState(new PlayerTurn(BattleSystem));
         }

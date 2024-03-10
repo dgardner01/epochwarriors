@@ -7,10 +7,11 @@ public class Fighter : MonoBehaviour
     public string name;
     public int health;
     public int maxHealth;
-    public float damageModifier = 1;
+    public int strength;
     public int block;
     public int cardsDrawnPerTurn;
-    public List<StatusEffect> activeStatusEffects;
+    public List<StatusEffect> activeStatusEffects = new List<StatusEffect>();
+    public FighterAnimator animator;
     public void Damage(int damage)
     {
         block -= damage;
@@ -34,7 +35,7 @@ public class Fighter : MonoBehaviour
                 if (statusEffect.id == status.id)
                 {
                     status.duration += statusEffect.duration;
-                    return;
+                    break;
                 }
             }
         }

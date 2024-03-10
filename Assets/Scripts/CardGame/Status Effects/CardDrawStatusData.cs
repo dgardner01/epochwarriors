@@ -9,6 +9,6 @@ public class CardDrawStatusData : StatusEffectData
     public int cardsDrawn;
     public override StatusEffect CreateStatusEffect()
     {
-        return new CardDrawStatus(duration, cardsDrawn);
+        return new CardDrawStatus(duration, symbol, cardsDrawn);
     }
 }

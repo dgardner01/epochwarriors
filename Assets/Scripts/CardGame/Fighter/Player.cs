@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class Player : Fighter
 {
-    public int energy;
-    public int energyPerTurn;
+    public int spirit;
+    public int spiritPerTurn;
     public List<Card> drawPile;
+
+    private void Update()
+    {
+    }
 }

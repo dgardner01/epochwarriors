@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class StatusEffect
 {
     public string id;
     public int duration;
-
-    public StatusEffect(int duration)
+    public int magnitude;
+    public Sprite symbol;
+    public StatusEffect(int duration, Sprite symbol)
     {
         this.duration = duration;
     }
@@ -23,6 +25,11 @@ public abstract class StatusEffect
     }
 
     public virtual void OnTurnUpdate(Fighter fighter)
+    {
+
+    }
+
+    public virtual void OnAttacked(Fighter fighter, Fighter attacker)
     {
 
     }

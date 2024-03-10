@@ -20,17 +20,17 @@ public class BattleSystem : StateMachine
 
     public void PlayCard(Card card)
     {
-        if (player.energy >= card.energyCost)
+        if (player.spirit >= card.spiritCost)
         {
             hand.cards.Remove(card);
             playArea.cards.Add(card);
-            player.energy -= card.energyCost;
+            player.spirit -= card.spiritCost;
         }
     }
     public void ReturnCard(Card card)
     {
-        player.energy += card.energyCost;
-        playArea.cards.Clear();
+        player.spirit += card.spiritCost;
+        playArea.cards.Remove(card);
         hand.cards.Add(card);
     }
     public void AssignEnemyIntent()
@@ -43,6 +43,7 @@ public class BattleSystem : StateMachine
     }
     public void InitializeCombos()
     {
+        player.spirit = 0;
         int cards = playArea.cards.Count;
         for(int i = 0; i < cards; i++)
         {
@@ -55,12 +56,6 @@ public class BattleSystem : StateMachine
         {
             discard.cards.Add(hand.cards[0]);
             hand.cards.Remove(hand.cards[0]);
-        }
-        int intents = enemyPlayArea.intents.Count;
-        for (int i = 0; i < intents; i++)
-        {
-            enemyCombo.intents.Add(enemyPlayArea.intents[0]);
-            enemyPlayArea.intents.Remove(enemyPlayArea.intents[0]);
         }
     }
 }

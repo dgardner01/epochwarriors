@@ -5,4 +5,7 @@ using UnityEngine;
 public abstract class StatusEffectData : ScriptableObject
 {
     public abstract StatusEffect CreateStatusEffect();
+    public Sprite symbol;
+    public int duration;
+    public int magnitude;
 }

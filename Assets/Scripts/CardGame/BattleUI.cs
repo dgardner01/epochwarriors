@@ -13,7 +13,6 @@ public class BattleUI : MonoBehaviour
     public GameObject cardDisplayPrefab;
     public Hand hand => battleSystem.hand;
     public PlayArea playArea => battleSystem.playArea;
-    public EnemyPlayArea enemyPlayArea => battleSystem.enemyPlayArea;
     public PlayerCombo playerCombo => battleSystem.playerCombo;
     public EnemyCombo enemyCombo => battleSystem.enemyCombo;
 
@@ -21,25 +20,26 @@ public class BattleUI : MonoBehaviour
     public List<GameObject> enemyStatusEffectIcons;
 
     public Image playerHealthBar;
+    public TextMeshProUGUI playerHealthBarText;
     public Image enemyHealthBar;
+    public TextMeshProUGUI enemyHealthBarText;
 
-    public GameObject cardGamePanel;
-    public GameObject fightPanel;
+    public GameObject upperThird, middleThird, lowerThird;
 
     public TextMeshProUGUI drawPileCount;
     public TextMeshProUGUI discardPileCount;
     public TextMeshProUGUI energyCount;
-
     private void Update()
+    {
+
+    }
+    private void FixedUpdate()
     {
         CardsDisplay(hand.cards, hand.gameObject.GetComponent<RectTransform>());
         CardsDisplay(playArea.cards, playArea.gameObject.GetComponent<RectTransform>());
-        //CardsDisplay(playArea.cards, playAreaObjects, playArea.gameObject, true);
-        //CardsDisplay(playerCombo.cards, playerComboObjects, playerCombo.gameObject, false);
-        //EnemyCardsDisplay(enemyPlayArea.intents, enemyPlayAreaObjects);
-        //EnemyCardsDisplay(enemyCombo.intents, enemyComboObjects);
+        StatusEffectDisplay();
         CardCountDisplay();
-        EnergyDisplay();
+        SpiritDisplay();
         HealthBarDisplay();
     }
     public void PrintLog(string log)
@@ -61,66 +61,83 @@ public class BattleUI : MonoBehaviour
                 Instantiate(cardDisplayPrefab, container.gameObject.transform);
             }
         }
-        if (cards.Count > 0)
+        //if the container has cards, display them spaced apart evenly
+        float containerWidth = container.sizeDelta.x;
+        float idealHandWidth = cards.Count * idealCardSpacing;
+        float handWidth = cards.Count * cardSpacing;
+        float middle = (handWidth / 2) - cardSpacing / 2;
+        cardSpacing = idealCardSpacing;
+        //if the total width of the cards with ideal spacing is greater than the container, scale the overall spacing
+        if (idealHandWidth > containerWidth)
         {
-            float containerWidth = container.sizeDelta.x;
-            float idealHandWidth = cards.Count * idealCardSpacing;
-            float handWidth = cards.Count * cardSpacing;
-            float middle = (handWidth / 2)-cardSpacing/2;
-            cardSpacing = idealCardSpacing;
-            //if the total width of the cards with ideal spacing is greater than the container, scale the spacing
-            if (idealHandWidth > containerWidth)
-            {
-                cardSpacing = containerWidth / cards.Count;
-            }
-            for (int i = 0; i < container.childCount; i++)
-            {
-                //hoverIndex is the list index of the card currently being hovered over
-                //by default the middle card is considered hovered over
-                int hoverIndex = Mathf.RoundToInt(cards.Count / 2);
-                for (int j = 0; j < container.childCount; j++)
-                {
-                    Transform _card = container.GetChild(j);
-                    CardDisplay _display = _card.gameObject.GetComponent<CardDisplay>();
-                    if (_display.hover)
-                    {
-                        hoverIndex = j;
-                    }
-                }
-                Transform card = container.GetChild(i);
-                CardDisplay display = card.GetComponent<CardDisplay>();
-                //by default, displays are inactive
-                card.gameObject.SetActive(false);
-                int distanceFromHover = i - hoverIndex;
-                //only use as many displays as there are cards
-                if (cards.Count > 0 && i < cards.Count)
-                {
-                    card.gameObject.SetActive(true);
-                    display.card = cards[i];
-                    float hoverDist = Mathf.Abs(distanceFromHover);
-                    float maxDist = 2;
-                    float dist = distanceFromHover * Mathf.Lerp(cardSpacing / 4, 0, hoverDist / maxDist);
-                    float offset = (i * cardSpacing) + dist;
-                    Vector3 currentPos = card.transform.localPosition;
-                    Vector3 targetPos = new Vector2(offset-middle, 0);
-                    Vector3 lerpedPos = Vector3.Lerp(currentPos, targetPos, cardSpeed);
-                    card.transform.localPosition = lerpedPos;
-                }
-            }
+            cardSpacing = containerWidth / cards.Count;
         }
-    }
-    public void EnemyCardsDisplay(List<Enemy.Intents> intents, List<GameObject> objects)
-    {
-        for (int i = 0; i < objects.Count; i++)
+        //apply spacing to each card in container
+        for (int i = 0; i < container.childCount; i++)
         {
-            if (i < intents.Count)
+            //hoverIndex is the list index of the card currently being hovered over
+            //by default the middle card is considered hovered over
+            int hoverIndex = Mathf.RoundToInt(cards.Count / 2);
+            for (int j = 0; j < container.childCount; j++)
             {
-                objects[i].SetActive(true);
-                objects[i].GetComponent<EnemyCardDisplay>().intent = intents[i];
+                Transform _card = container.GetChild(j);
+                CardDisplay _display = _card.gameObject.GetComponent<CardDisplay>();
+                if (_display.hover)
+                {
+                    hoverIndex = j;
+                }
+            }
+            Transform card = container.GetChild(i);
+            CardDisplay display = card.GetComponent<CardDisplay>();
+            int distanceFromHover = i - hoverIndex;
+            //only use as many displays as there are cards
+            if (cards.Count > 0 && i < cards.Count)
+            {
+                card.gameObject.SetActive(true);
+                display.card = cards[i];
+                float hoverDist = Mathf.Abs(distanceFromHover);
+                float maxDist = 2;
+                //individually space each card by how close it is to the hovered card
+                float dist = distanceFromHover * Mathf.Lerp(cardSpacing / 4, 0, hoverDist / maxDist);
+                float offset = (i * cardSpacing) + dist;
+                Vector3 currentPos = card.transform.localPosition;
+                Vector3 targetPos = new Vector2(offset - middle, 0);
+                Vector3 lerpedPos = Vector3.Lerp(currentPos, targetPos, cardSpeed);
+                card.transform.localPosition = lerpedPos;
             }
             else
             {
-                objects[i].SetActive(false);
+                card.gameObject.SetActive(false);
+            }
+        }
+    }
+    public void StatusEffectDisplay()
+    {
+        Player player = battleSystem.player;
+        for (int i = 0; i < playerStatusEffectIcons.Count; i++)
+        {
+            if (i < player.activeStatusEffects.Count)
+            {
+                playerStatusEffectIcons[i].SetActive(true);
+                StatusEffect statusEffect = player.activeStatusEffects[i];
+                Sprite symbol = statusEffect.symbol;
+                int duration = statusEffect.duration;
+                playerStatusEffectIcons[i].GetComponent<Image>().sprite = symbol;
+                TextMeshProUGUI number = playerStatusEffectIcons[i].
+                    transform.GetChild(0).
+                        GetComponent<TextMeshProUGUI>();
+                if (duration > 0)
+                {
+                    number.text = "" + duration;
+                }
+                else
+                {
+                    number.text = "";
+                }
+            }
+            else
+            {
+                playerStatusEffectIcons[i].SetActive(false);
             }
         }
     }
@@ -129,13 +146,22 @@ public class BattleUI : MonoBehaviour
         drawPileCount.text = battleSystem.player.drawPile.Count + "";
         discardPileCount.text = battleSystem.discard.cards.Count + "";
     }
-    public void EnergyDisplay()
+    public void SpiritDisplay()
     {
-        energyCount.text = battleSystem.player.energy + "";
+        energyCount.text = battleSystem.player.spirit + "";
     }
     public void HealthBarDisplay()
     {
-        playerHealthBar.fillAmount = (float)battleSystem.player.health / (float)battleSystem.player.maxHealth;
-        enemyHealthBar.fillAmount = (float)battleSystem.enemy.health / (float)battleSystem.enemy.maxHealth;
+        float healthBarSpeed = 0.5f;
+        float playerHealth = battleSystem.player.health;
+        float playerMaxHealth = battleSystem.player.maxHealth;
+        float lerpedPlayerHealth = Mathf.Lerp(playerHealthBar.fillAmount * playerMaxHealth, playerHealth, healthBarSpeed);
+        float enemyHealth = battleSystem.enemy.health;
+        float enemyMaxHealth = battleSystem.enemy.maxHealth;
+        float lerpedEnemyHealth = Mathf.Lerp(enemyHealthBar.fillAmount * enemyMaxHealth, enemyHealth, healthBarSpeed);
+        playerHealthBar.fillAmount = lerpedPlayerHealth / playerMaxHealth;
+        playerHealthBarText.text = playerHealth + "/" + playerMaxHealth;
+        enemyHealthBar.fillAmount = lerpedEnemyHealth / enemyMaxHealth;
+        enemyHealthBarText.text = enemyHealth + "/" + enemyMaxHealth;
     }
 }

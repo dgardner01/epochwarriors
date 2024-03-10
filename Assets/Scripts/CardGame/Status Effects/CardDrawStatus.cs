@@ -7,8 +7,10 @@ public class CardDrawStatus : StatusEffect
     string id = "CardDraw";
     int cardsDrawn;
     int cardsDrawnAtStart;
-    public CardDrawStatus(int duration, int cardsDrawn) : base(duration)
+    public CardDrawStatus(int duration, Sprite symbol, int cardsDrawn) : base(duration, symbol)
     {
+        this.duration = duration;
+        this.symbol = symbol;
         this.cardsDrawn = cardsDrawn;
     }
     public override void OnApply(Fighter fighter)

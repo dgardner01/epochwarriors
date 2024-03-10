@@ -1,57 +1,131 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using TMPro;
 
 public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public BattleSystem battleSystem => FindAnyObjectByType<BattleSystem>().GetComponent<BattleSystem>();
-    public Sprite[] bgs;
-    public Sprite[] symbols;
+    public TextMeshProUGUI title, spiritCost, description;
+    public TextMeshProUGUI[] symbolMagnitudes;
     public Image bg;
-    public Image symbol;
-    public Card card;
-    public int energyCost;
-    public string cardName;
-    public string description;
+    public Sprite[] bgs;
+    public Image[] symbols;
+    public Sprite[] symbolSprites;
+    public Image chain;
+    public Sprite[] comboChains;
+    BattleSystem battleSystem => FindAnyObjectByType<BattleSystem>();
     public bool hover;
-
-    public TextMeshProUGUI energyCostText;
-    public TextMeshProUGUI nameText;
-    public TextMeshProUGUI descriptionText;
-
-    private void Update()
+    public Card card;
+    // Start is called before the first frame update
+    void Start()
     {
-        print(card != null);
-        if (card != null)
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        Player player = battleSystem.player;
+        title.text = card.name;
+        spiritCost.text = ""+card.spiritCost;
+        description.text = card.description;
+        if (description.text == "")
         {
-            energyCostText.text = card.energyCost + "";
-            nameText.text = card.name;
-            descriptionText.text = card.description;
-            if (card.damage > 0)
-            {
+            description.gameObject.SetActive(false);
+        }
+        else
+        {
+            description.gameObject.SetActive(true);
+        }
+        chain.sprite = comboChains[card.comboPosition];
+        switch (card.cardType)
+        {
+            case CardType.Attack:
                 bg.sprite = bgs[0];
-                symbol.sprite = symbols[0];
-                descriptionText.text = card.damage + "";
-            }
-            else if (card.block > 0)
-            {
+                symbols[0].sprite = symbolSprites[0];
+                if (player.strength > 0)
+                {
+                    symbolMagnitudes[0].color = Color.green;
+                    symbolMagnitudes[0].text = "" + (card.damage+player.strength);
+                }
+                else
+                {
+                    symbolMagnitudes[0].color = Color.white;
+                    symbolMagnitudes[0].text = "" + card.damage;
+                }
+                if (card.statusEffect != null)
+                {
+                    symbols[1].sprite = card.statusEffect.symbol;
+                    symbolMagnitudes[1].text = ""+Mathf.Max(card.statusEffect.duration, card.statusEffect.magnitude);
+                }
+                else
+                {
+                    symbols[1].sprite = null;
+                }
+                break;
+            case CardType.Block:
                 bg.sprite = bgs[1];
-                symbol.sprite = symbols[1];
-                descriptionText.text = card.block + "";
+                symbols[0].sprite = symbolSprites[1];
+                symbolMagnitudes[0].text = "" + card.block;
+                if (card.statusEffect != null)
+                {
+                    symbols[1].sprite = card.statusEffect.symbol;
+                    symbolMagnitudes[1].text = "" + Mathf.Max(card.statusEffect.duration, card.statusEffect.magnitude);
+                }
+                else
+                {
+                    symbols[1].sprite = null;
+                }
+                if (card.damage > 0)
+                {
+                    symbols[1].sprite = symbolSprites[0];
+                    symbolMagnitudes[1].text = card.damage + "";
+                    if (player.strength > 0)
+                    {
+                        symbolMagnitudes[1].color = Color.green;
+                        symbolMagnitudes[1].text = "" + (card.damage + player.strength);
+                    }
+                    else
+                    {
+                        symbolMagnitudes[1].color = Color.white;
+                        symbolMagnitudes[1].text = "" + card.damage;
+                    }
+                }
+                break;
+            case CardType.Skill:
+                bg.sprite = bgs[2];
+                if (card.statusEffect != null)
+                {
+                    symbols[0].sprite = card.statusEffect.symbol;
+                    symbolMagnitudes[0].text = "" + Mathf.Max(card.statusEffect.duration, card.statusEffect.magnitude);
+                }
+                else
+                {
+                    symbols[0].sprite = null;
+                }
+                symbols[1].sprite = null;
+                break;
+        }
+        for (int i = 0; i < symbols.Length; i++)
+        {
+            if (symbols[i].sprite == null)
+            {
+                symbols[i].gameObject.SetActive(false);
             }
             else
             {
-                bg.sprite = bgs[2];
-                symbol.sprite = symbols[2];
-                descriptionText.text = "2";
+                symbols[i].gameObject.SetActive(true);
             }
         }
     }
     public void PlayCard()
     {
+        if (card == null)
+        {
+            return;
+        }
         if (transform.parent.GetComponent<Hand>())
         {
             battleSystem.PlayCard(card);
@@ -59,6 +133,7 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         }
         battleSystem.ReturnCard(card);
     }
+
     public void OnPointerEnter(PointerEventData pointerEventData)
     {
         hover = true;

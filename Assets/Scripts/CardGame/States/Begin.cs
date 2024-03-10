@@ -10,7 +10,7 @@ public class Begin : State
         public override IEnumerator Start()
         {
             BattleSystem.ui.PrintLog("match begin");
-            yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(2);
             BattleSystem.SetState(new PlayerTurn(BattleSystem));
         }
     }
