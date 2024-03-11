@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 086a04e9f5f48df4294f081bf3ed9d1a, type: 3}
-  m_Name: Counterattack
+  m_Name: Strong Attack
   m_EditorClassIdentifier: 
-  name: Counterattack
+  name: 
   description: 
-  spiritCost: 1
-  damage: 1
-  block: 1
+  spiritCost: 0
+  damage: 4
+  block: 0
   comboPosition: 0
-  cardType: 1
+  cardType: 0
   statusEffect: {fileID: 0}
-  animation: {fileID: 0}
+  animation: {fileID: 7400000, guid: da3740125aab5624ca14410fb1cb2950, type: 2}
