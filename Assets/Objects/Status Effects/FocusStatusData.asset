@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1374cbd1f4c16945a16576e5a9aca4e, type: 3}
-  m_Name: RageStatusData
+  m_Script: {fileID: 11500000, guid: 60f3fd777a0cec341a2c449377ed8519, type: 3}
+  m_Name: FocusStatusData
   m_EditorClassIdentifier: 
-  symbol: {fileID: 21300000, guid: 4587ed12f28815e4c941f8baee4875c9, type: 3}
-  id: Rage
-  duration: 99
-  magnitude: 1
+  symbol: {fileID: 21300000, guid: 0662ff4b0c842c245848faa8677cf1ef, type: 3}
+  id: Focus
+  duration: 0
+  magnitude: 0

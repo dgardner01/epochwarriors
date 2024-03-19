@@ -10,6 +10,7 @@ public class PlayerTurn : State
         public override IEnumerator Start()
         {
             BattleSystem.ui.PrintLog("player turn begin");
+        BattleSystem.enemy.UpdateTurnIndex();
         List<StatusEffect> statusToRemove = new List<StatusEffect>();
             foreach(StatusEffect status in BattleSystem.player.activeStatusEffects)
         {
@@ -30,6 +31,8 @@ public class PlayerTurn : State
         BattleSystem.AssignEnemyIntent();
             BattleSystem.StartCoroutine(BattleSystem.hand.DrawCard(BattleSystem.player.cardsDrawnPerTurn));
             BattleSystem.player.spirit += BattleSystem.player.spiritPerTurn;
+        BattleSystem.player.block = 0;
+        BattleSystem.enemy.block = 0;
             yield break;
         }
 }

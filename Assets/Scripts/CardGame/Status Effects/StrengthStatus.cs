@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class StrengthStatus : StatusEffect
 {
-    string id = "Strength";
     public StrengthStatus(int duration, Sprite symbol) : base(duration, symbol)
     {
         this.duration = duration;
         this.symbol = symbol;
+        id = "Strength";
     }
     public override void OnApply(Fighter fighter)
     {

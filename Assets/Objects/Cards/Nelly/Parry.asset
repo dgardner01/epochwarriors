@@ -18,6 +18,6 @@ MonoBehaviour:
   damage: 0
   block: 0
   comboPosition: 0
-  cardType: 0
-  statusEffect: {fileID: 0}
+  cardType: 1
+  statusEffect: {fileID: 11400000, guid: b0394a2f9ca53904eb22310929a09982, type: 2}
   animation: {fileID: 0}

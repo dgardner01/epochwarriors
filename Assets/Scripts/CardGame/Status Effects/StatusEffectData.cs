@@ -6,6 +6,7 @@ public abstract class StatusEffectData : ScriptableObject
 {
     public abstract StatusEffect CreateStatusEffect();
     public Sprite symbol;
+    public string id;
     public int duration;
     public int magnitude;
 }
