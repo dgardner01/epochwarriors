@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class DodgeStatus : StatusEffect
 {
-    string id = "Dodge";
     public DodgeStatus(int duration, Sprite symbol) : base(duration, symbol)
     {
         this.duration = duration;
         this.symbol = symbol;
+        id = "Dodge";
     }
     public override void OnTurnUpdate(Fighter fighter)
     {

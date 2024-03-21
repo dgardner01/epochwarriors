@@ -9,15 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 086a04e9f5f48df4294f081bf3ed9d1a, type: 3}
-  m_Name: Counterattack
+  m_Script: {fileID: 11500000, guid: b1374cbd1f4c16945a16576e5a9aca4e, type: 3}
+  m_Name: RageStatusData
   m_EditorClassIdentifier: 
-  name: Counterattack
-  description: 
-  spiritCost: 1
-  damage: 1
-  block: 1
-  comboPosition: 0
-  cardType: 1
-  statusEffect: {fileID: 0}
-  animation: {fileID: 0}
+  symbol: {fileID: 21300000, guid: 4587ed12f28815e4c941f8baee4875c9, type: 3}
+  id: Rage
+  duration: 99
+  magnitude: 1

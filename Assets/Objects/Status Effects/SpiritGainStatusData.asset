@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: SpiritGainStatusData
   m_EditorClassIdentifier: 
   symbol: {fileID: 21300000, guid: 0662ff4b0c842c245848faa8677cf1ef, type: 3}
+  id: SpiritGain
   duration: 0
   magnitude: 2

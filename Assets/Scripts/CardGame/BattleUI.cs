@@ -19,6 +19,11 @@ public class BattleUI : MonoBehaviour
     public List<GameObject> playerStatusEffectIcons;
     public List<GameObject> enemyStatusEffectIcons;
 
+    public GameObject playerBlockIndicator;
+    public GameObject enemyBlockIndicator;
+
+    public Color nelly, bruttia, block, damage;
+
     public Image playerHealthBar;
     public TextMeshProUGUI playerHealthBarText;
     public Image enemyHealthBar;
@@ -29,6 +34,7 @@ public class BattleUI : MonoBehaviour
     public TextMeshProUGUI drawPileCount;
     public TextMeshProUGUI discardPileCount;
     public TextMeshProUGUI energyCount;
+    public TextParticle textParticle;
     private void Update()
     {
 
@@ -140,6 +146,34 @@ public class BattleUI : MonoBehaviour
                 playerStatusEffectIcons[i].SetActive(false);
             }
         }
+        // :(
+        Enemy enemy = battleSystem.enemy;
+        for (int i = 0; i < enemyStatusEffectIcons.Count; i++)
+        {
+            if (i < enemy.activeStatusEffects.Count)
+            {
+                enemyStatusEffectIcons[i].SetActive(true);
+                StatusEffect statusEffect = enemy.activeStatusEffects[i];
+                Sprite symbol = statusEffect.symbol;
+                int magnitude = statusEffect.magnitude;
+                enemyStatusEffectIcons[i].GetComponent<Image>().sprite = symbol;
+                TextMeshProUGUI number = enemyStatusEffectIcons[i].
+                    transform.GetChild(0).
+                        GetComponent<TextMeshProUGUI>();
+                if (magnitude > 0)
+                {
+                    number.text = "" + magnitude;
+                }
+                else
+                {
+                    number.text = "";
+                }
+            }
+            else
+            {
+                enemyStatusEffectIcons[i].SetActive(false);
+            }
+        }
     }
     public void CardCountDisplay()
     {
@@ -152,16 +186,56 @@ public class BattleUI : MonoBehaviour
     }
     public void HealthBarDisplay()
     {
+        Player player = battleSystem.player;
+        Enemy enemy = battleSystem.enemy;
         float healthBarSpeed = 0.5f;
-        float playerHealth = battleSystem.player.health;
-        float playerMaxHealth = battleSystem.player.maxHealth;
+        float playerHealth = player.health;
+        float playerMaxHealth = player.maxHealth;
         float lerpedPlayerHealth = Mathf.Lerp(playerHealthBar.fillAmount * playerMaxHealth, playerHealth, healthBarSpeed);
-        float enemyHealth = battleSystem.enemy.health;
-        float enemyMaxHealth = battleSystem.enemy.maxHealth;
+        float enemyHealth = enemy.health;
+        float enemyMaxHealth = enemy.maxHealth;
         float lerpedEnemyHealth = Mathf.Lerp(enemyHealthBar.fillAmount * enemyMaxHealth, enemyHealth, healthBarSpeed);
         playerHealthBar.fillAmount = lerpedPlayerHealth / playerMaxHealth;
         playerHealthBarText.text = playerHealth + "/" + playerMaxHealth;
         enemyHealthBar.fillAmount = lerpedEnemyHealth / enemyMaxHealth;
         enemyHealthBarText.text = enemyHealth + "/" + enemyMaxHealth;
+        if (player.block > 0)
+        {
+            playerHealthBar.color = block;
+            playerBlockIndicator.SetActive(true);
+            playerBlockIndicator.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "" + player.block;
+        }
+        else
+        {
+            playerHealthBar.color = nelly;
+            playerBlockIndicator.SetActive(false);
+        }
+        if (enemy.block > 0)
+        {
+            enemyHealthBar.color = block;
+            enemyBlockIndicator.SetActive(true);
+            enemyBlockIndicator.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "" + enemy.block;
+        }
+        else
+        {
+            enemyHealthBar.color = bruttia;
+            enemyBlockIndicator.SetActive(false);
+        }
     }
+    public Vector2 PuppetPos(Fighter fighter, string bodyPart, Vector3 offset)
+    {
+        Transform part;
+        if (!fighter.animator.transform.Find(bodyPart))
+        {
+            part = fighter.animator.transform.Find("S " + bodyPart);
+        }
+        else
+        {
+            part = fighter.animator.transform.Find(bodyPart);
+        }
+        Vector2 puppetPos = part.position + offset;
+        return Camera.main.WorldToScreenPoint(puppetPos);
+    }
+    public void NumberPopUp(string text, Vector2 position) => textParticle.NumberPopUp(text, position);
+    public void BlockPopUp(Vector2 position) => textParticle.BlockPopUp(position);
 }

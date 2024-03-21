@@ -4,5 +4,4 @@ using UnityEngine;
 
 public class EnemyPlayArea : MonoBehaviour
 {
-    public List<Enemy.Intents> intents;
 }

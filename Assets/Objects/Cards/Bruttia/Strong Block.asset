@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 086a04e9f5f48df4294f081bf3ed9d1a, type: 3}
-  m_Name: Feint
+  m_Name: Strong Block
   m_EditorClassIdentifier: 
-  name: Feint
-  description: Gain 2 spirit next turn.
-  spiritCost: 1
-  damage: 1
-  block: 0
-  comboPosition: 1
-  cardType: 0
-  statusEffect: {fileID: 11400000, guid: 5da031fc676dc5f4f836840f5fba4712, type: 2}
+  name: 
+  description: 
+  spiritCost: 0
+  damage: 0
+  block: 3
+  comboPosition: 0
+  cardType: 1
+  statusEffect: {fileID: 0}
   animation: {fileID: 0}

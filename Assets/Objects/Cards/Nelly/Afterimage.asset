@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 086a04e9f5f48df4294f081bf3ed9d1a, type: 3}
+  m_Name: Afterimage
+  m_EditorClassIdentifier: 
+  name: Afterimage
+  description: Dodge next attack this turn.
+  spiritCost: 2
+  damage: 0
+  block: 0
+  comboPosition: 1
+  cardType: 2
+  statusEffect: {fileID: 11400000, guid: 366a9e062f3668c47bb6a0ca38d49377, type: 2}
+  animation: {fileID: 0}

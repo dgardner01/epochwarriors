@@ -16,6 +16,7 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public Image chain;
     public Sprite[] comboChains;
     BattleSystem battleSystem => FindAnyObjectByType<BattleSystem>();
+
     public bool hover;
     public Card card;
     // Start is called before the first frame update
@@ -47,28 +48,12 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                 symbols[0].sprite = symbolSprites[0];
                 if (player.strength > 0)
                 {
-                    symbolMagnitudes[0].color = Color.green;
                     symbolMagnitudes[0].text = "" + (card.damage+player.strength);
                 }
                 else
                 {
-                    symbolMagnitudes[0].color = Color.white;
                     symbolMagnitudes[0].text = "" + card.damage;
                 }
-                if (card.statusEffect != null)
-                {
-                    symbols[1].sprite = card.statusEffect.symbol;
-                    symbolMagnitudes[1].text = ""+Mathf.Max(card.statusEffect.duration, card.statusEffect.magnitude);
-                }
-                else
-                {
-                    symbols[1].sprite = null;
-                }
-                break;
-            case CardType.Block:
-                bg.sprite = bgs[1];
-                symbols[0].sprite = symbolSprites[1];
-                symbolMagnitudes[0].text = "" + card.block;
                 if (card.statusEffect != null)
                 {
                     symbols[1].sprite = card.statusEffect.symbol;
@@ -78,18 +63,41 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                 {
                     symbols[1].sprite = null;
                 }
+                break;
+            case CardType.Block:
+                bg.sprite = bgs[1];
+                symbols[0].sprite = symbolSprites[1];
+                if (card.statusEffect != null)
+                {
+                    symbols[1].sprite = card.statusEffect.symbol;
+                    if (card.statusEffect.id == "Parry")
+                    {
+                        Enemy enemy = battleSystem.enemy;
+                        int halvedDamage = 0;
+                        if (enemy.FirstAttackInTurn() != null)
+                        {
+                            halvedDamage = (enemy.FirstAttackInTurn().damage + enemy.strength) / 2;
+                        }
+                        card.statusEffect.magnitude = halvedDamage;
+                        card.block = halvedDamage;
+                    }
+                    symbolMagnitudes[1].text = "" + Mathf.Max(card.statusEffect.duration, card.statusEffect.magnitude);
+                }
+                else
+                {
+                    symbols[1].sprite = null;
+                }
+                symbolMagnitudes[0].text = ""+card.block;
                 if (card.damage > 0)
                 {
                     symbols[1].sprite = symbolSprites[0];
                     symbolMagnitudes[1].text = card.damage + "";
                     if (player.strength > 0)
                     {
-                        symbolMagnitudes[1].color = Color.green;
                         symbolMagnitudes[1].text = "" + (card.damage + player.strength);
                     }
                     else
                     {
-                        symbolMagnitudes[1].color = Color.white;
                         symbolMagnitudes[1].text = "" + card.damage;
                     }
                 }
