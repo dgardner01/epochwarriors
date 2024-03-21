@@ -34,6 +34,7 @@ public class BattleUI : MonoBehaviour
     public TextMeshProUGUI drawPileCount;
     public TextMeshProUGUI discardPileCount;
     public TextMeshProUGUI energyCount;
+    public TextParticle textParticle;
     private void Update()
     {
 
@@ -221,4 +222,20 @@ public class BattleUI : MonoBehaviour
             enemyBlockIndicator.SetActive(false);
         }
     }
+    public Vector2 PuppetPos(Fighter fighter, string bodyPart, Vector3 offset)
+    {
+        Transform part;
+        if (!fighter.animator.transform.Find(bodyPart))
+        {
+            part = fighter.animator.transform.Find("S " + bodyPart);
+        }
+        else
+        {
+            part = fighter.animator.transform.Find(bodyPart);
+        }
+        Vector2 puppetPos = part.position + offset;
+        return Camera.main.WorldToScreenPoint(puppetPos);
+    }
+    public void NumberPopUp(string text, Vector2 position) => textParticle.NumberPopUp(text, position);
+    public void BlockPopUp(Vector2 position) => textParticle.BlockPopUp(position);
 }

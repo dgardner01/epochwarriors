@@ -11,7 +11,6 @@ public class Enemy : Fighter
     public int damage;
     public int turnIndex;
     public List<TurnPattern> turnPattern = new List<TurnPattern>();
-    public List<TurnPattern> startingTurnPattern = new List<TurnPattern>();
     public List<GameObject> intentObjects;
     public List<Card> currentTurn;
     private void Start()
@@ -25,12 +24,12 @@ public class Enemy : Fighter
     public void UpdateTurnIndex()
     {
         turnIndex++;
-        if (turnIndex >= turnPattern.Count)
+        turnIndex %= turnPattern.Count;
+        currentTurn.Clear();
+        for (int i = 0; i < turnPattern[turnIndex].turn.Count; i++)
         {
-            turnIndex = 0;
-            turnPattern = startingTurnPattern;
+            currentTurn.Add(turnPattern[turnIndex].turn[i]);
         }
-        currentTurn = turnPattern[turnIndex].turn;
     }
     void DisplayIntents()
     {

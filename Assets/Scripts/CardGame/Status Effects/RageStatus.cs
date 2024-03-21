@@ -23,7 +23,6 @@ public class RageStatus : StatusEffect
         if (magnitude > maxMagnitude)
         {
             fighter.strength -= magnitude;
-            fighter.ApplyStatusEffect(new FocusStatusData().CreateStatusEffect());
             duration = -1;
         }
     }

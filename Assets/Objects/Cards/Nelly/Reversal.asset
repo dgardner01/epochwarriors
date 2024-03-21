@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Reversal
   m_EditorClassIdentifier: 
   name: Reversal
-  description: 
-  spiritCost: 1
-  damage: 1
-  block: 1
+  description: Block and reflect half of the damage of the next attack this turn.
+  spiritCost: 2
+  damage: 0
+  block: 0
   comboPosition: 0
   cardType: 1
-  statusEffect: {fileID: 0}
-  animation: {fileID: 7400000, guid: 0e2df1c493d91d94fa14c067eef4ace1, type: 2}
+  statusEffect: {fileID: 11400000, guid: b0394a2f9ca53904eb22310929a09982, type: 2}
+  animation: {fileID: 0}

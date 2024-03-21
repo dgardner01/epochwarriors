@@ -49,7 +49,7 @@ public class Battle : State
         for (int i = 0; i < enemyCardsToRemove.Count; i++)
         {
             BattleSystem.enemy.currentTurn.Remove(enemyCardsToRemove[0]);
-            playerCardsToRemove.RemoveAt(0);
+            enemyCardsToRemove.RemoveAt(0);
         }
     }
     public IEnumerator ResolveCard()
@@ -62,7 +62,8 @@ public class Battle : State
             Card playerCard = playerCombo.cards[0];
             if (playerCard.damage > 0)
             {
-                enemy.Damage(playerCard.damage + player.strength, player);
+                int damage = playerCard.damage + player.strength;
+                enemy.Damage(damage, player);
             }
             playerCombo.cards.Remove(playerCard);
             if (playerCard.statusEffect != null)
@@ -80,7 +81,8 @@ public class Battle : State
             Card enemyCard = BattleSystem.enemy.currentTurn[0];
             if (enemyCard.damage > 0)
             {
-                player.Damage(enemyCard.damage + enemy.strength, enemy);
+                int damage = enemyCard.damage + enemy.strength;
+                player.Damage(damage, enemy);
             }
             BattleSystem.enemy.currentTurn.Remove(enemyCard);
             if (enemyCard.statusEffect != null)

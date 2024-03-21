@@ -21,7 +21,7 @@ public class PlayerTurn : State
             }
         }
         int statusCount = statusToRemove.Count;
-            for (int i = 0; i < statusCount; i++)
+        for (int i = 0; i < statusCount; i++)
         {
             BattleSystem.player.RemoveStatusEffect(statusToRemove[0]);
             statusToRemove.RemoveAt(0);
@@ -29,10 +29,10 @@ public class PlayerTurn : State
         BattleSystem.ui.middleThird.SetActive(true);
         BattleSystem.ui.lowerThird.SetActive(true);
         BattleSystem.AssignEnemyIntent();
-            BattleSystem.StartCoroutine(BattleSystem.hand.DrawCard(BattleSystem.player.cardsDrawnPerTurn));
-            BattleSystem.player.spirit += BattleSystem.player.spiritPerTurn;
+        BattleSystem.StartCoroutine(BattleSystem.hand.DrawCard(BattleSystem.player.cardsDrawnPerTurn));
+        BattleSystem.player.spirit += BattleSystem.player.spiritPerTurn;
         BattleSystem.player.block = 0;
         BattleSystem.enemy.block = 0;
-            yield break;
+        yield break;
         }
 }

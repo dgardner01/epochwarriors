@@ -57,7 +57,7 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                 if (card.statusEffect != null)
                 {
                     symbols[1].sprite = card.statusEffect.symbol;
-                    symbolMagnitudes[1].text = ""+Mathf.Max(card.statusEffect.duration, card.statusEffect.magnitude);
+                    symbolMagnitudes[1].text = "" + Mathf.Max(card.statusEffect.duration, card.statusEffect.magnitude);
                 }
                 else
                 {

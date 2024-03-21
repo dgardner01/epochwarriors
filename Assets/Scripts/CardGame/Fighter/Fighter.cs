@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Fighter : MonoBehaviour
 {
+    BattleSystem battleSystem => FindAnyObjectByType<BattleSystem>();
+    BattleUI ui => battleSystem.ui;
     public string name;
     public int health;
     public int maxHealth;
@@ -42,7 +44,12 @@ public class Fighter : MonoBehaviour
         if (block < 0)
         {
             health += block;
+            battleSystem.ui.NumberPopUp("" + Mathf.Abs(block), ui.PuppetPos(this, "head", Vector2.up / 2));
             block = 0;
+        }
+        else
+        {
+            battleSystem.ui.BlockPopUp(ui.PuppetPos(this, "head", Vector2.up));
         }
     }
 
