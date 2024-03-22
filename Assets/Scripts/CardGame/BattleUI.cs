@@ -182,7 +182,7 @@ public class BattleUI : MonoBehaviour
     }
     public void SpiritDisplay()
     {
-        energyCount.text = battleSystem.player.spirit + "";
+        energyCount.text = battleSystem.player.spirit + "/" + battleSystem.player.spiritPerTurn;
     }
     public void HealthBarDisplay()
     {
