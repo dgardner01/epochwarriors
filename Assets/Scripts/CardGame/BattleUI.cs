@@ -29,6 +29,8 @@ public class BattleUI : MonoBehaviour
     public Image enemyHealthBar;
     public TextMeshProUGUI enemyHealthBarText;
 
+    public Image spiritFill;
+
     public GameObject upperThird, middleThird, lowerThird;
 
     public TextMeshProUGUI drawPileCount;
@@ -183,6 +185,8 @@ public class BattleUI : MonoBehaviour
     public void SpiritDisplay()
     {
         energyCount.text = battleSystem.player.spirit + "/" + battleSystem.player.spiritPerTurn;
+        float percentage = (float)battleSystem.player.spirit / (float)battleSystem.player.spiritPerTurn;
+        spiritFill.fillAmount = Mathf.Lerp(spiritFill.fillAmount, percentage, 0.1f);
     }
     public void HealthBarDisplay()
     {
@@ -237,5 +241,5 @@ public class BattleUI : MonoBehaviour
         return Camera.main.WorldToScreenPoint(puppetPos);
     }
     public void NumberPopUp(string text, Vector2 position) => textParticle.NumberPopUp(text, position);
-    public void BlockPopUp(Vector2 position) => textParticle.BlockPopUp(position);
+    public void TextPopUp(string text, Vector2 position) => textParticle.TextPopUp(text, position);
 }

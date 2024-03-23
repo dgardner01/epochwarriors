@@ -16,6 +16,10 @@ public class Fighter : MonoBehaviour
     public FighterAnimator animator;
     public void Damage(int damage, Fighter opponent)
     {
+        CameraManager cam = Camera.main.GetComponent<CameraManager>();
+        float time = 0.1f;
+        float magnitude = 0.1f;
+        float decreaseFactor = 2;
         StatusEffect dodgeStatus = null;
         StatusEffect parryStatus = null;
         foreach (StatusEffect status in activeStatusEffects)
@@ -32,6 +36,7 @@ public class Fighter : MonoBehaviour
         if (dodgeStatus != null)
         {
             activeStatusEffects.Remove(dodgeStatus);
+            battleSystem.ui.TextPopUp("Dodged!",ui.PuppetPos(this, "head", Vector2.up));
             return;
         }
         if (parryStatus != null)
@@ -45,11 +50,13 @@ public class Fighter : MonoBehaviour
         {
             health += block;
             battleSystem.ui.NumberPopUp("" + Mathf.Abs(block), ui.PuppetPos(this, "head", Vector2.up / 2));
+            cam.ScreenShake(time, magnitude * Mathf.Abs(block), decreaseFactor);
             block = 0;
         }
         else
         {
-            battleSystem.ui.BlockPopUp(ui.PuppetPos(this, "head", Vector2.up));
+            battleSystem.ui.TextPopUp("Blocked!",ui.PuppetPos(this, "head", Vector2.up));
+            cam.ScreenShake(time, magnitude/2, decreaseFactor);
         }
     }
 

@@ -27,10 +27,10 @@ public class TextParticle : MonoBehaviour
         instance.transform.position = position;
     }
 
-    public void BlockPopUp(Vector2 position)
+    public void TextPopUp(string text, Vector2 position)
     {
         GameObject instance = Instantiate(blockPopUp, particleParent);
-        instance.GetComponent<UIParticle>().material = TextMat("Blocked!");
+        instance.GetComponent<UIParticle>().material = TextMat(text);
         instance.transform.position = position;
     }
 
