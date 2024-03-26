@@ -10,7 +10,7 @@ public class TextParticle : MonoBehaviour
     public TextMeshProUGUI renderText;
     public Material material;
     public Transform particleParent;
-    public GameObject numberPopUp, blockPopUp;
+    public GameObject numberPopUp, blockPopUp, statusPopUp;
 
     Material TextMat(string text)
     {
@@ -30,6 +30,13 @@ public class TextParticle : MonoBehaviour
     public void TextPopUp(string text, Vector2 position)
     {
         GameObject instance = Instantiate(blockPopUp, particleParent);
+        instance.GetComponent<UIParticle>().material = TextMat(text);
+        instance.transform.position = position;
+    }
+    
+    public void StatusPopUp(string text, Vector2 position)
+    {
+        GameObject instance = Instantiate(statusPopUp, particleParent);
         instance.GetComponent<UIParticle>().material = TextMat(text);
         instance.transform.position = position;
     }

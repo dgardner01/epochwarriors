@@ -70,9 +70,10 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                 if (card.statusEffect != null)
                 {
                     symbols[1].sprite = card.statusEffect.symbol;
-                    if (card.statusEffect.id == "Parry")
+                    if (card.statusEffect.id == "Reflect")
                     {
                         Enemy enemy = battleSystem.enemy;
+                        print(enemy.FirstAttackInTurn());
                         int halvedDamage = 0;
                         if (enemy.FirstAttackInTurn() != null)
                         {

@@ -11,11 +11,17 @@ public class PlayerTurn : State
         {
             BattleSystem.ui.PrintLog("player turn begin");
         BattleSystem.enemy.UpdateTurnIndex();
+        BattleSystem.player.UpdateStatusEffects();
+        BattleSystem.enemy.UpdateStatusEffects();
+        if (BattleSystem.enemy.activeStatusEffects.Count > 0)
+        {
+            StatusEffect status = BattleSystem.enemy.activeStatusEffects[0];
+        }
         List<StatusEffect> statusToRemove = new List<StatusEffect>();
             foreach(StatusEffect status in BattleSystem.player.activeStatusEffects)
         {
             status.OnTurnUpdate(BattleSystem.player);
-            if (status.duration < 0)
+            if (status.duration < 1)
             {
                 statusToRemove.Add(status);
             }
@@ -23,7 +29,9 @@ public class PlayerTurn : State
         int statusCount = statusToRemove.Count;
         for (int i = 0; i < statusCount; i++)
         {
-            BattleSystem.player.RemoveStatusEffect(statusToRemove[0]);
+            StatusEffect status = statusToRemove[0];
+            BattleSystem.player.RemoveStatusEffect(status);
+            BattleSystem.ui.StatusPopUp(status.id + " wears off", BattleSystem.ui.PuppetPos(BattleSystem.player, "head", Vector2.up));
             statusToRemove.RemoveAt(0);
         }
         BattleSystem.ui.middleThird.SetActive(true);

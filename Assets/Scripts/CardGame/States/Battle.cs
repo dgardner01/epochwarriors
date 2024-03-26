@@ -12,8 +12,6 @@ public class Battle : State
         BattleSystem.ui.PrintLog("battle begin");
         BattleSystem.ui.lowerThird.SetActive(false);
         BattleSystem.ui.middleThird.SetActive(false);
-        BattleSystem.player.UpdateStatusEffects();
-        BattleSystem.enemy.UpdateStatusEffects();
         BattleSystem.InitializeCombos();
         ApplyBlocks();
         yield return new WaitForSeconds(1);
@@ -60,40 +58,51 @@ public class Battle : State
         if (BattleSystem.playerCombo.cards.Count > 0)
         {
             Card playerCard = playerCombo.cards[0];
+            if (playerCard.animation != null)
+            {
+                player.animator.PlayAnimationClip(playerCard.animation);
+            }
             if (playerCard.damage > 0)
             {
                 int damage = playerCard.damage + player.strength;
                 enemy.Damage(damage, player);
+                yield return new WaitForSeconds(1f);
             }
             playerCombo.cards.Remove(playerCard);
             if (playerCard.statusEffect != null)
             {
                 player.ApplyStatusEffect(playerCard.statusEffect.CreateStatusEffect());
+                if (playerCard.statusEffect.duration < 0)
+                {
+                    BattleSystem.ui.StatusPopUp(playerCard.statusEffect.id + " active", BattleSystem.ui.PuppetPos(BattleSystem.player, "head", Vector3.up));
+                }
+                else
+                {
+                    BattleSystem.ui.StatusPopUp(playerCard.statusEffect.id + " up", BattleSystem.ui.PuppetPos(BattleSystem.player, "head", Vector3.up));
+                }
+                yield return new WaitForSeconds(1.5f);
             }
-            if (playerCard.animation != null)
-            {
-                player.animator.PlayAnimationClip(playerCard.animation);
-            }
-            yield return new WaitForSeconds(1);
         }
         if (BattleSystem.enemy.currentTurn.Count > 0)
         {
             Card enemyCard = BattleSystem.enemy.currentTurn[0];
-            if (enemyCard.damage > 0)
-            {
-                int damage = enemyCard.damage + enemy.strength;
-                player.Damage(damage, enemy);
-            }
-            BattleSystem.enemy.currentTurn.Remove(enemyCard);
-            if (enemyCard.statusEffect != null)
-            {
-                enemy.ApplyStatusEffect(enemyCard.statusEffect.CreateStatusEffect());
-            }
             if (enemyCard.animation != null)
             {
                 enemy.animator.PlayAnimationClip(enemyCard.animation);
             }
-            yield return new WaitForSeconds(1);
+            if (enemyCard.damage > 0)
+            {
+                int damage = enemyCard.damage + enemy.strength;
+                player.Damage(damage, enemy);
+                yield return new WaitForSeconds(1);
+            }
+            BattleSystem.enemy.currentTurn.Remove(enemyCard);
+            if (enemyCard.statusEffect != null)
+            {
+                BattleSystem.ui.StatusPopUp(enemyCard.statusEffect.id + " active", BattleSystem.ui.PuppetPos(BattleSystem.enemy, "head", Vector3.up));
+                enemy.ApplyStatusEffect(enemyCard.statusEffect.CreateStatusEffect());
+                yield return new WaitForSeconds(1f);
+            }
         }
         if (playerCombo.cards.Count == 0 && BattleSystem.enemy.currentTurn.Count == 0)
         {

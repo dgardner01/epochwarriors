@@ -9,10 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fe2e22845a043848a79bfd1ef707301, type: 3}
-  m_Name: SpiritGainStatusData
+  m_Script: {fileID: 11500000, guid: 086a04e9f5f48df4294f081bf3ed9d1a, type: 3}
+  m_Name: Weak Block 1
   m_EditorClassIdentifier: 
-  symbol: {fileID: 21300000, guid: 0662ff4b0c842c245848faa8677cf1ef, type: 3}
-  id: Spirit gain
-  duration: 0
-  magnitude: 2
+  name: 
+  description: 
+  spiritCost: 0
+  damage: 0
+  block: 2
+  comboPosition: 0
+  cardType: 1
+  statusEffect: {fileID: 0}
+  animation: {fileID: 0}

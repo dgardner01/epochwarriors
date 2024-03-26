@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: ParryStatusData
   m_EditorClassIdentifier: 
   symbol: {fileID: 21300000, guid: 407861a0b61dd014aae31b6ce4776d28, type: 3}
-  id: Parry
+  id: Reflect
   duration: -1
-  magnitude: 0
+  magnitude: 1

@@ -242,4 +242,5 @@ public class BattleUI : MonoBehaviour
     }
     public void NumberPopUp(string text, Vector2 position) => textParticle.NumberPopUp(text, position);
     public void TextPopUp(string text, Vector2 position) => textParticle.TextPopUp(text, position);
+    public void StatusPopUp(string text, Vector2 position) => textParticle.StatusPopUp(text, position);
 }

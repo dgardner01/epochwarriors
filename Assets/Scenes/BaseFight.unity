@@ -7818,6 +7818,7 @@ MonoBehaviour:
   particleParent: {fileID: 630187989}
   numberPopUp: {fileID: 3156874336900071736, guid: e88314249059f784bb163096f017894b, type: 3}
   blockPopUp: {fileID: 557011790724092868, guid: f5269c1a377231445b6ac5bf3959fcbf, type: 3}
+  statusPopUp: {fileID: 557011790724092868, guid: 3d9c80f4342647448b99962bed065e73, type: 3}
 --- !u!114 &2416977915395735240
 MonoBehaviour:
   m_ObjectHideFlags: 0

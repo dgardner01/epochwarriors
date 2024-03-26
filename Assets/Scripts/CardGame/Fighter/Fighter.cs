@@ -28,7 +28,7 @@ public class Fighter : MonoBehaviour
             {
                 dodgeStatus = status;
             }
-            if (status.id == "Parry")
+            if (status.id == "Reflect")
             {
                 parryStatus = status;
             }
@@ -42,7 +42,7 @@ public class Fighter : MonoBehaviour
         if (parryStatus != null)
         {
             damage /= 2;
-            opponent.Damage(damage, this);
+            StartCoroutine(DelayedDamage(damage, opponent));
             activeStatusEffects.Remove(parryStatus);
         }
         block -= damage;
@@ -59,7 +59,11 @@ public class Fighter : MonoBehaviour
             cam.ScreenShake(time, magnitude/2, decreaseFactor);
         }
     }
-
+    public IEnumerator DelayedDamage(int damage, Fighter opponent)
+    {
+        yield return new WaitForSeconds(.5f);
+        opponent.Damage(damage, this); 
+    }
     public void ApplyStatusEffect(StatusEffect statusEffect)
     {
         if (activeStatusEffects == null)
