@@ -20,12 +20,9 @@ public class BattleSystem : StateMachine
 
     public void PlayCard(Card card)
     {
-        if (player.spirit >= card.spiritCost)
-        {
-            hand.cards.Remove(card);
-            playArea.cards.Add(card);
-            player.spirit -= card.spiritCost;
-        }
+        hand.cards.Remove(card);
+        playArea.cards.Add(card);
+        player.spirit -= card.spiritCost;
     }
     public void ReturnCard(Card card)
     {
@@ -45,7 +42,7 @@ public class BattleSystem : StateMachine
     {
         player.spirit = 0;
         int cards = playArea.cards.Count;
-        for(int i = 0; i < cards; i++)
+        for (int i = 0; i < cards; i++)
         {
             playerCombo.cards.Add(playArea.cards[0]);
             discard.cards.Add(playArea.cards[0]);

@@ -716,7 +716,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &5005060561257144345
@@ -897,6 +897,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 17c8f5a1614924f4eb5d6a41ae9777c4, type: 3}
   - {fileID: 21300000, guid: dc933f05276d95844b9df95069d3358a, type: 3}
   hover: 0
+  drag: 0
+  yThreshold: 100
+  wiggle: {x: 0, y: 0}
   card: {fileID: 0}
 --- !u!1 &5005060561507971353
 GameObject:

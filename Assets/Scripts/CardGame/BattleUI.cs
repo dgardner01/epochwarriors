@@ -6,33 +6,42 @@ using TMPro;
 
 public class BattleUI : MonoBehaviour
 {
-    public float idealCardSpacing;
-    float cardSpacing;
-    public float cardSpeed;
+    [Header("High Level References")]
+
     public BattleSystem battleSystem;
+    public GameObject upperThird, middleThird, lowerThird;
+
+    [Header("Procedural Card Animation")]
+    public float spreadAngle;
+    public float fanRadius;
+    public float phase;
+    public float hoverMagnitude;
+    public float yThreshold;
+    public float cardSpeed;
     public GameObject cardDisplayPrefab;
     public Hand hand => battleSystem.hand;
     public PlayArea playArea => battleSystem.playArea;
     public PlayerCombo playerCombo => battleSystem.playerCombo;
     public EnemyCombo enemyCombo => battleSystem.enemyCombo;
 
+    [Header("Status Effect Icons")]
     public List<GameObject> playerStatusEffectIcons;
     public List<GameObject> enemyStatusEffectIcons;
 
-    public GameObject playerBlockIndicator;
-    public GameObject enemyBlockIndicator;
-
-    public Color nelly, bruttia, block, damage;
-
+    [Header("Fighter UI")]
     public Image playerHealthBar;
     public TextMeshProUGUI playerHealthBarText;
     public Image enemyHealthBar;
     public TextMeshProUGUI enemyHealthBarText;
 
+    public GameObject playerBlockIndicator;
+    public GameObject enemyBlockIndicator;
+
     public Image spiritFill;
 
-    public GameObject upperThird, middleThird, lowerThird;
+    public Color nelly, bruttia, block, damage;
 
+    [Header("Text")]
     public TextMeshProUGUI drawPileCount;
     public TextMeshProUGUI discardPileCount;
     public TextMeshProUGUI energyCount;
@@ -66,56 +75,48 @@ public class BattleUI : MonoBehaviour
         {
             for (int i = 0; i < cards.Count - container.childCount; i++)
             {
-                Instantiate(cardDisplayPrefab, container.gameObject.transform);
+                GameObject instance = Instantiate(cardDisplayPrefab, container.gameObject.transform);
+                CardDisplay instanceDisplay = instance.GetComponent<CardDisplay>();
+                instanceDisplay.card = cards[instance.transform.GetSiblingIndex()];
             }
         }
-        //if the container has cards, display them spaced apart evenly
-        float containerWidth = container.sizeDelta.x;
-        float idealHandWidth = cards.Count * idealCardSpacing;
-        float handWidth = cards.Count * cardSpacing;
-        float middle = (handWidth / 2) - cardSpacing / 2;
-        cardSpacing = idealCardSpacing;
-        //if the total width of the cards with ideal spacing is greater than the container, scale the overall spacing
-        if (idealHandWidth > containerWidth)
-        {
-            cardSpacing = containerWidth / cards.Count;
-        }
-        //apply spacing to each card in container
+        float totalAngle = spreadAngle * cards.Count - 1;
+        float startingAngle = -totalAngle / 2;
         for (int i = 0; i < container.childCount; i++)
         {
-            //hoverIndex is the list index of the card currently being hovered over
-            //by default the middle card is considered hovered over
-            int hoverIndex = Mathf.RoundToInt(cards.Count / 2);
-            for (int j = 0; j < container.childCount; j++)
+            Transform cardObject = container.GetChild(i);
+            
+            if (i + 1 < container.childCount)
             {
-                Transform _card = container.GetChild(j);
-                CardDisplay _display = _card.gameObject.GetComponent<CardDisplay>();
-                if (_display.hover)
+                Transform nextObject = container.GetChild(i + 1);
+                if (nextObject.position.x < cardObject.position.x)
                 {
-                    hoverIndex = j;
+                    nextObject.SetSiblingIndex(i);
+                    cardObject.SetSiblingIndex(i + 1);
+                    return;
                 }
             }
-            Transform card = container.GetChild(i);
-            CardDisplay display = card.GetComponent<CardDisplay>();
-            int distanceFromHover = i - hoverIndex;
-            //only use as many displays as there are cards
-            if (cards.Count > 0 && i < cards.Count)
+
+            CardDisplay cardDisplay = cardObject.gameObject.GetComponent<CardDisplay>();
+            bool active = cards.Count > 0 && i < cards.Count;
+            float hoverHeight = cardDisplay.hover ? hoverMagnitude : 0;
+            float angle = startingAngle + spreadAngle * i;
+            float radianAngle = Mathf.Deg2Rad * angle;
+            float x = Mathf.Sin(radianAngle + phase) * fanRadius;
+            float y = (Mathf.Cos(radianAngle + phase) * fanRadius)-fanRadius;
+
+            Vector3 cardPosition = new Vector3(x, y, 0) + cardObject.up * hoverHeight;
+            Vector3 lerpedPosition = Vector3.Lerp(cardObject.localPosition, cardPosition, cardSpeed);
+            Quaternion cardRotation = Quaternion.Euler(0, 0, -angle);
+            Quaternion lerpedRotation = Quaternion.Lerp(cardObject.localRotation, cardRotation, cardSpeed);
+
+            cardObject.localPosition = lerpedPosition;
+            cardObject.localRotation = lerpedRotation;
+            cardObject.position = cardDisplay.drag ? Input.mousePosition : cardObject.position;
+
+            if (cards.Count < 1 || cards.Count < i)
             {
-                card.gameObject.SetActive(true);
-                display.card = cards[i];
-                float hoverDist = Mathf.Abs(distanceFromHover);
-                float maxDist = 2;
-                //individually space each card by how close it is to the hovered card
-                float dist = distanceFromHover * Mathf.Lerp(cardSpacing / 4, 0, hoverDist / maxDist);
-                float offset = (i * cardSpacing) + dist;
-                Vector3 currentPos = card.transform.localPosition;
-                Vector3 targetPos = new Vector2(offset - middle, 0);
-                Vector3 lerpedPos = Vector3.Lerp(currentPos, targetPos, cardSpeed);
-                card.transform.localPosition = lerpedPos;
-            }
-            else
-            {
-                card.gameObject.SetActive(false);
+                Destroy(cardObject.gameObject);
             }
         }
     }

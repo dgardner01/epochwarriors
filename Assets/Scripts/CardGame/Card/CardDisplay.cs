@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 
-public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public TextMeshProUGUI title, spiritCost, description;
     public TextMeshProUGUI[] symbolMagnitudes;
@@ -18,6 +18,9 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     BattleSystem battleSystem => FindAnyObjectByType<BattleSystem>();
 
     public bool hover;
+    public bool drag;
+    public float yThreshold;
+    public Vector2 wiggle;
     public Card card;
     // Start is called before the first frame update
     void Start()
@@ -28,6 +31,7 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     // Update is called once per frame
     void Update()
     {
+        yThreshold = battleSystem.ui.yThreshold;
         Player player = battleSystem.player;
         title.text = card.name;
         spiritCost.text = ""+card.spiritCost;
@@ -73,7 +77,6 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                     if (card.statusEffect.id == "Reflect")
                     {
                         Enemy enemy = battleSystem.enemy;
-                        print(enemy.FirstAttackInTurn());
                         int halvedDamage = 0;
                         if (enemy.FirstAttackInTurn() != null)
                         {
@@ -131,16 +134,25 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     }
     public void PlayCard()
     {
-        if (card == null)
+        Transform hand = FindAnyObjectByType<Hand>().transform;
+        Transform playArea = FindAnyObjectByType<PlayArea>().transform;
+
+        float threshold = yThreshold;
+        bool playable = battleSystem.player.spirit >= card.spiritCost;
+
+        if (card != null)
         {
-            return;
+            if (transform.localPosition.y > threshold && transform.parent == hand && playable)
+            {
+                battleSystem.PlayCard(card);
+                Destroy(gameObject);
+            }
+            if (transform.localPosition.y < -threshold && transform.parent == playArea)
+            {
+                battleSystem.ReturnCard(card);
+                Destroy(gameObject);
+            }
         }
-        if (transform.parent.GetComponent<Hand>())
-        {
-            battleSystem.PlayCard(card);
-            return;
-        }
-        battleSystem.ReturnCard(card);
     }
 
     public void OnPointerEnter(PointerEventData pointerEventData)
@@ -151,5 +163,17 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public void OnPointerExit(PointerEventData pointerEventData)
     {
         hover = false;
+    }
+    public void OnBeginDrag(PointerEventData pointerEventData)
+    {
+        drag = true;
+    }
+    public void OnDrag(PointerEventData pointerEventData)
+    {
+
+    }
+    public void OnEndDrag(PointerEventData pointerEventData)
+    {
+        drag = false;
     }
 }
