@@ -896,10 +896,61 @@ MonoBehaviour:
   - {fileID: 21300000, guid: dcfce36566348164686fbb6f62b955a2, type: 3}
   - {fileID: 21300000, guid: 17c8f5a1614924f4eb5d6a41ae9777c4, type: 3}
   - {fileID: 21300000, guid: dc933f05276d95844b9df95069d3358a, type: 3}
+  bounce:
+  - serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.32975587
+      inSlope: 5.503201
+      outSlope: 5.503201
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.018996034
+    - serializedVersion: 3
+      time: 0.15
+      value: 0.33
+      inSlope: 0.0016276041
+      outSlope: 0.0016276041
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  - serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.32975587
+      inSlope: 0.00726367
+      outSlope: 0.00726367
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.05481513
+    - serializedVersion: 3
+      time: 0.15
+      value: 0.33
+      inSlope: -5.1589284
+      outSlope: -5.1589284
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.022059876
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  bounceTime: 0
+  wiggle: {x: 0, y: 0}
+  wiggleMagnitude: 0.01
+  wiggleTime: 0
+  wiggleTimeMax: 5
   hover: 0
   drag: 0
   yThreshold: 100
-  wiggle: {x: 0, y: 0}
   card: {fileID: 0}
 --- !u!1 &5005060561507971353
 GameObject:

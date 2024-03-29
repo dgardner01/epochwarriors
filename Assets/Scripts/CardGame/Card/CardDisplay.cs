@@ -17,15 +17,22 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public Sprite[] comboChains;
     BattleSystem battleSystem => FindAnyObjectByType<BattleSystem>();
 
+    public AnimationCurve[] bounce;
+    public float bounceTime;
+
+    public Vector2 wiggle;
+    public float wiggleMagnitude;
+    public float wiggleTime;
+    public float wiggleTimeMax;
+
     public bool hover;
     public bool drag;
     public float yThreshold;
-    public Vector2 wiggle;
     public Card card;
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -132,6 +139,23 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             }
         }
     }
+    private void FixedUpdate()
+    {
+        float startScale = .33f;
+        Vector3 targetScale = Vector3.one * startScale;
+        if (bounceTime < bounce[0].length)
+        {
+            bounceTime += Time.deltaTime;
+            targetScale = new Vector3(bounce[0].Evaluate(bounceTime), bounce[1].Evaluate(bounceTime));
+        }
+        wiggleTime += Time.deltaTime;
+        wiggleTime %= wiggleTimeMax;
+        if (!hover && !drag && bounceTime >= bounce[0].length)
+        {
+            targetScale += new Vector3(wiggleMagnitude * Mathf.Sin(wiggleTime), wiggleMagnitude * Mathf.Cos(wiggleTime));
+        }
+        transform.localScale = Vector3.Lerp(transform.localScale, targetScale, 0.1f);
+    }
     public void PlayCard()
     {
         Transform hand = FindAnyObjectByType<Hand>().transform;
@@ -144,13 +168,15 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         {
             if (transform.localPosition.y > threshold && transform.parent == hand && playable)
             {
+                bounceTime = 0;
                 battleSystem.PlayCard(card);
-                Destroy(gameObject);
+                transform.parent = playArea;
             }
             if (transform.localPosition.y < -threshold && transform.parent == playArea)
             {
+                bounceTime = 0;
                 battleSystem.ReturnCard(card);
-                Destroy(gameObject);
+                transform.parent = hand;
             }
         }
     }

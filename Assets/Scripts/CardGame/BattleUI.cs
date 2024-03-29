@@ -93,12 +93,12 @@ public class BattleUI : MonoBehaviour
                 {
                     nextObject.SetSiblingIndex(i);
                     cardObject.SetSiblingIndex(i + 1);
-                    return;
                 }
             }
 
             CardDisplay cardDisplay = cardObject.gameObject.GetComponent<CardDisplay>();
-            bool active = cards.Count > 0 && i < cards.Count;
+            float wiggleFrequency = 0.001f;
+            float wiggleMagnitude = 15;
             float hoverHeight = cardDisplay.hover ? hoverMagnitude : 0;
             float angle = startingAngle + spreadAngle * i;
             float radianAngle = Mathf.Deg2Rad * angle;
@@ -106,6 +106,11 @@ public class BattleUI : MonoBehaviour
             float y = (Mathf.Cos(radianAngle + phase) * fanRadius)-fanRadius;
 
             Vector3 cardPosition = new Vector3(x, y, 0) + cardObject.up * hoverHeight;
+
+            float distFromTarget = Vector3.Distance(cardObject.localPosition, cardPosition);
+            float maxDist = 100;
+            cardSpeed = Mathf.Lerp(0.1f, 0.5f, distFromTarget / maxDist);
+
             Vector3 lerpedPosition = Vector3.Lerp(cardObject.localPosition, cardPosition, cardSpeed);
             Quaternion cardRotation = Quaternion.Euler(0, 0, -angle);
             Quaternion lerpedRotation = Quaternion.Lerp(cardObject.localRotation, cardRotation, cardSpeed);
@@ -114,7 +119,7 @@ public class BattleUI : MonoBehaviour
             cardObject.localRotation = lerpedRotation;
             cardObject.position = cardDisplay.drag ? Input.mousePosition : cardObject.position;
 
-            if (cards.Count < 1 || cards.Count < i)
+            if (cards.Count < 1)
             {
                 Destroy(cardObject.gameObject);
             }
