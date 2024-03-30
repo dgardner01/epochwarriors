@@ -7,11 +7,14 @@ public class Battle : State
     public Battle(BattleSystem battleSystem) : base(battleSystem)
     {
     }
+    BattleUI ui => BattleSystem.ui;
     public override IEnumerator Start()
     {
         BattleSystem.ui.PrintLog("battle begin");
         BattleSystem.ui.lowerThird.SetActive(false);
         BattleSystem.ui.middleThird.SetActive(false);
+        BattleSystem.player.turnDamage = BattleSystem.player.health;
+        BattleSystem.enemy.turnDamage = BattleSystem.enemy.health;
         BattleSystem.InitializeCombos();
         ApplyBlocks();
         yield return new WaitForSeconds(1);
@@ -55,8 +58,10 @@ public class Battle : State
         Player player = BattleSystem.player;
         Enemy enemy = BattleSystem.enemy;
         PlayerCombo playerCombo = BattleSystem.playerCombo;
+        float waitTime = 1;
         if (BattleSystem.playerCombo.cards.Count > 0)
         {
+            ui.PlayComboCard();
             Card playerCard = playerCombo.cards[0];
             if (playerCard.animation != null)
             {
@@ -66,7 +71,7 @@ public class Battle : State
             {
                 int damage = playerCard.damage + player.strength;
                 enemy.Damage(damage, player);
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(waitTime);
             }
             playerCombo.cards.Remove(playerCard);
             if (playerCard.statusEffect != null)
@@ -74,13 +79,13 @@ public class Battle : State
                 player.ApplyStatusEffect(playerCard.statusEffect.CreateStatusEffect());
                 if (playerCard.statusEffect.duration < 0)
                 {
-                    BattleSystem.ui.StatusPopUp(playerCard.statusEffect.id + " active", BattleSystem.ui.PuppetPos(BattleSystem.player, "head", Vector3.up));
+                    BattleSystem.ui.TextPopUp(playerCard.statusEffect.id + " active", BattleSystem.ui.PuppetPos(BattleSystem.player, "head", Vector3.up), ui.statusPopUp);
                 }
                 else
                 {
-                    BattleSystem.ui.StatusPopUp(playerCard.statusEffect.id + " up", BattleSystem.ui.PuppetPos(BattleSystem.player, "head", Vector3.up));
+                    BattleSystem.ui.TextPopUp(playerCard.statusEffect.id + " up", BattleSystem.ui.PuppetPos(BattleSystem.player, "head", Vector3.up), ui.statusPopUp);
                 }
-                yield return new WaitForSeconds(1.5f);
+                yield return new WaitForSeconds(waitTime);
             }
         }
         if (BattleSystem.enemy.currentTurn.Count > 0)
@@ -94,14 +99,14 @@ public class Battle : State
             {
                 int damage = enemyCard.damage + enemy.strength;
                 player.Damage(damage, enemy);
-                yield return new WaitForSeconds(1);
+                yield return new WaitForSeconds(waitTime);
             }
             BattleSystem.enemy.currentTurn.Remove(enemyCard);
             if (enemyCard.statusEffect != null)
             {
-                BattleSystem.ui.StatusPopUp(enemyCard.statusEffect.id + " active", BattleSystem.ui.PuppetPos(BattleSystem.enemy, "head", Vector3.up));
+                BattleSystem.ui.TextPopUp(enemyCard.statusEffect.id + " active", BattleSystem.ui.PuppetPos(BattleSystem.enemy, "head", Vector3.up), ui.statusPopUp);
                 enemy.ApplyStatusEffect(enemyCard.statusEffect.CreateStatusEffect());
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(waitTime);
             }
         }
         if (playerCombo.cards.Count == 0 && BattleSystem.enemy.currentTurn.Count == 0)

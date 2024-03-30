@@ -19,8 +19,11 @@ public class BattleUI : MonoBehaviour
     public float yThreshold;
     public float cardSpeed;
     public GameObject cardDisplayPrefab;
+    [Header("Card Containers")]
+    public float comboSpacing;
     public Hand hand => battleSystem.hand;
     public PlayArea playArea => battleSystem.playArea;
+    public Discard discard => battleSystem.discard;
     public PlayerCombo playerCombo => battleSystem.playerCombo;
     public EnemyCombo enemyCombo => battleSystem.enemyCombo;
 
@@ -30,8 +33,10 @@ public class BattleUI : MonoBehaviour
 
     [Header("Fighter UI")]
     public Image playerHealthBar;
+    public Image playerTurnDamage;
     public TextMeshProUGUI playerHealthBarText;
     public Image enemyHealthBar;
+    public Image enemyTurnDamage;
     public TextMeshProUGUI enemyHealthBarText;
 
     public GameObject playerBlockIndicator;
@@ -45,7 +50,9 @@ public class BattleUI : MonoBehaviour
     public TextMeshProUGUI drawPileCount;
     public TextMeshProUGUI discardPileCount;
     public TextMeshProUGUI energyCount;
-    public TextParticle textParticle;
+    [Header("VFX")]
+    public Transform UIParticleParent;
+    public GameObject blockPopUp, statusPopUp, numberPopUp;
     private void Update()
     {
 
@@ -54,6 +61,7 @@ public class BattleUI : MonoBehaviour
     {
         CardsDisplay(hand.cards, hand.gameObject.GetComponent<RectTransform>());
         CardsDisplay(playArea.cards, playArea.gameObject.GetComponent<RectTransform>());
+        DiscardDisplay();
         StatusEffectDisplay();
         CardCountDisplay();
         SpiritDisplay();
@@ -85,7 +93,7 @@ public class BattleUI : MonoBehaviour
         for (int i = 0; i < container.childCount; i++)
         {
             Transform cardObject = container.GetChild(i);
-            
+
             if (i + 1 < container.childCount)
             {
                 Transform nextObject = container.GetChild(i + 1);
@@ -97,13 +105,11 @@ public class BattleUI : MonoBehaviour
             }
 
             CardDisplay cardDisplay = cardObject.gameObject.GetComponent<CardDisplay>();
-            float wiggleFrequency = 0.001f;
-            float wiggleMagnitude = 15;
             float hoverHeight = cardDisplay.hover ? hoverMagnitude : 0;
             float angle = startingAngle + spreadAngle * i;
             float radianAngle = Mathf.Deg2Rad * angle;
             float x = Mathf.Sin(radianAngle + phase) * fanRadius;
-            float y = (Mathf.Cos(radianAngle + phase) * fanRadius)-fanRadius;
+            float y = (Mathf.Cos(radianAngle + phase) * fanRadius) - fanRadius;
 
             Vector3 cardPosition = new Vector3(x, y, 0) + cardObject.up * hoverHeight;
 
@@ -123,6 +129,15 @@ public class BattleUI : MonoBehaviour
             {
                 Destroy(cardObject.gameObject);
             }
+        }
+    }
+    public void DiscardDisplay()
+    {
+        for (int i = 0; i < discard.transform.childCount; i++)
+        {
+            Transform cardObject = discard.transform.GetChild(i);
+            cardObject.localPosition = Vector3.Lerp(cardObject.localPosition, Vector3.zero, cardSpeed);
+            cardObject.localScale = Vector3.Lerp(cardObject.localScale, Vector3.one * 0.2f, cardSpeed);
         }
     }
     public void StatusEffectDisplay()
@@ -200,14 +215,18 @@ public class BattleUI : MonoBehaviour
         Enemy enemy = battleSystem.enemy;
         float healthBarSpeed = 0.5f;
         float playerHealth = player.health;
+        float _playerTurnDamage = player.turnDamage;
         float playerMaxHealth = player.maxHealth;
         float lerpedPlayerHealth = Mathf.Lerp(playerHealthBar.fillAmount * playerMaxHealth, playerHealth, healthBarSpeed);
         float enemyHealth = enemy.health;
+        float _enemyTurnDamage = enemy.turnDamage;
         float enemyMaxHealth = enemy.maxHealth;
-        float lerpedEnemyHealth = Mathf.Lerp(enemyHealthBar.fillAmount * enemyMaxHealth, enemyHealth, healthBarSpeed);
+        float lerpedEnemyHealth = Mathf.Lerp(enemyHealthBar.fillAmount * enemyMaxHealth, enemyHealth, healthBarSpeed/5);
         playerHealthBar.fillAmount = lerpedPlayerHealth / playerMaxHealth;
+        playerTurnDamage.fillAmount = Mathf.Lerp(playerTurnDamage.fillAmount, _playerTurnDamage/playerMaxHealth, healthBarSpeed);
         playerHealthBarText.text = playerHealth + "/" + playerMaxHealth;
         enemyHealthBar.fillAmount = lerpedEnemyHealth / enemyMaxHealth;
+        enemyTurnDamage.fillAmount = Mathf.Lerp(enemyTurnDamage.fillAmount, _enemyTurnDamage/enemyMaxHealth, healthBarSpeed/5);
         enemyHealthBarText.text = enemyHealth + "/" + enemyMaxHealth;
         if (player.block > 0)
         {
@@ -232,6 +251,23 @@ public class BattleUI : MonoBehaviour
             enemyBlockIndicator.SetActive(false);
         }
     }
+    public void PlayComboCard()
+    {
+        if (playerCombo.cards.Count > 0)
+        {
+            GameObject instance = Instantiate(cardDisplayPrefab, playerCombo.transform);
+            instance.GetComponent<CardDisplay>().card = playerCombo.cards[0];
+            instance.transform.localPosition -= Vector3.up * (comboSpacing * playerCombo.transform.childCount-1);
+            instance.transform.localRotation = Quaternion.Euler(0, 0, Random.Range(-15, 15));
+        }
+    }
+    public void ClearCombo()
+    {
+        foreach (Transform child in playerCombo.transform)
+        {
+            Destroy(child.gameObject);
+        }    
+    }
     public Vector2 PuppetPos(Fighter fighter, string bodyPart, Vector3 offset)
     {
         Transform part;
@@ -246,7 +282,10 @@ public class BattleUI : MonoBehaviour
         Vector2 puppetPos = part.position + offset;
         return Camera.main.WorldToScreenPoint(puppetPos);
     }
-    public void NumberPopUp(string text, Vector2 position) => textParticle.NumberPopUp(text, position);
-    public void TextPopUp(string text, Vector2 position) => textParticle.TextPopUp(text, position);
-    public void StatusPopUp(string text, Vector2 position) => textParticle.StatusPopUp(text, position);
+    public void TextPopUp(string text, Vector2 position, GameObject prefab)
+    {
+        GameObject instance = Instantiate(prefab, UIParticleParent);
+        instance.transform.position = position;
+        instance.GetComponent<TextMeshProUGUI>().text = text;
+    }
 }

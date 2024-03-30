@@ -8,6 +8,7 @@ public class Fighter : MonoBehaviour
     BattleUI ui => battleSystem.ui;
     public string name;
     public int health;
+    public int turnDamage;
     public int maxHealth;
     public int strength;
     public int block;
@@ -36,26 +37,25 @@ public class Fighter : MonoBehaviour
         if (dodgeStatus != null)
         {
             activeStatusEffects.Remove(dodgeStatus);
-            battleSystem.ui.TextPopUp("Dodged!",ui.PuppetPos(this, "head", Vector2.up));
+            ui.TextPopUp("Dodged!",ui.PuppetPos(this, "head", Vector2.up), ui.blockPopUp);
             return;
         }
         if (parryStatus != null)
         {
-            damage /= 2;
-            StartCoroutine(DelayedDamage(damage, opponent));
+            StartCoroutine(DelayedDamage(damage/2, opponent));
             activeStatusEffects.Remove(parryStatus);
         }
         block -= damage;
         if (block < 0)
         {
             health += block;
-            battleSystem.ui.NumberPopUp("" + Mathf.Abs(block), ui.PuppetPos(this, "head", Vector2.up / 2));
+            battleSystem.ui.TextPopUp("" + Mathf.Abs(block), ui.PuppetPos(this, "head", Vector2.up / 2), ui.numberPopUp);
             cam.ScreenShake(time, magnitude * Mathf.Abs(block), decreaseFactor);
             block = 0;
         }
         else
         {
-            battleSystem.ui.TextPopUp("Blocked!",ui.PuppetPos(this, "head", Vector2.up));
+            battleSystem.ui.TextPopUp("Blocked!",ui.PuppetPos(this, "head", Vector2.up), ui.blockPopUp);
             cam.ScreenShake(time, magnitude/2, decreaseFactor);
         }
     }

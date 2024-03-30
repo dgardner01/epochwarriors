@@ -7,9 +7,13 @@ public class PlayerTurn : State
         public PlayerTurn(BattleSystem battleSystem) : base(battleSystem)
         {
         }
+    BattleUI ui => BattleSystem.ui;
         public override IEnumerator Start()
         {
             BattleSystem.ui.PrintLog("player turn begin");
+        BattleSystem.player.turnDamage = BattleSystem.player.health;
+        BattleSystem.enemy.turnDamage = BattleSystem.enemy.health;
+        BattleSystem.ui.ClearCombo();
         BattleSystem.enemy.UpdateTurnIndex();
         BattleSystem.player.UpdateStatusEffects();
         BattleSystem.enemy.UpdateStatusEffects();
@@ -31,7 +35,7 @@ public class PlayerTurn : State
         {
             StatusEffect status = statusToRemove[0];
             BattleSystem.player.RemoveStatusEffect(status);
-            BattleSystem.ui.StatusPopUp(status.id + " wears off", BattleSystem.ui.PuppetPos(BattleSystem.player, "head", Vector2.up));
+            BattleSystem.ui.TextPopUp(status.id + " wears off", BattleSystem.ui.PuppetPos(BattleSystem.player, "head", Vector2.up), ui.statusPopUp);
             statusToRemove.RemoveAt(0);
         }
         BattleSystem.ui.middleThird.SetActive(true);

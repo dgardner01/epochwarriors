@@ -142,17 +142,12 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     private void FixedUpdate()
     {
         float startScale = .33f;
+        float x = transform.position.x;
         Vector3 targetScale = Vector3.one * startScale;
         if (bounceTime < bounce[0].length)
         {
             bounceTime += Time.deltaTime;
             targetScale = new Vector3(bounce[0].Evaluate(bounceTime), bounce[1].Evaluate(bounceTime));
-        }
-        wiggleTime += Time.deltaTime;
-        wiggleTime %= wiggleTimeMax;
-        if (!hover && !drag && bounceTime >= bounce[0].length)
-        {
-            targetScale += new Vector3(wiggleMagnitude * Mathf.Sin(wiggleTime), wiggleMagnitude * Mathf.Cos(wiggleTime));
         }
         transform.localScale = Vector3.Lerp(transform.localScale, targetScale, 0.1f);
     }

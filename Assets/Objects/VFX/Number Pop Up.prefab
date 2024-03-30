@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6538553737516613162}
   - component: {fileID: 2468371498592338802}
   m_Layer: 5
-  m_Name: Status Pop Up
+  m_Name: Number Pop Up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -68,7 +68,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Strength wears off
+  m_text: Blocked!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 88f72df447518704ab726800cdf21938, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 8a55f511d7677df4598496c295bf083f, type: 2}
@@ -95,8 +95,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 36
+  m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -149,48 +149,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3ceea15e97f6fd41bd26b2e43443ba9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxLifetime: 1
-  gravityScale: -10
-  xForce: 0
-  yForce: 0
+  maxLifetime: 5
+  gravityScale: 1000
+  xForce: 1000
+  yForce: 2000
   scale:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: -0.004219055
-      value: 0.0036315918
-      inSlope: 4.759431
-      outSlope: 4.759431
-      tangentMode: 0
+      time: -0.012500763
+      value: 0.94999695
+      inSlope: 0.23269112
+      outSlope: 0.23269112
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.078597985
+      outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.19343881
-      value: 0.99501395
-      inSlope: 0.66253054
-      outSlope: 0.66253054
+      time: 0.20140585
+      value: 0.9997711
+      inSlope: 0.0010734183
+      outSlope: 0.0010734183
       tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0.00028660597
+      outSlope: 0.00028660597
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.083949976
-    - serializedVersion: 3
-      time: 0.80539906
-      value: 0.9354385
-      inSlope: -0.8937423
-      outSlope: -0.8937423
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.069730766
-    - serializedVersion: 3
-      time: 1.0125351
-      value: -0.0117378235
-      inSlope: -9.629304
-      outSlope: -9.629304
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.014169078
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2

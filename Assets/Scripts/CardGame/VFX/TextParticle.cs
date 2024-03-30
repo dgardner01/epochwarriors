@@ -6,39 +6,32 @@ using Coffee.UIExtensions;
 
 public class TextParticle : MonoBehaviour
 {
-    public Camera textRenderer;
-    public TextMeshProUGUI renderText;
-    public Material material;
-    public Transform particleParent;
-    public GameObject numberPopUp, blockPopUp, statusPopUp;
+    float lifetime;
+    public float maxLifetime;
+    public float gravityScale;
+    public float xForce;
+    public float yForce;
+    public AnimationCurve scale;
+    Rigidbody2D rb2D => GetComponent<Rigidbody2D>();
 
-    Material TextMat(string text)
+    private void Start()
     {
-        Material mat = new Material(material.shader);
-        renderText.text = text;
-        mat.mainTexture = textRenderer.targetTexture;
-        return mat;
+        rb2D.gravityScale = gravityScale;
+        rb2D.velocity = new Vector2(Random.Range(-xForce, xForce), yForce);
     }
-
-    public void NumberPopUp(string text, Vector2 position)
+    private void Update()
     {
-        GameObject instance = Instantiate(numberPopUp, particleParent);
-        instance.GetComponent<UIParticle>().material = TextMat(text);
-        instance.transform.position = position;
+        transform.localScale = Vector3.one * scale.Evaluate(lifetime / maxLifetime);
     }
-
-    public void TextPopUp(string text, Vector2 position)
+    private void FixedUpdate()
     {
-        GameObject instance = Instantiate(blockPopUp, particleParent);
-        instance.GetComponent<UIParticle>().material = TextMat(text);
-        instance.transform.position = position;
+        if (lifetime < maxLifetime)
+        {
+            lifetime += Time.deltaTime;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
-    
-    public void StatusPopUp(string text, Vector2 position)
-    {
-        GameObject instance = Instantiate(statusPopUp, particleParent);
-        instance.GetComponent<UIParticle>().material = TextMat(text);
-        instance.transform.position = position;
-    }
-
 }
