@@ -15,7 +15,7 @@ MonoBehaviour:
   name: Roundhouse
   description: 
   spiritCost: 1
-  damage: 1
+  damage: 6
   block: 0
   comboPosition: 1
   cardType: 0

@@ -4,24 +4,23 @@ using UnityEngine;
 
 public class CardDrawStatus : StatusEffect
 {
-    string id = "CardDraw";
     int cardsDrawn;
-    int cardsDrawnAtStart;
-    public CardDrawStatus(int duration, Sprite symbol, int cardsDrawn) : base(duration, symbol)
+    StatusEffectData rageData;
+    public CardDrawStatus(int duration, Sprite symbol, int cardsDrawn, StatusEffectData rageData) : base(duration, symbol)
     {
         this.duration = duration;
         this.symbol = symbol;
         this.cardsDrawn = cardsDrawn;
+        this.rageData = rageData;
+        id = "CardDraw";
     }
     public override void OnApply(Fighter fighter)
     {
-        base.OnApply(fighter);
-        cardsDrawnAtStart = fighter.cardsDrawnPerTurn;
-        fighter.cardsDrawnPerTurn = cardsDrawnAtStart + cardsDrawn;
+        fighter.battleSystem.hand.StartCoroutine(fighter.battleSystem.hand.DrawCard(cardsDrawn));
+        fighter.battleSystem.enemy.ApplyStatusEffect(new RageStatus(1, rageData.symbol));
     }
     public override void OnRemove(Fighter fighter)
     {
-        fighter.cardsDrawnPerTurn = cardsDrawnAtStart;
         base.OnRemove(fighter);
     }
 }

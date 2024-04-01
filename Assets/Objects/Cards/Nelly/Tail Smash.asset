@@ -15,7 +15,7 @@ MonoBehaviour:
   name: Tail Smash
   description: 
   spiritCost: 1
-  damage: 2
+  damage: 12
   block: 0
   comboPosition: 2
   cardType: 0
