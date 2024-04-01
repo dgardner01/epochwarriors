@@ -15,8 +15,8 @@ MonoBehaviour:
   name: Counter Attack
   description: 
   spiritCost: 1
-  damage: 1
-  block: 1
+  damage: 6
+  block: 6
   comboPosition: 0
   cardType: 1
   statusEffect: {fileID: 0}

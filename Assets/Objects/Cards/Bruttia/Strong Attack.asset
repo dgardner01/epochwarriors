@@ -15,7 +15,7 @@ MonoBehaviour:
   name: 
   description: 
   spiritCost: 0
-  damage: 4
+  damage: 30
   block: 0
   comboPosition: 0
   cardType: 0
