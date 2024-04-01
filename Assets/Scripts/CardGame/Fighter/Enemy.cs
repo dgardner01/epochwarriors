@@ -6,6 +6,7 @@ using TMPro;
 
 public class Enemy : Fighter
 { 
+    public BattleSystem battleSystem;
     public BattleUI ui => battleSystem.ui;
     public int damage;
     public int turnIndex;
@@ -37,10 +38,9 @@ public class Enemy : Fighter
             if (i < currentTurn.Count)
             {
                 intentObjects[i].SetActive(true);
-                Transform intentObject = intentObjects[i].transform;
                 CardDisplay displayTemplate = ui.cardDisplayPrefab.GetComponent<CardDisplay>();
-                Image symbol = intentObject.Find("Symbol").GetComponent<Image>();
-                TextMeshProUGUI number = intentObject.Find("Text").GetComponent<TextMeshProUGUI>();
+                Image symbol = intentObjects[i].GetComponent<Image>();
+                TextMeshProUGUI number = intentObjects[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>();
                 Card card = currentTurn[i];
                 switch (card.cardType)
                 {

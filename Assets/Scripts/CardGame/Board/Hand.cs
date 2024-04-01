@@ -10,7 +10,6 @@ public class Hand : MonoBehaviour
 
     public IEnumerator DrawCard(int numCards)
     {
-        int cardsDrawn = 0;
         for (int i = 0; i < numCards; i++)
         {
             if (player.drawPile.Count > 0)
@@ -18,21 +17,18 @@ public class Hand : MonoBehaviour
                 int rand = Random.Range(0, player.drawPile.Count);
                 Card drawnCard = player.drawPile[rand];
                 cards.Add(drawnCard);
-                print(drawnCard.name);
-                battleSystem.ui.AddCardToHand(drawnCard);
                 player.drawPile.Remove(drawnCard);
                 yield return new WaitForSeconds(0.1f);
-                cardsDrawn++;
             }
             else
             {
-                Shuffle(numCards, cardsDrawn);
+                Shuffle();
                 break;
             }
         }
     }
 
-    public void Shuffle(int numCards, int cardsDrawn)
+    public void Shuffle()
     {
         for (int i = 0; i < battleSystem.discard.cards.Count; i++)
         {
@@ -40,8 +36,6 @@ public class Hand : MonoBehaviour
             battleSystem.player.drawPile.Add(card);
             battleSystem.discard.cards.Remove(card);
         }
-        int cardsLeft = numCards - cardsDrawn;
-        print(cardsLeft + " cards left");
-        StartCoroutine(DrawCard(cardsLeft));
+        StartCoroutine(DrawCard(battleSystem.player.cardsDrawnPerTurn-battleSystem.hand.cards.Count));
     }
 }

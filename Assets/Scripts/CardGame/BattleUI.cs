@@ -26,7 +26,6 @@ public class BattleUI : MonoBehaviour
     public Discard discard => battleSystem.discard;
     public PlayerCombo playerCombo => battleSystem.playerCombo;
     public EnemyCombo enemyCombo => battleSystem.enemyCombo;
-    public GameObject playedZone;
 
     [Header("Status Effect Icons")]
     public List<GameObject> playerStatusEffectIcons;
@@ -70,17 +69,12 @@ public class BattleUI : MonoBehaviour
     }
     public void PrintLog(string log)
     {
+        print(log);
     }
 
     public void EndTurnButtonPressed()
     {
         battleSystem.EndTurn();
-    }
-    public void AddCardToHand(Card card)
-    {
-        GameObject instance = Instantiate(cardDisplayPrefab, hand.gameObject.transform);
-        CardDisplay instanceDisplay = instance.GetComponent<CardDisplay>();
-        instanceDisplay.card = card;
     }
     public void CardsDisplay(List<Card> cards, RectTransform container)
     {
@@ -92,7 +86,6 @@ public class BattleUI : MonoBehaviour
                 GameObject instance = Instantiate(cardDisplayPrefab, container.gameObject.transform);
                 CardDisplay instanceDisplay = instance.GetComponent<CardDisplay>();
                 instanceDisplay.card = cards[instance.transform.GetSiblingIndex()];
-                print("battle ui says its " + instanceDisplay.card.name);
             }
         }
         float totalAngle = spreadAngle * cards.Count - 1;
@@ -112,7 +105,7 @@ public class BattleUI : MonoBehaviour
             }
 
             CardDisplay cardDisplay = cardObject.gameObject.GetComponent<CardDisplay>();
-            float hoverHeight = cardDisplay.hover && !cardDisplay.drag ? hoverMagnitude : 0;
+            float hoverHeight = cardDisplay.hover ? hoverMagnitude : 0;
             float angle = startingAngle + spreadAngle * i;
             float radianAngle = Mathf.Deg2Rad * angle;
             float x = Mathf.Sin(radianAngle + phase) * fanRadius;
@@ -128,12 +121,9 @@ public class BattleUI : MonoBehaviour
             Quaternion cardRotation = Quaternion.Euler(0, 0, -angle);
             Quaternion lerpedRotation = Quaternion.Lerp(cardObject.localRotation, cardRotation, cardSpeed);
 
-            if (!cardDisplay.discardBuffer)
-            {
-                cardObject.localPosition = lerpedPosition;
-                cardObject.localRotation = lerpedRotation;
-                cardObject.position = cardDisplay.drag ? Input.mousePosition : cardObject.position;
-            }
+            cardObject.localPosition = lerpedPosition;
+            cardObject.localRotation = lerpedRotation;
+            cardObject.position = cardDisplay.drag ? Input.mousePosition : cardObject.position;
 
             if (cards.Count < 1)
             {
@@ -143,16 +133,11 @@ public class BattleUI : MonoBehaviour
     }
     public void DiscardDisplay()
     {
-        Transform discardObject = discard.transform;
-        for (int i = 0; i < discardObject.childCount; i++)
+        for (int i = 0; i < discard.transform.childCount; i++)
         {
-            Transform cardObject = discardObject.GetChild(i);
+            Transform cardObject = discard.transform.GetChild(i);
             cardObject.localPosition = Vector3.Lerp(cardObject.localPosition, Vector3.zero, cardSpeed);
-            Vector3 discardPos = discardObject.position;
-            Vector3 cardPos = cardObject.position;
-            float targetRot = -(Mathf.Atan2(cardPos.y - discardPos.y, cardPos.x - discardPos.x) * Mathf.Rad2Deg);
-            Quaternion targetRotation = Quaternion.AngleAxis(targetRot, Vector3.forward);
-            //cardObject.localRotation = Quaternion.Lerp(cardObject.localRotation, targetRotation, cardSpeed*10);
+            cardObject.localScale = Vector3.Lerp(cardObject.localScale, Vector3.one * 0.2f, cardSpeed);
         }
     }
     public void StatusEffectDisplay()
@@ -271,9 +256,7 @@ public class BattleUI : MonoBehaviour
         if (playerCombo.cards.Count > 0)
         {
             GameObject instance = Instantiate(cardDisplayPrefab, playerCombo.transform);
-            instance.SetActive(false);
             instance.GetComponent<CardDisplay>().card = playerCombo.cards[0];
-            instance.SetActive(true);
             instance.transform.localPosition -= Vector3.up * (comboSpacing * playerCombo.transform.childCount-1);
             instance.transform.localRotation = Quaternion.Euler(0, 0, Random.Range(-15, 15));
         }

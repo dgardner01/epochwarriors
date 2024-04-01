@@ -15,4 +15,4 @@ MonoBehaviour:
   symbol: {fileID: 21300000, guid: 407861a0b61dd014aae31b6ce4776d28, type: 3}
   id: Reflect
   duration: -1
-  magnitude: 0
+  magnitude: 1

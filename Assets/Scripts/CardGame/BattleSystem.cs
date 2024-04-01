@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class BattleSystem : StateMachine
 {
@@ -18,13 +17,7 @@ public class BattleSystem : StateMachine
     {
         SetState(new Begin(this));
     }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            SceneManager.LoadScene(0);
-        }
-    }
+
     public void PlayCard(Card card)
     {
         hand.cards.Remove(card);
@@ -36,22 +29,6 @@ public class BattleSystem : StateMachine
         player.spirit += card.spiritCost;
         playArea.cards.Remove(card);
         hand.cards.Add(card);
-    }
-    public void ResolveInstantCard(Card card)
-    {
-        switch (card.cardType)
-        {
-            case CardType.Block:
-                player.block += card.block;
-                break;
-        }
-        if (card.statusEffect != null)
-        {
-            player.ApplyStatusEffect(card.statusEffect.CreateStatusEffect());
-        }
-        player.spirit -= card.spiritCost;
-        discard.cards.Add(card);
-        hand.cards.Remove(card);
     }
     public void AssignEnemyIntent()
     {

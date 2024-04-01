@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d3397c80db781641bd96f46774a3244, type: 3}
   m_Name: StrengthStatusData
   m_EditorClassIdentifier: 
-  symbol: {fileID: -209775167, guid: 34293b56643095f4f8f33897fecda063, type: 3}
+  symbol: {fileID: 21300000, guid: 4587ed12f28815e4c941f8baee4875c9, type: 3}
   id: Strength
   duration: 2
   magnitude: 0

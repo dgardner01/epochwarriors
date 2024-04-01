@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Fighter : MonoBehaviour
 {
-    public BattleSystem battleSystem => FindAnyObjectByType<BattleSystem>();
+    BattleSystem battleSystem => FindAnyObjectByType<BattleSystem>();
     BattleUI ui => battleSystem.ui;
-    public string fighterName;
+    public string name;
     public int health;
     public int turnDamage;
     public int maxHealth;

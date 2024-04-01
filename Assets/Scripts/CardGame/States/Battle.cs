@@ -16,7 +16,7 @@ public class Battle : State
         BattleSystem.player.turnDamage = BattleSystem.player.health;
         BattleSystem.enemy.turnDamage = BattleSystem.enemy.health;
         BattleSystem.InitializeCombos();
-        //ApplyBlocks();
+        ApplyBlocks();
         yield return new WaitForSeconds(1);
         BattleSystem.StartCoroutine(ResolveCard());
     }
@@ -61,16 +61,11 @@ public class Battle : State
         float waitTime = 1;
         if (BattleSystem.playerCombo.cards.Count > 0)
         {
+            ui.PlayComboCard();
             Card playerCard = playerCombo.cards[0];
             if (playerCard.animation != null)
             {
                 player.animator.PlayAnimationClip(playerCard.animation);
-            }
-            ui.PlayComboCard();
-            playerCombo.cards.Remove(playerCard);
-            if (playerCard.block > 0)
-            {
-                player.block += playerCard.block;
             }
             if (playerCard.damage > 0)
             {
@@ -78,6 +73,7 @@ public class Battle : State
                 enemy.Damage(damage, player);
                 yield return new WaitForSeconds(waitTime);
             }
+            playerCombo.cards.Remove(playerCard);
             if (playerCard.statusEffect != null)
             {
                 player.ApplyStatusEffect(playerCard.statusEffect.CreateStatusEffect());

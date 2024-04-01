@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RageStatus : StatusEffect
 {
-    int maxMagnitude = 99;
+    int maxMagnitude = 4;
     public RageStatus(int duration, Sprite symbol) : base(duration, symbol)
     {
         this.duration = duration;
