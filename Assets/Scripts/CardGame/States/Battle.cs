@@ -105,6 +105,10 @@ public class Battle : State
                 player.Damage(damage, enemy);
                 yield return new WaitForSeconds(waitTime);
             }
+            if (enemyCard.block > 0)
+            {
+                enemy.block += enemyCard.block;
+            }
             BattleSystem.enemy.currentTurn.Remove(enemyCard);
             if (enemyCard.statusEffect != null)
             {
