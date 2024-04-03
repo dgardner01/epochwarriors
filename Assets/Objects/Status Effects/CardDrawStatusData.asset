@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dd17d54f0723a84f962b3351c8fa4d4, type: 3}
   m_Name: CardDrawStatusData
   m_EditorClassIdentifier: 
-  symbol: {fileID: 0}
-  id: 
-  duration: 0
+  symbol: {fileID: -587984219, guid: 34293b56643095f4f8f33897fecda063, type: 3}
+  id: Card draw
+  duration: -1
   magnitude: 0
-  duration: 0
-  cardsDrawn: 0
+  cardsDrawn: 2
+  rageData: {fileID: 11400000, guid: 06875b16531ae104fbef50a6d56c3663, type: 2}

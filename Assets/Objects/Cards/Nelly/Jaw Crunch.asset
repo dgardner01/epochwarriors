@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Jaw Crunch
   description: 
-  spiritCost: 1
+  spiritCost: 2
   damage: 8
   block: 0
   comboPosition: 2

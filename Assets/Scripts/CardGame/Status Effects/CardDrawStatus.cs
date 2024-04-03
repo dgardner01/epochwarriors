@@ -17,7 +17,7 @@ public class CardDrawStatus : StatusEffect
     public override void OnApply(Fighter fighter)
     {
         fighter.battleSystem.hand.StartCoroutine(fighter.battleSystem.hand.DrawCard(cardsDrawn));
-        fighter.battleSystem.enemy.ApplyStatusEffect(new RageStatus(1, rageData.symbol));
+        fighter.battleSystem.enemy.ApplyStatusEffect(rageData.CreateStatusEffect());
     }
     public override void OnRemove(Fighter fighter)
     {

@@ -288,6 +288,7 @@ Transform:
   m_Children:
   - {fileID: 1091507259}
   - {fileID: 1274488570}
+  - {fileID: 885961015}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1689,7 +1690,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -2248,7 +2249,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c69f88a277b93a46b8c24a8e3352b52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Nelly
+  fighterName: 
   health: 100
   turnDamage: 0
   maxHealth: 100
@@ -2257,7 +2258,7 @@ MonoBehaviour:
   cardsDrawnPerTurn: 6
   animator: {fileID: 1814764085}
   spirit: 0
-  spiritPerTurn: 4
+  spiritPerTurn: 5
   drawPile:
   - {fileID: 11400000, guid: e027b8566d8772e43a3de2657893382f, type: 2}
   - {fileID: 11400000, guid: e027b8566d8772e43a3de2657893382f, type: 2}
@@ -2270,6 +2271,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 50a2527d66ac2e14ba0e7f958357f6eb, type: 2}
   - {fileID: 11400000, guid: d066d6f81f18f7c4da45a3878698afea, type: 2}
   - {fileID: 11400000, guid: 9205758e378ba3046b97b85cc160c9ed, type: 2}
+  - {fileID: 11400000, guid: 1abfb4c04b0d50a40baa5ccbe72b1f99, type: 2}
 --- !u!4 &577386879
 Transform:
   m_ObjectHideFlags: 0
@@ -2892,6 +2894,55 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 868616261}
   m_CullTransparentMesh: 1
+--- !u!1 &885961014
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 885961015}
+  - component: {fileID: 885961016}
+  m_Layer: 0
+  m_Name: Battle VFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &885961015
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 885961014}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 52308327}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &885961016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 885961014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c11842c5181c14345ac12137d460c8ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volume: {fileID: 1719526597}
+  vignette: {fileID: 0}
+  targetVignetteIntensity: 0
+  lerpedVignetteIntensity: 0
+  vignetteSpeed: 0.025
 --- !u!1 &886819810
 GameObject:
   m_ObjectHideFlags: 0
@@ -4378,6 +4429,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ui: {fileID: 1274488571}
+  vfx: {fileID: 885961016}
   player: {fileID: 577386878}
   enemy: {fileID: 1978823343}
   hand: {fileID: 1057215103}
@@ -5877,6 +5929,55 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1711565631}
   m_CullTransparentMesh: 1
+--- !u!1 &1719526596
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1719526598}
+  - component: {fileID: 1719526597}
+  m_Layer: 0
+  m_Name: Global Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1719526597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1719526596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 7cf286b5a5b8b714f97fc01f9d36a5a0, type: 2}
+--- !u!4 &1719526598
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1719526596}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2117592640}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1737458474
 GameObject:
   m_ObjectHideFlags: 0
@@ -6517,7 +6618,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 205bc612ca7715c4bbcac22768fb210d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Bruttia
+  fighterName: 
   health: 100
   turnDamage: 0
   maxHealth: 100
@@ -6525,7 +6626,6 @@ MonoBehaviour:
   block: 0
   cardsDrawnPerTurn: 0
   animator: {fileID: 1328599696}
-  battleSystem: {fileID: 1091507260}
   damage: 2
   turnIndex: -1
   turnPattern:
@@ -6912,6 +7012,7 @@ Transform:
   - {fileID: 519420032}
   - {fileID: 619394802}
   - {fileID: 1749649266}
+  - {fileID: 1719526598}
   m_Father: {fileID: 1773385756}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
