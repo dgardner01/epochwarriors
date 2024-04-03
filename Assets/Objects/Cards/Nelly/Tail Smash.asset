@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Tail Smash
   description: 
-  spiritCost: 1
-  damage: 2
+  spiritCost: 3
+  damage: 15
   block: 0
   comboPosition: 2
   cardType: 0

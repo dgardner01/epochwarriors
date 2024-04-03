@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 086a04e9f5f48df4294f081bf3ed9d1a, type: 3}
-  m_Name: Reversal
+  m_Name: Skull Bash
   m_EditorClassIdentifier: 
-  name: Reversal
+  name: Skull Bash
   description: Block and reflect half of the damage of the next attack this turn.
-  spiritCost: 2
+  spiritCost: 3
   damage: 0
-  block: 0
+  block: 11
   comboPosition: 0
   cardType: 1
   statusEffect: {fileID: 11400000, guid: b0394a2f9ca53904eb22310929a09982, type: 2}

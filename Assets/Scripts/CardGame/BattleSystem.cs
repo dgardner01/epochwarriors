@@ -5,6 +5,7 @@ using UnityEngine;
 public class BattleSystem : StateMachine
 {
     public BattleUI ui;
+    public BattleVFX vfx;
     public Player player;
     public Enemy enemy;
     public Hand hand;

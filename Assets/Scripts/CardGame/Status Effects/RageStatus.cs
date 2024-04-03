@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class RageStatus : StatusEffect
 {
-    int maxMagnitude = 4;
+    int maxMagnitude = 99;
+    float vignetteIntensity = 0.4f;
     public RageStatus(int duration, Sprite symbol) : base(duration, symbol)
     {
         this.duration = duration;
@@ -15,9 +16,11 @@ public class RageStatus : StatusEffect
     {
         magnitude++;
         fighter.strength++;
+        fighter.battleSystem.vfx.SetVignetteIntensity(vignetteIntensity);
     }
     public override void OnTurnUpdate(Fighter fighter)
     {
+        fighter.battleSystem.vfx.SetVignetteIntensity(vignetteIntensity);
         magnitude++;
         fighter.strength++;
         if (magnitude > maxMagnitude)
