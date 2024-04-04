@@ -11,12 +11,11 @@ public class Battle : State
     public override IEnumerator Start()
     {
         BattleSystem.ui.PrintLog("battle begin");
-        BattleSystem.ui.lowerThird.SetActive(false);
-        BattleSystem.ui.middleThird.SetActive(false);
         BattleSystem.player.turnDamage = BattleSystem.player.health;
         BattleSystem.enemy.turnDamage = BattleSystem.enemy.health;
-        BattleSystem.InitializeCombos();
+        BattleSystem.StartCoroutine(BattleSystem.InitializeCombos());
         yield return new WaitForSeconds(1);
+        BattleSystem.ui.InitializeComboDisplay();
         BattleSystem.StartCoroutine(ResolveCard());
     }
     public IEnumerator ResolveCard()
@@ -27,7 +26,7 @@ public class Battle : State
         float waitTime = 1;
         if (BattleSystem.playerCombo.cards.Count > 0)
         {
-            ui.PlayComboCard();
+            ui.PlayComboCard(BattleSystem.playerCombo.transform, BattleSystem.playerCombo.cards);
             Card playerCard = playerCombo.cards[0];
             if (playerCard.animation != null)
             {
@@ -60,6 +59,7 @@ public class Battle : State
         }
         if (BattleSystem.enemy.currentTurn.Count > 0)
         {
+            ui.PlayComboCard(BattleSystem.enemyCombo.transform, BattleSystem.enemy.currentTurn);
             Card enemyCard = BattleSystem.enemy.currentTurn[0];
             if (enemyCard.animation != null)
             {

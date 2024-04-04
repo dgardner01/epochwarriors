@@ -28,13 +28,13 @@ public class Hand : MonoBehaviour
             }
             else
             {
-                Shuffle(numLeft);
+                StartCoroutine(Shuffle(numLeft));
                 break;
             }
         }
     }
 
-    public void Shuffle(int numLeft)
+    public IEnumerator Shuffle(int numLeft)
     {
         for (int i = 0; i < battleSystem.discard.cards.Count; i++)
         {
@@ -42,6 +42,7 @@ public class Hand : MonoBehaviour
             battleSystem.player.drawPile.Add(card);
             ui.ReparentCard(ui.discard.transform.GetChild(0).gameObject, ui.drawPile.transform);
             battleSystem.discard.cards.Remove(card);
+            yield return new WaitForSeconds(0.1f);
         }
         StartCoroutine(DrawCard(numLeft));
     }

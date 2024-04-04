@@ -28,6 +28,7 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public bool hover;
     public bool drag;
+    public bool played;
     public float discardBuffer;
     public float yThreshold;
     public Card card;
@@ -185,9 +186,9 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                 }
                 else
                 {
+                    discardBuffer = bounceTimeMax;
                     battleSystem.ResolveInstantCard(card);
                     battleSystem.ui.ReparentCard(gameObject, battleSystem.discard.transform);
-                    discardBuffer = bounceTimeMax;
                 }
             }
             if (transform.localPosition.y < -threshold && transform.parent == playArea)

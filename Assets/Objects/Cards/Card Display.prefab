@@ -1098,13 +1098,14 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   bounceTime: 0
-  bounceTimeMax: 0.25
+  bounceTimeMax: 0.3
   wiggle: {x: 0, y: 0}
   wiggleMagnitude: 0.01
   wiggleTime: 0
   wiggleTimeMax: 5
   hover: 0
   drag: 0
+  played: 0
   discardBuffer: 0
   yThreshold: 100
   card: {fileID: 0}

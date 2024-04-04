@@ -20,13 +20,6 @@ public class RageStatus : StatusEffect
     }
     public override void OnTurnUpdate(Fighter fighter)
     {
-        fighter.battleSystem.vfx.SetVignetteIntensity(vignetteIntensity);
-        magnitude++;
-        fighter.strength++;
-        if (magnitude > maxMagnitude)
-        {
-            fighter.strength -= magnitude;
-            duration = -1;
-        }
+
     }
 }

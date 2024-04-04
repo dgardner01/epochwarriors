@@ -49,19 +49,21 @@ public class BattleSystem : StateMachine
         {
             player.ApplyStatusEffect(card.statusEffect.CreateStatusEffect());
         }
+        player.spirit -= card.spiritCost;
         hand.cards.Remove(card);
         discard.cards.Add(card);
     }
-    public void InitializeCombos()
+    public IEnumerator InitializeCombos()
     {
         player.spirit = 0;
         int cards = playArea.cards.Count;
         for (int i = 0; i < cards; i++)
         {
-            ui.ReparentCard(playArea.transform.GetChild(0).gameObject, ui.discard.transform);
+            ui.ReparentCard(playArea.transform.GetChild(0).gameObject, ui.playedZone.transform);
             playerCombo.cards.Add(playArea.cards[0]);
             discard.cards.Add(playArea.cards[0]);
             playArea.cards.Remove(playArea.cards[0]);
+            yield return new WaitForSeconds(0.1f);
         }
         cards = hand.cards.Count;
         for (int i = 0; i < cards; i++)
@@ -69,6 +71,7 @@ public class BattleSystem : StateMachine
             ui.ReparentCard(hand.transform.GetChild(0).gameObject, ui.discard.transform);
             discard.cards.Add(hand.cards[0]);
             hand.cards.Remove(hand.cards[0]);
+            yield return new WaitForSeconds(0.1f);
         }
     }
 }

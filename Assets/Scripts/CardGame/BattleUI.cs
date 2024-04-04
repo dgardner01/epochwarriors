@@ -20,6 +20,8 @@ public class BattleUI : MonoBehaviour
     public float cardSpeed;
     public GameObject cardDisplayPrefab;
     [Header("Card Containers")]
+    public GameObject playedZone;
+    public GameObject enemyPlayedZone;
     public GameObject drawPile;
     public float comboSpacing;
     public Hand hand => battleSystem.hand;
@@ -68,7 +70,8 @@ public class BattleUI : MonoBehaviour
         CardsDisplay(playArea.cards, playArea.gameObject.GetComponent<RectTransform>());
         ContainerDisplay(discard.transform);
         ContainerDisplay(drawPile.transform);
-        DiscardDisplay();
+        ContainerDisplay(playedZone.transform);
+        ContainerDisplay(enemyPlayedZone.transform);
         StatusEffectDisplay();
         CardCountDisplay();
         SpiritDisplay();
@@ -97,9 +100,9 @@ public class BattleUI : MonoBehaviour
         {
             GameObject cardObject = container.GetChild(i).gameObject;
             CardDisplay cardDisplay = cardObject.GetComponent<CardDisplay>();
-            if (cardDisplay.discardBuffer <= 0)
+            if (cardDisplay.discardBuffer <= 0 && !cardDisplay.played)
             {
-                cardObject.transform.localPosition = Vector3.Lerp(gameObject.transform.localPosition, Vector3.zero, cardSpeed * 2);
+                cardObject.transform.localPosition = Vector3.Lerp(cardObject.transform.localPosition, Vector3.zero, cardSpeed * 2);
             }
         }
     }
@@ -153,13 +156,64 @@ public class BattleUI : MonoBehaviour
             }
         }
     }
-    public void DiscardDisplay()
+    public void InitializeComboDisplay()
     {
-        for (int i = 0; i < discard.transform.childCount; i++)
+        List<GameObject> comboCards = new List<GameObject>();
+        Transform comboContainer = playedZone.transform;
+        for (int i = 0; i < comboContainer.childCount; i++)
         {
-            Transform cardObject = discard.transform.GetChild(i);
-            cardObject.localPosition = Vector3.Lerp(cardObject.localPosition, Vector3.zero, cardSpeed);
-            cardObject.localScale = Vector3.Lerp(cardObject.localScale, Vector3.one * 0.2f, cardSpeed);
+            GameObject cardObject = comboContainer.GetChild(i).gameObject;
+            comboCards.Add(cardObject);
+        }
+        int count = comboCards.Count;
+        for (int i = 0; i < count; i++)
+        {
+            GameObject cardObject = comboCards[0];
+            ReparentCard(cardObject, playerCombo.transform);
+            //print("parented " + cardObject.GetComponent<CardDisplay>().card + " to player combo");
+            comboCards.RemoveAt(0);
+        }
+        Enemy enemy = battleSystem.enemy;
+        for (int i = 0; i < enemy.currentTurn.Count; i++)
+        {
+            GameObject instance = Instantiate(cardDisplayPrefab, enemyCombo.transform);
+            CardDisplay cardDisplay = instance.GetComponent<CardDisplay>();
+            cardDisplay.card = enemy.currentTurn[i];
+            instance.transform.position = Vector3.one * -1000;
+        }
+    }
+    public void PlayComboCard(Transform comboContainer, List<Card> cards)
+    {
+        if (cards.Count > 0)
+        {
+            int index = comboContainer.childCount - cards.Count;
+            print("index is " + index);
+            GameObject cardObject = comboContainer.GetChild(index).gameObject;
+            CardDisplay cardDisplay = cardObject.GetComponent<CardDisplay>();
+            cardDisplay.card = cards[0];
+            cardDisplay.bounceTime = 0;
+            cardDisplay.played = true;
+            cardObject.transform.localPosition = Vector3.zero - Vector3.up * (comboSpacing * index);
+            cardObject.transform.localRotation = Quaternion.Euler(0, 0, Random.Range(-15, 15));
+        }
+    }
+    public IEnumerator ClearCombo(Transform comboContainer, Transform targetContainer)
+    {
+        List<GameObject> comboCards = new List<GameObject>();
+        for (int i = 0; i < comboContainer.childCount; i++)
+        {
+            GameObject cardObject = comboContainer.GetChild(i).gameObject;
+            comboCards.Add(cardObject);
+        }
+        int cardsToReparent = comboCards.Count;
+        for (int i = 0; i < cardsToReparent; i++)
+        {
+            GameObject cardObject = comboCards[0];
+            CardDisplay cardDisplay = cardObject.GetComponent<CardDisplay>();
+            cardDisplay.played = false;
+            ReparentCard(cardObject, targetContainer);
+            comboCards.RemoveAt(0);
+            yield return new WaitForSeconds(0.1f);
         }
     }
     public void StatusEffectDisplay()
@@ -272,23 +326,6 @@ public class BattleUI : MonoBehaviour
             enemyHealthBar.color = bruttia;
             enemyBlockIndicator.SetActive(false);
         }
-    }
-    public void PlayComboCard()
-    {
-        if (playerCombo.cards.Count > 0)
-        {
-            GameObject instance = Instantiate(cardDisplayPrefab, playerCombo.transform);
-            instance.GetComponent<CardDisplay>().card = playerCombo.cards[0];
-            instance.transform.localPosition -= Vector3.up * (comboSpacing * playerCombo.transform.childCount-1);
-            instance.transform.localRotation = Quaternion.Euler(0, 0, Random.Range(-15, 15));
-        }
-    }
-    public void ClearCombo()
-    {
-        foreach (Transform child in playerCombo.transform)
-        {
-            Destroy(child.gameObject);
-        }    
     }
     public Vector2 PuppetPos(Fighter fighter, string bodyPart, Vector3 offset)
     {

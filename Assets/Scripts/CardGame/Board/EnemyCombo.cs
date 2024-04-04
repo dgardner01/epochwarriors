@@ -4,4 +4,5 @@ using UnityEngine;
 
 public class EnemyCombo : MonoBehaviour
 {
+    public List<Card> cards = new List<Card>();
 }

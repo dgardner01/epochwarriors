@@ -13,7 +13,10 @@ public class PlayerTurn : State
             BattleSystem.ui.PrintLog("player turn begin");
         BattleSystem.player.turnDamage = BattleSystem.player.health;
         BattleSystem.enemy.turnDamage = BattleSystem.enemy.health;
-        BattleSystem.ui.ClearCombo();
+        BattleSystem.StartCoroutine(BattleSystem.ui.ClearCombo(BattleSystem.playerCombo.transform, BattleSystem.discard.transform));
+        yield return new WaitForSeconds(0.5f);
+        BattleSystem.StartCoroutine(BattleSystem.ui.ClearCombo(BattleSystem.enemyCombo.transform, BattleSystem.ui.enemyPlayedZone.transform));
+        yield return new WaitForSeconds(0.5f);
         BattleSystem.enemy.UpdateTurnIndex();
         BattleSystem.player.UpdateStatusEffects();
         BattleSystem.enemy.UpdateStatusEffects();
@@ -38,8 +41,6 @@ public class PlayerTurn : State
             BattleSystem.ui.TextPopUp(status.id + " wears off", BattleSystem.ui.PuppetPos(BattleSystem.player, "head", Vector2.up), ui.statusPopUp);
             statusToRemove.RemoveAt(0);
         }
-        BattleSystem.ui.middleThird.SetActive(true);
-        BattleSystem.ui.lowerThird.SetActive(true);
         BattleSystem.AssignEnemyIntent();
         BattleSystem.StartCoroutine(BattleSystem.hand.DrawCard(BattleSystem.player.cardsDrawnPerTurn));
         BattleSystem.player.spirit += BattleSystem.player.spiritPerTurn;
