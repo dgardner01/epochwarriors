@@ -46,14 +46,6 @@ public class Battle : State
             if (playerCard.statusEffect != null)
             {
                 player.ApplyStatusEffect(playerCard.statusEffect.CreateStatusEffect());
-                if (playerCard.statusEffect.duration < 0)
-                {
-                    BattleSystem.ui.TextPopUp(playerCard.statusEffect.id + " active", BattleSystem.ui.PuppetPos(BattleSystem.player, "head", Vector3.up), ui.statusPopUp);
-                }
-                else
-                {
-                    BattleSystem.ui.TextPopUp(playerCard.statusEffect.id + " up", BattleSystem.ui.PuppetPos(BattleSystem.player, "head", Vector3.up), ui.statusPopUp);
-                }
                 yield return new WaitForSeconds(waitTime);
             }
         }
@@ -78,7 +70,6 @@ public class Battle : State
             BattleSystem.enemy.currentTurn.Remove(enemyCard);
             if (enemyCard.statusEffect != null)
             {
-                BattleSystem.ui.TextPopUp(enemyCard.statusEffect.id + " active", BattleSystem.ui.PuppetPos(BattleSystem.enemy, "head", Vector3.up), ui.statusPopUp);
                 enemy.ApplyStatusEffect(enemyCard.statusEffect.CreateStatusEffect());
                 yield return new WaitForSeconds(waitTime);
             }

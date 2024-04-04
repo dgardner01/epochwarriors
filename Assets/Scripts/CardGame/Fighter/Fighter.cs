@@ -66,6 +66,15 @@ public class Fighter : MonoBehaviour
     }
     public void ApplyStatusEffect(StatusEffect statusEffect)
     {
+        statusEffect.OnApply(this);
+        if (statusEffect.duration < 0)
+        {
+            battleSystem.ui.TextPopUp(statusEffect.id + " active", battleSystem.ui.PuppetPos(this, "head", Vector3.up), ui.statusPopUp);
+        }
+        else
+        {
+            battleSystem.ui.TextPopUp(statusEffect.id + " up", battleSystem.ui.PuppetPos(this, "head", Vector3.up), ui.statusPopUp);
+        }
         if (activeStatusEffects == null)
         {
             activeStatusEffects = new List<StatusEffect>();
@@ -76,13 +85,13 @@ public class Fighter : MonoBehaviour
             {
                 if (statusEffect.id == status.id)
                 {
+                    status.magnitude += statusEffect.magnitude;
                     status.duration += statusEffect.duration;
                     return;
                 }
             }
         }
         activeStatusEffects.Add(statusEffect);
-        statusEffect.OnApply(this);
     }
 
     public void RemoveStatusEffect(StatusEffect statusEffect)
@@ -101,7 +110,6 @@ public class Fighter : MonoBehaviour
         foreach (StatusEffect status in activeStatusEffects)
         {
             status.OnTurnUpdate(this);
-            status.DecreaseDuration();
             if (status.duration <= -1)
             {
                 effectsToRemove.Add(status);

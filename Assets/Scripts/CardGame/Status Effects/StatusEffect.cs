@@ -33,9 +33,5 @@ public abstract class StatusEffect
     {
 
     }
-    public void DecreaseDuration()
-    {
-        duration--;
-    }
 }
 

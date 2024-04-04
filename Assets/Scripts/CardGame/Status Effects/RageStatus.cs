@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class RageStatus : StatusEffect
 {
-    int maxMagnitude = 99;
     float vignetteIntensity = 0.4f;
     public RageStatus(int duration, Sprite symbol) : base(duration, symbol)
     {

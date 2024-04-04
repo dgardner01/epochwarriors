@@ -12,7 +12,7 @@ public class CardDrawStatus : StatusEffect
         this.symbol = symbol;
         this.cardsDrawn = cardsDrawn;
         this.rageData = rageData;
-        id = "CardDraw";
+        id = "Card draw";
     }
     public override void OnApply(Fighter fighter)
     {
