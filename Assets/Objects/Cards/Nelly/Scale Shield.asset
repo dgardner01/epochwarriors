@@ -16,8 +16,8 @@ MonoBehaviour:
   description: 
   spiritCost: 1
   damage: 0
-  block: 1
-  comboPosition: 1
+  block: 6
+  comboPosition: -1
   cardType: 1
   statusEffect: {fileID: 0}
-  animation: {fileID: 0}
+  animation: {fileID: 7400000, guid: 21b914ec77e7e2b46a6342ebee1f984a, type: 2}

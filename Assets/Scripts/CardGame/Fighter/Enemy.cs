@@ -39,8 +39,8 @@ public class Enemy : Fighter
             {
                 intentObjects[i].SetActive(true);
                 CardDisplay displayTemplate = ui.cardDisplayPrefab.GetComponent<CardDisplay>();
-                Image symbol = intentObjects[i].GetComponent<Image>();
-                TextMeshProUGUI number = intentObjects[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+                Image symbol = intentObjects[i].transform.GetChild(0).GetComponent<Image>();
+                TextMeshProUGUI number = intentObjects[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>();
                 Card card = currentTurn[i];
                 switch (card.cardType)
                 {

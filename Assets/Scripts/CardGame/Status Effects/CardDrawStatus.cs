@@ -6,7 +6,7 @@ public class CardDrawStatus : StatusEffect
 {
     int cardsDrawn;
     StatusEffectData rageData;
-    public CardDrawStatus(int duration, Sprite symbol, int cardsDrawn, StatusEffectData rageData) : base(duration, symbol)
+    public CardDrawStatus(int duration, int cardsDrawn, Sprite symbol, StatusEffectData rageData) : base(duration, symbol)
     {
         this.duration = duration;
         this.symbol = symbol;

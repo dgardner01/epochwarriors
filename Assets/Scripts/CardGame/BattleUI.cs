@@ -20,6 +20,7 @@ public class BattleUI : MonoBehaviour
     public float cardSpeed;
     public GameObject cardDisplayPrefab;
     [Header("Card Containers")]
+    public GameObject drawPile;
     public float comboSpacing;
     public Hand hand => battleSystem.hand;
     public PlayArea playArea => battleSystem.playArea;
@@ -53,6 +54,10 @@ public class BattleUI : MonoBehaviour
     [Header("VFX")]
     public Transform UIParticleParent;
     public GameObject blockPopUp, statusPopUp, numberPopUp;
+    private void Start()
+    {
+        InitializeCardDisplayObjects();
+    }
     private void Update()
     {
 
@@ -61,6 +66,8 @@ public class BattleUI : MonoBehaviour
     {
         CardsDisplay(hand.cards, hand.gameObject.GetComponent<RectTransform>());
         CardsDisplay(playArea.cards, playArea.gameObject.GetComponent<RectTransform>());
+        ContainerDisplay(discard.transform);
+        ContainerDisplay(drawPile.transform);
         DiscardDisplay();
         StatusEffectDisplay();
         CardCountDisplay();
@@ -76,18 +83,33 @@ public class BattleUI : MonoBehaviour
     {
         battleSystem.EndTurn();
     }
-    public void CardsDisplay(List<Card> cards, RectTransform container)
+    public void InitializeCardDisplayObjects()
     {
-        //if there are not enough card display objects for the number of cards, instantiate new ones
-        if (container.childCount < cards.Count)
+        for (int i = 0; i < battleSystem.player.drawPile.Count; i++)
         {
-            for (int i = 0; i < cards.Count - container.childCount; i++)
+            GameObject instance = Instantiate(cardDisplayPrefab, drawPile.transform);
+            instance.GetComponent<CardDisplay>().card = battleSystem.player.drawPile[i];
+        }
+    }
+    public void ContainerDisplay(Transform container)
+    {
+        for (int i = 0; i < container.childCount; i++)
+        {
+            GameObject cardObject = container.GetChild(i).gameObject;
+            CardDisplay cardDisplay = cardObject.GetComponent<CardDisplay>();
+            if (cardDisplay.discardBuffer <= 0)
             {
-                GameObject instance = Instantiate(cardDisplayPrefab, container.gameObject.transform);
-                CardDisplay instanceDisplay = instance.GetComponent<CardDisplay>();
-                instanceDisplay.card = cards[instance.transform.GetSiblingIndex()];
+                cardObject.transform.localPosition = Vector3.Lerp(gameObject.transform.localPosition, Vector3.zero, cardSpeed * 2);
             }
         }
+    }
+    public void ReparentCard(GameObject cardObject, Transform container)
+    {
+        cardObject.transform.SetParent(container);
+    }
+
+    public void CardsDisplay(List<Card> cards, RectTransform container)
+    {
         float totalAngle = spreadAngle * cards.Count - 1;
         float startingAngle = -totalAngle / 2;
         for (int i = 0; i < container.childCount; i++)

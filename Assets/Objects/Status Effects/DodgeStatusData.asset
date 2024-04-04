@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80a576532166c7444b0c25b3224f05d1, type: 3}
   m_Name: DodgeStatusData
   m_EditorClassIdentifier: 
-  symbol: {fileID: 21300000, guid: 7a2a6b7ed349eeb4bb38f891f91610ab, type: 3}
+  symbol: {fileID: 1632275766, guid: 90fd1464fad1a2f4db05f2d36e3f52be, type: 3}
   id: Dodge
   duration: -1
   magnitude: 1

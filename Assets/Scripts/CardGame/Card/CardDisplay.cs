@@ -19,6 +19,7 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public AnimationCurve[] bounce;
     public float bounceTime;
+    public float bounceTimeMax;
 
     public Vector2 wiggle;
     public float wiggleMagnitude;
@@ -27,6 +28,7 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public bool hover;
     public bool drag;
+    public float discardBuffer;
     public float yThreshold;
     public Card card;
     // Start is called before the first frame update
@@ -51,7 +53,15 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         {
             description.gameObject.SetActive(true);
         }
-        chain.sprite = comboChains[card.comboPosition];
+        if (card.comboPosition > -1)
+        {
+            chain.gameObject.SetActive(true);
+            chain.sprite = comboChains[card.comboPosition];
+        }
+        else
+        {
+            chain.gameObject.SetActive(false);
+        }
         switch (card.cardType)
         {
             case CardType.Attack:
@@ -144,12 +154,16 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         float startScale = .33f;
         float x = transform.position.x;
         Vector3 targetScale = Vector3.one * startScale;
-        if (bounceTime < bounce[0].length)
+        if (bounceTime < bounceTimeMax)
         {
             bounceTime += Time.deltaTime;
-            targetScale = new Vector3(bounce[0].Evaluate(bounceTime), bounce[1].Evaluate(bounceTime));
+            targetScale = new Vector3(bounce[0].Evaluate(bounceTime/bounceTimeMax), bounce[1].Evaluate(bounceTime/bounceTimeMax));
         }
-        transform.localScale = Vector3.Lerp(transform.localScale, targetScale, 0.1f);
+        if (discardBuffer > 0)
+        {
+            discardBuffer -= Time.deltaTime;
+        }
+        transform.localScale = Vector3.Lerp(transform.localScale, targetScale, 0.25f);
     }
     public void PlayCard()
     {
@@ -164,14 +178,23 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             if (transform.localPosition.y > threshold && transform.parent == hand && playable)
             {
                 bounceTime = 0;
-                battleSystem.PlayCard(card);
-                transform.parent = playArea;
+                if (card.comboPosition > -1)
+                {
+                    battleSystem.PlayCard(card);
+                    battleSystem.ui.ReparentCard(gameObject, battleSystem.playArea.transform);
+                }
+                else
+                {
+                    battleSystem.ResolveInstantCard(card);
+                    battleSystem.ui.ReparentCard(gameObject, battleSystem.discard.transform);
+                    discardBuffer = bounceTimeMax;
+                }
             }
             if (transform.localPosition.y < -threshold && transform.parent == playArea)
             {
                 bounceTime = 0;
                 battleSystem.ReturnCard(card);
-                transform.parent = hand;
+                battleSystem.ui.ReparentCard(gameObject, battleSystem.hand.transform);
             }
         }
     }

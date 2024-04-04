@@ -16,42 +16,8 @@ public class Battle : State
         BattleSystem.player.turnDamage = BattleSystem.player.health;
         BattleSystem.enemy.turnDamage = BattleSystem.enemy.health;
         BattleSystem.InitializeCombos();
-        ApplyBlocks();
         yield return new WaitForSeconds(1);
         BattleSystem.StartCoroutine(ResolveCard());
-    }
-    public void ApplyBlocks()
-    {
-        List<Card> playerCardsToRemove = new List<Card>();
-        foreach(Card card in BattleSystem.playerCombo.cards)
-        {
-            if (card.cardType == CardType.Block)
-            {
-                BattleSystem.player.block += card.block;
-                if (card.statusEffect == null && card.damage <= 0)
-                {
-                    playerCardsToRemove.Add(card);
-                }
-            }
-        }
-        for (int i = 0; i < playerCardsToRemove.Count; i++)
-        {
-            BattleSystem.playerCombo.cards.Remove(playerCardsToRemove[0]);
-            playerCardsToRemove.RemoveAt(0);
-        }
-        List<Card> enemyCardsToRemove = new List<Card>();
-        foreach(Card card in BattleSystem.enemy.currentTurn)
-        { 
-            if (card.cardType == CardType.Block)
-            {
-                BattleSystem.enemy.block += card.block;
-            }
-        }
-        for (int i = 0; i < enemyCardsToRemove.Count; i++)
-        {
-            BattleSystem.enemy.currentTurn.Remove(enemyCardsToRemove[0]);
-            enemyCardsToRemove.RemoveAt(0);
-        }
     }
     public IEnumerator ResolveCard()
     {
@@ -66,6 +32,10 @@ public class Battle : State
             if (playerCard.animation != null)
             {
                 player.animator.PlayAnimationClip(playerCard.animation);
+            }
+            if (playerCard.block > 0)
+            {
+                player.block += playerCard.block;
             }
             if (playerCard.damage > 0)
             {

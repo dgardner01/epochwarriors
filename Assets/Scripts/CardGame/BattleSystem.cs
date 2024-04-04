@@ -39,12 +39,26 @@ public class BattleSystem : StateMachine
     {
         SetState(new Battle(this));
     }
+    public void ResolveInstantCard(Card card)
+    {
+        if (card.block > 0)
+        {
+            player.block += card.block;
+        }
+        if (card.statusEffect != null)
+        {
+            player.ApplyStatusEffect(card.statusEffect.CreateStatusEffect());
+        }
+        hand.cards.Remove(card);
+        discard.cards.Add(card);
+    }
     public void InitializeCombos()
     {
         player.spirit = 0;
         int cards = playArea.cards.Count;
         for (int i = 0; i < cards; i++)
         {
+            ui.ReparentCard(playArea.transform.GetChild(0).gameObject, ui.discard.transform);
             playerCombo.cards.Add(playArea.cards[0]);
             discard.cards.Add(playArea.cards[0]);
             playArea.cards.Remove(playArea.cards[0]);
@@ -52,6 +66,7 @@ public class BattleSystem : StateMachine
         cards = hand.cards.Count;
         for (int i = 0; i < cards; i++)
         {
+            ui.ReparentCard(hand.transform.GetChild(0).gameObject, ui.discard.transform);
             discard.cards.Add(hand.cards[0]);
             hand.cards.Remove(hand.cards[0]);
         }
