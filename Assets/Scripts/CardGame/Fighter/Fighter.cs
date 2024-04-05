@@ -38,6 +38,7 @@ public class Fighter : MonoBehaviour
         }
         if (dodgeStatus != null)
         {
+            animator.PlayAnimationClipByName("dash_backward");
             activeStatusEffects.Remove(dodgeStatus);
             ui.TextPopUp("Dodged!",ui.PuppetPos(this, "head", Vector2.up), ui.blockPopUp);
             return;
@@ -61,12 +62,14 @@ public class Fighter : MonoBehaviour
         }
         else
         {
+            animator.PlayAnimationClipByName("guard");
             battleSystem.ui.TextPopUp("Blocked!",ui.PuppetPos(this, "head", Vector2.up), ui.blockPopUp);
             cam.ScreenShake(time, magnitude/2, decreaseFactor);
         }
     }
     public IEnumerator DelayedDamage(int damage, Fighter opponent)
     {
+        animator.PlayAnimationClipByName("bite");
         yield return new WaitForSeconds(.5f);
         opponent.Damage(damage, this); 
     }

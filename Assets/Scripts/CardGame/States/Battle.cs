@@ -27,11 +27,15 @@ public class Battle : State
         if (BattleSystem.playerCombo.cards.Count > 0)
         {
             ui.PlayComboCard(BattleSystem.playerCombo.transform, BattleSystem.playerCombo.cards);
-            yield return new WaitForSeconds(waitTime/2);
             Card playerCard = playerCombo.cards[0];
             if (playerCard.animation != null)
             {
                 player.animator.PlayAnimationClip(playerCard.animation);
+                yield return new WaitForSeconds(player.animator.GetImpactTimeFromClipName(playerCard.animation.name));
+            }
+            else
+            {
+                yield return new WaitForSeconds(waitTime/2);
             }
             if (playerCard.block > 0)
             {
