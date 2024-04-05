@@ -15,4 +15,4 @@ MonoBehaviour:
   symbol: {fileID: 21300000, guid: 9092fdb368e332743b72890bb12edbf1, type: 3}
   id: Rage
   duration: 1
-  magnitude: 1
+  magnitude: 3

@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Haymaker
   description: 
-  spiritCost: 3
-  damage: 15
+  spiritCost: 2
+  damage: 9
   block: 0
   comboPosition: 1
   cardType: 0

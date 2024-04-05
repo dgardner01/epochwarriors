@@ -15,7 +15,7 @@ MonoBehaviour:
   name: Jab
   description: 
   spiritCost: 1
-  damage: 10
+  damage: 6
   block: 0
   comboPosition: 0
   cardType: 0
