@@ -23,10 +23,11 @@ public class Battle : State
         Player player = BattleSystem.player;
         Enemy enemy = BattleSystem.enemy;
         PlayerCombo playerCombo = BattleSystem.playerCombo;
-        float waitTime = 1;
+        float waitTime = .75f;
         if (BattleSystem.playerCombo.cards.Count > 0)
         {
             ui.PlayComboCard(BattleSystem.playerCombo.transform, BattleSystem.playerCombo.cards);
+            yield return new WaitForSeconds(waitTime/2);
             Card playerCard = playerCombo.cards[0];
             if (playerCard.animation != null)
             {
@@ -52,6 +53,7 @@ public class Battle : State
         if (BattleSystem.enemy.currentTurn.Count > 0)
         {
             ui.PlayComboCard(BattleSystem.enemyCombo.transform, BattleSystem.enemy.currentTurn);
+            yield return new WaitForSeconds(waitTime / 2);
             Card enemyCard = BattleSystem.enemy.currentTurn[0];
             if (enemyCard.animation != null)
             {

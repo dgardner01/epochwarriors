@@ -13,6 +13,8 @@ public class Fighter : MonoBehaviour
     public int strength;
     public int block;
     public int cardsDrawnPerTurn;
+    public int consecutiveHits;
+    public int consecutiveDamage;
     public List<StatusEffect> activeStatusEffects = new List<StatusEffect>();
     public FighterAnimator animator;
     public void Damage(int damage, Fighter opponent)
@@ -48,6 +50,10 @@ public class Fighter : MonoBehaviour
         block -= damage;
         if (block < 0)
         {
+            opponent.consecutiveHits++;
+            opponent.consecutiveDamage += damage;
+            consecutiveHits = 0;
+            consecutiveDamage = 0;
             health += block;
             battleSystem.ui.TextPopUp("" + Mathf.Abs(block), ui.PuppetPos(this, "head", Vector2.up / 2), ui.numberPopUp);
             cam.ScreenShake(time, magnitude * Mathf.Abs(block), decreaseFactor);

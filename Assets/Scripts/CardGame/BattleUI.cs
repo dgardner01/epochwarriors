@@ -42,6 +42,9 @@ public class BattleUI : MonoBehaviour
     public Image enemyTurnDamage;
     public TextMeshProUGUI enemyHealthBarText;
 
+    public GameObject playerComboTracker;
+    public GameObject enemyComboTracker;
+
     public GameObject playerBlockIndicator;
     public GameObject enemyBlockIndicator;
 
@@ -72,6 +75,8 @@ public class BattleUI : MonoBehaviour
         ContainerDisplay(drawPile.transform);
         ContainerDisplay(playedZone.transform);
         ContainerDisplay(enemyPlayedZone.transform);
+        ComboDisplay(playerComboTracker, battleSystem.player);
+        ComboDisplay(enemyComboTracker, battleSystem.enemy); ;
         StatusEffectDisplay();
         CardCountDisplay();
         SpiritDisplay();
@@ -156,6 +161,19 @@ public class BattleUI : MonoBehaviour
             }
         }
     }
+    public bool DragFromHand()
+    {
+        Transform container = hand.transform;
+        for (int i = 0; i < container.childCount; i++)
+        {
+            CardDisplay cardDisplay = container.GetChild(i).GetComponent<CardDisplay>();
+            if (cardDisplay.drag)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     public void InitializeComboDisplay()
     {
         List<GameObject> comboCards = new List<GameObject>();
@@ -214,6 +232,19 @@ public class BattleUI : MonoBehaviour
             ReparentCard(cardObject, targetContainer);
             comboCards.RemoveAt(0);
             yield return new WaitForSeconds(0.1f);
+        }
+    }
+    public void ComboDisplay(GameObject comboTracker, Fighter fighter)
+    {
+        if (fighter.consecutiveHits > 1)
+        {
+            comboTracker.SetActive(true);
+            Transform trackerObject = comboTracker.transform;
+            trackerObject.GetChild(0).GetComponent<TextMeshProUGUI>().text = fighter.consecutiveHits + " hits!";
+        }
+        else
+        {
+            comboTracker.SetActive(false);
         }
     }
     public void StatusEffectDisplay()

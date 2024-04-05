@@ -7,6 +7,7 @@ public class CameraManager : MonoBehaviour
     public GameObject player, enemy;
     public Vector3 center;
     public Vector3 screenShakeOffset;
+    public float targetSize;
     public float shakeTimer;
     public float shakeAmount;
     public float decreaseFactor;
@@ -19,7 +20,7 @@ public class CameraManager : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, 4.6f, 0.1f);
+        Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, targetSize, 0.1f);
         if (shakeTimer > 0)
         {
             screenShakeOffset = Random.insideUnitSphere * shakeAmount;
@@ -43,7 +44,7 @@ public class CameraManager : MonoBehaviour
         Time.timeScale = 0;
         yield return new WaitForSecondsRealtime(time);
         Time.timeScale = 1;
-        Camera.main.orthographicSize = 4.6f - (amount / 2);
+        Camera.main.orthographicSize = targetSize - (amount / 2);
         shakeTimer = time;
     }
 }
