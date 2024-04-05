@@ -52,11 +52,11 @@ public class Fighter : MonoBehaviour
         {
             opponent.consecutiveHits++;
             opponent.consecutiveDamage += damage;
-            consecutiveHits = 0;
-            consecutiveDamage = 0;
             health += block;
             battleSystem.ui.TextPopUp("" + Mathf.Abs(block), ui.PuppetPos(this, "head", Vector2.up / 2), ui.numberPopUp);
             cam.ScreenShake(time, magnitude * Mathf.Abs(block), decreaseFactor);
+            consecutiveHits = 0;
+            consecutiveDamage = 0;
             block = 0;
         }
         else

@@ -23,6 +23,14 @@ public class BattleVFX : MonoBehaviour
     {
         bool outlineCondition = ui.DragFromHand() && battleSystem.playArea.cards.Count == 0;
         EnableParticleSystem("Outline", outlineCondition);
+        float gaugeEmissionRate = (float)battleSystem.player.spirit / battleSystem.player.spiritPerTurn;
+        SetParticleSystemEmissionRate("Gauge Sparkle", Mathf.Lerp(0, 10, gaugeEmissionRate));
+        bool bellSparkleCondition = battleSystem.player.spirit <= 0 && battleSystem.playArea.cards.Count > 0;
+        EnableParticleSystem("Bell Sparkle", bellSparkleCondition);
+        float playerComboTrackerEmissionRate = battleSystem.player.consecutiveHits > 2 ? (float)battleSystem.player.consecutiveHits / 10 : 0;
+        SetParticleSystemEmissionRate("Nelly Combo Flames", Mathf.Lerp(0,250,playerComboTrackerEmissionRate));
+        float enemyComboTrackerEmissionRate = battleSystem.enemy.consecutiveHits > 2 ? (float)battleSystem.enemy.consecutiveHits / 10 : 0;
+        SetParticleSystemEmissionRate("Bruttia Combo Flames", Mathf.Lerp(0, 250, enemyComboTrackerEmissionRate));
     }
     private void FixedUpdate()
     {
@@ -40,6 +48,10 @@ public class BattleVFX : MonoBehaviour
     public void EnableParticleSystem(string key, bool state)
     {
         particles[key].enableEmission = state;
+    }
+    public void SetParticleSystemEmissionRate(string key, float emissionRate)
+    {
+        particles[key].emissionRate = emissionRate;
     }
     public void SetVignetteIntensity(float intensity)
     {

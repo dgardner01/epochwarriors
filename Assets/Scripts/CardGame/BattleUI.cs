@@ -240,7 +240,7 @@ public class BattleUI : MonoBehaviour
         {
             comboTracker.SetActive(true);
             Transform trackerObject = comboTracker.transform;
-            trackerObject.GetChild(0).GetComponent<TextMeshProUGUI>().text = fighter.consecutiveHits + " hits!";
+            trackerObject.GetChild(1).GetComponent<TextMeshProUGUI>().text = fighter.consecutiveHits + " hits!";
         }
         else
         {
