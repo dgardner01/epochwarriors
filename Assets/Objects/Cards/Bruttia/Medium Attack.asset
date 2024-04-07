@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 086a04e9f5f48df4294f081bf3ed9d1a, type: 3}
   m_Name: Medium Attack
   m_EditorClassIdentifier: 
-  name: Haymaker
+  name: Uppercut
   description: 
   spiritCost: 2
-  damage: 9
+  damage: 12
   block: 0
   comboPosition: 1
   cardType: 0
