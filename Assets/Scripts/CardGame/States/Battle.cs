@@ -10,11 +10,14 @@ public class Battle : State
     BattleUI ui => BattleSystem.ui;
     public override IEnumerator Start()
     {
+        BattleSystem.enemy.ClearIntents();
         BattleSystem.ui.PrintLog("battle begin");
         BattleSystem.player.turnDamage = BattleSystem.player.health;
         BattleSystem.enemy.turnDamage = BattleSystem.enemy.health;
         BattleSystem.StartCoroutine(BattleSystem.InitializeCombos());
         yield return new WaitForSeconds(1);
+        BattleSystem.ui.lowerThird.GetComponent<Animator>().Play("down");
+        yield return new WaitForSeconds(.25f);
         BattleSystem.ui.InitializeComboDisplay();
         BattleSystem.StartCoroutine(ResolveCard());
     }

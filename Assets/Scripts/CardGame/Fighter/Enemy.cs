@@ -19,7 +19,7 @@ public class Enemy : Fighter
     }
     private void Update()
     {
-        DisplayIntents();
+
     }
     public void UpdateTurnIndex()
     {
@@ -31,7 +31,7 @@ public class Enemy : Fighter
             currentTurn.Add(turnPattern[turnIndex].turn[i]);
         }
     }
-    void DisplayIntents()
+    public IEnumerator DisplayIntents()
     {
         for (int i = 0; i < intentObjects.Count; i++)
         {
@@ -57,11 +57,15 @@ public class Enemy : Fighter
                         number.text = "" + card.statusEffect.magnitude;
                         break;
                 }
+                yield return new WaitForSeconds(0.1f);
             }
-            else
-            {
-                intentObjects[i].SetActive(false);
-            }
+        }
+    }
+    public void ClearIntents()
+    {
+        for (int i = 0; i < intentObjects.Count; i++)
+        {
+            intentObjects[i].SetActive(false);
         }
     }
     public Card FirstAttackInTurn()

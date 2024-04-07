@@ -13,11 +13,13 @@ public class PlayerTurn : State
             BattleSystem.ui.PrintLog("player turn begin");
         BattleSystem.player.turnDamage = BattleSystem.player.health;
         BattleSystem.enemy.turnDamage = BattleSystem.enemy.health;
+        BattleSystem.ui.lowerThird.GetComponent<Animator>().Play("up");
         BattleSystem.StartCoroutine(BattleSystem.ui.ClearCombo(BattleSystem.playerCombo.transform, BattleSystem.discard.transform));
         yield return new WaitForSeconds(0.5f);
         BattleSystem.StartCoroutine(BattleSystem.ui.ClearCombo(BattleSystem.enemyCombo.transform, BattleSystem.ui.enemyPlayedZone.transform));
         yield return new WaitForSeconds(0.5f);
         BattleSystem.enemy.UpdateTurnIndex();
+        BattleSystem.enemy.StartCoroutine(BattleSystem.enemy.DisplayIntents());
         BattleSystem.player.UpdateStatusEffects();
         BattleSystem.enemy.UpdateStatusEffects();
         if (BattleSystem.enemy.activeStatusEffects.Count > 0)
