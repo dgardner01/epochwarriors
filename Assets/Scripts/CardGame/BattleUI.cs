@@ -154,11 +154,6 @@ public class BattleUI : MonoBehaviour
             cardObject.localPosition = lerpedPosition;
             cardObject.localRotation = lerpedRotation;
             cardObject.position = cardDisplay.drag ? Input.mousePosition : cardObject.position;
-
-            if (cards.Count < 1)
-            {
-                Destroy(cardObject.gameObject);
-            }
         }
     }
     public bool DragFromHand()

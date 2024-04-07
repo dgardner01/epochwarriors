@@ -49,8 +49,7 @@ public class BattleSystem : StateMachine
         {
             player.ApplyStatusEffect(card.statusEffect.CreateStatusEffect());
         }
-        player.spirit -= card.spiritCost;
-        hand.cards.Remove(card);
+        playArea.cards.Remove(card);
         discard.cards.Add(card);
     }
     public IEnumerator InitializeCombos()

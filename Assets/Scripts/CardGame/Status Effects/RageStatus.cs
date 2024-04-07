@@ -13,8 +13,8 @@ public class RageStatus : StatusEffect
     }
     public override void OnApply(Fighter fighter)
     {
-        magnitude++;
-        fighter.strength++;
+        fighter.strength += duration;
+        magnitude += duration;
         fighter.battleSystem.vfx.SetVignetteIntensity(vignetteIntensity);
     }
     public override void OnTurnUpdate(Fighter fighter)

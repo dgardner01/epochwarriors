@@ -41,7 +41,20 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     // Update is called once per frame
     void Update()
     {
+        Transform hand = FindAnyObjectByType<Hand>().transform;
+        Transform playArea = FindAnyObjectByType<PlayArea>().transform;
+        bool playable = battleSystem.player.spirit >= card.spiritCost;
         yThreshold = battleSystem.ui.yThreshold;
+        if (transform.position.y > yThreshold && transform.parent == hand && playable)
+        {
+            battleSystem.ui.ReparentCard(gameObject, battleSystem.playArea.transform);
+            battleSystem.PlayCard(card);
+        }
+        if (transform.position.y < yThreshold && transform.parent == playArea)
+        {
+            battleSystem.ui.ReparentCard(gameObject, battleSystem.hand.transform);
+            battleSystem.ReturnCard(card);
+        }
         Player player = battleSystem.player;
         title.text = card.name;
         spiritCost.text = ""+card.spiritCost;
@@ -168,35 +181,11 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     }
     public void PlayCard()
     {
-        Transform hand = FindAnyObjectByType<Hand>().transform;
-        Transform playArea = FindAnyObjectByType<PlayArea>().transform;
-
-        float threshold = yThreshold;
-        bool playable = battleSystem.player.spirit >= card.spiritCost;
-
-        if (card != null)
+        bounceTime = 0;
+        if (card != null && card.comboPosition < 0 && transform.parent == battleSystem.playArea.transform)
         {
-            if (transform.localPosition.y > threshold && transform.parent == hand && playable)
-            {
-                bounceTime = 0;
-                if (card.comboPosition > -1)
-                {
-                    battleSystem.PlayCard(card);
-                    battleSystem.ui.ReparentCard(gameObject, battleSystem.playArea.transform);
-                }
-                else
-                {
-                    discardBuffer = bounceTimeMax;
-                    battleSystem.ResolveInstantCard(card);
-                    battleSystem.ui.ReparentCard(gameObject, battleSystem.discard.transform);
-                }
-            }
-            if (transform.localPosition.y < -threshold && transform.parent == playArea)
-            {
-                bounceTime = 0;
-                battleSystem.ReturnCard(card);
-                battleSystem.ui.ReparentCard(gameObject, battleSystem.hand.transform);
-            }
+            battleSystem.ResolveInstantCard(card);
+            battleSystem.ui.ReparentCard(gameObject, battleSystem.discard.transform);
         }
     }
 

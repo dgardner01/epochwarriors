@@ -20,4 +20,4 @@ MonoBehaviour:
   comboPosition: 2
   cardType: 0
   statusEffect: {fileID: 0}
-  animation: {fileID: 0}
+  animation: {fileID: 7400000, guid: 797e075afb5f099489fcc50fce9af193, type: 2}
