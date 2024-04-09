@@ -10277,27 +10277,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6541804612454531740, guid: 195d49ebf424e82419622dffdbdb0278, type: 3}
       propertyPath: m_Bounds.m_Center.x
-      value: -0.016704619
+      value: -0.06909692
       objectReference: {fileID: 0}
     - target: {fileID: 6541804612454531740, guid: 195d49ebf424e82419622dffdbdb0278, type: 3}
       propertyPath: m_Bounds.m_Center.y
-      value: -0.21633887
+      value: -0.2385838
       objectReference: {fileID: 0}
     - target: {fileID: 6541804612454531740, guid: 195d49ebf424e82419622dffdbdb0278, type: 3}
       propertyPath: m_Bounds.m_Center.z
-      value: 0.000070083086
+      value: 0.0001342065
       objectReference: {fileID: 0}
     - target: {fileID: 6541804612454531740, guid: 195d49ebf424e82419622dffdbdb0278, type: 3}
       propertyPath: m_Bounds.m_Extent.x
-      value: 0.2999382
+      value: 0.5001954
       objectReference: {fileID: 0}
     - target: {fileID: 6541804612454531740, guid: 195d49ebf424e82419622dffdbdb0278, type: 3}
       propertyPath: m_Bounds.m_Extent.y
-      value: 0.30604953
+      value: 0.5687127
       objectReference: {fileID: 0}
     - target: {fileID: 6541804612454531740, guid: 195d49ebf424e82419622dffdbdb0278, type: 3}
       propertyPath: m_Bounds.m_Extent.z
-      value: 0.0000000040163286
+      value: 0.000000007210474
       objectReference: {fileID: 0}
     - target: {fileID: 6541804612454531740, guid: 195d49ebf424e82419622dffdbdb0278, type: 3}
       propertyPath: m_BoneTransforms.Array.size
