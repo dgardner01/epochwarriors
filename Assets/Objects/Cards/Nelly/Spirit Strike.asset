@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Spirit Strike
   m_EditorClassIdentifier: 
   name: Spirit Strike
-  description: Gain 2 spirit next turn.
+  description: Gain 1 spirit next turn.
   spiritCost: 2
   damage: 6
   block: 0

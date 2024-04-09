@@ -15,6 +15,7 @@ public class Fighter : MonoBehaviour
     public int cardsDrawnPerTurn;
     public int consecutiveHits;
     public int consecutiveDamage;
+    public int chain;
     public List<StatusEffect> activeStatusEffects = new List<StatusEffect>();
     public FighterAnimator animator;
     public void Damage(int damage, Fighter opponent)
@@ -23,6 +24,9 @@ public class Fighter : MonoBehaviour
         float time = 0.1f;
         float magnitude = 0.1f;
         float decreaseFactor = 2;
+        float bounceMag = 0.05f;
+        float bounceFreq = 10;
+        float lostComboModifier = consecutiveHits > 2 ? 2 : 1;
         StatusEffect dodgeStatus = null;
         StatusEffect parryStatus = null;
         foreach (StatusEffect status in activeStatusEffects)
@@ -53,18 +57,27 @@ public class Fighter : MonoBehaviour
         {
             opponent.consecutiveHits++;
             opponent.consecutiveDamage += damage;
+            float magModifier = damage;
+            float freqModifier = 1;
             health += block;
             battleSystem.ui.TextPopUp("" + Mathf.Abs(block), ui.PuppetPos(this, "head", Vector2.up / 2), ui.numberPopUp);
-            cam.ScreenShake(time, magnitude * Mathf.Abs(block), decreaseFactor);
+            cam.ScreenShake(time * lostComboModifier, magnitude * Mathf.Min(15,Mathf.Abs(block)) * lostComboModifier, decreaseFactor);
+            if (consecutiveHits > 2)
+            {
+                //ui.TextPopUp("C-c-combo breaker!", ui.PuppetPos(opponent, "head", Vector2.up), ui.blockPopUp);
+            }
+            battleSystem.vfx.StartBackgroundCharBounce(bounceMag * magModifier, bounceFreq * freqModifier);
             consecutiveHits = 0;
             consecutiveDamage = 0;
+            chain = 0;
             block = 0;
         }
         else
         {
+            battleSystem.vfx.StartBackgroundCharBounce(bounceMag, bounceFreq);
             animator.PlayAnimationClipByName("guard");
             battleSystem.ui.TextPopUp("Blocked!",ui.PuppetPos(this, "head", Vector2.up), ui.blockPopUp);
-            cam.ScreenShake(time, magnitude/2, decreaseFactor);
+            cam.ScreenShake(time, (magnitude/2), decreaseFactor);
         }
     }
     public IEnumerator DelayedDamage(int damage, Fighter opponent)

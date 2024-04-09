@@ -14,6 +14,15 @@ public class Battle : State
         BattleSystem.ui.PrintLog("battle begin");
         BattleSystem.player.turnDamage = BattleSystem.player.health;
         BattleSystem.enemy.turnDamage = BattleSystem.enemy.health;
+        if (BattleSystem.playArea.chain)
+        {
+            BattleSystem.ui.PrintLog("chain bonus!");
+            BattleSystem.player.chain++;
+        }
+        else
+        {
+            BattleSystem.player.chain = 0;
+        }
         BattleSystem.StartCoroutine(BattleSystem.InitializeCombos());
         yield return new WaitForSeconds(1);
         BattleSystem.ui.lowerThird.GetComponent<Animator>().Play("down");

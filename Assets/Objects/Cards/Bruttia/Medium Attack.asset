@@ -15,7 +15,7 @@ MonoBehaviour:
   name: Uppercut
   description: 
   spiritCost: 2
-  damage: 12
+  damage: 15
   block: 0
   comboPosition: 1
   cardType: 0

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Afterimage
   description: Dodge next attack this turn.
-  spiritCost: 3
+  spiritCost: 4
   damage: 0
   block: 0
   comboPosition: 1

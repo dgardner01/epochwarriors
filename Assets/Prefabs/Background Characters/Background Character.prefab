@@ -98,5 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startPosition: {x: 0, y: 0, z: 0}
-  magnitude: 0.1
+  magnitude: 0.01
   frequency: 10
+  smoothSpeed: 0.05
+  excitement: 0

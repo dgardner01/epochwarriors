@@ -49,6 +49,9 @@ public class BattleUI : MonoBehaviour
     public GameObject enemyBlockIndicator;
 
     public Image spiritFill;
+    public Image[] rewards;
+    public TextMeshProUGUI chainText;
+    public GameObject chainBonus;
 
     public Color nelly, bruttia, block, damage;
 
@@ -65,7 +68,7 @@ public class BattleUI : MonoBehaviour
     }
     private void Update()
     {
-
+        ComboRewardsDisplay();
     }
     private void FixedUpdate()
     {
@@ -76,7 +79,7 @@ public class BattleUI : MonoBehaviour
         ContainerDisplay(playedZone.transform);
         ContainerDisplay(enemyPlayedZone.transform);
         ComboDisplay(playerComboTracker, battleSystem.player);
-        ComboDisplay(enemyComboTracker, battleSystem.enemy); ;
+        ComboDisplay(enemyComboTracker, battleSystem.enemy);
         StatusEffectDisplay();
         CardCountDisplay();
         SpiritDisplay();
@@ -115,7 +118,6 @@ public class BattleUI : MonoBehaviour
     {
         cardObject.transform.SetParent(container);
     }
-
     public void CardsDisplay(List<Card> cards, RectTransform container)
     {
         float totalAngle = spreadAngle * cards.Count - 1;
@@ -135,6 +137,7 @@ public class BattleUI : MonoBehaviour
             }
 
             CardDisplay cardDisplay = cardObject.gameObject.GetComponent<CardDisplay>();
+            cardDisplay.chained = false;
             float hoverHeight = cardDisplay.hover ? hoverMagnitude : 0;
             float angle = startingAngle + spreadAngle * i;
             float radianAngle = Mathf.Deg2Rad * angle;
@@ -240,6 +243,27 @@ public class BattleUI : MonoBehaviour
         else
         {
             comboTracker.SetActive(false);
+        }
+    }
+    public void ComboRewardsDisplay()
+    {
+        if (battleSystem.player.consecutiveHits > 2)
+        {
+            rewards[1].gameObject.SetActive(true);
+        }
+        else
+        {
+            rewards[1].gameObject.SetActive(false);
+        }
+        if (battleSystem.player.chain > 0)
+        {
+            rewards[0].gameObject.SetActive(true);
+            chainText.text = "Chain x" + battleSystem.player.chain;
+        }
+        else
+        {
+            rewards[0].gameObject.SetActive(false);
+            chainText.text = "";
         }
     }
     public void StatusEffectDisplay()

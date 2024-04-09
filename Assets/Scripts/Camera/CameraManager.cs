@@ -34,14 +34,16 @@ public class CameraManager : MonoBehaviour
     }
     public void ScreenShake(float time, float amount, float decreaseFactor)
     {
-        StartCoroutine(FreezeFrame(time/2, amount));
+        StartCoroutine(FreezeFrame(time, amount));
         shakeAmount = amount;
         this.decreaseFactor = decreaseFactor;
     }
 
     public IEnumerator FreezeFrame(float time, float amount)
     {
-        yield return new WaitForSecondsRealtime(0);
+        Time.timeScale = 0;
+        yield return new WaitForSecondsRealtime(time/2);
+        Time.timeScale = 1;
         Camera.main.orthographicSize = targetSize - (amount / 2);
         shakeTimer = time;
     }

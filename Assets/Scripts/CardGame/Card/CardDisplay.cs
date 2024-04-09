@@ -15,6 +15,7 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public Sprite[] symbolSprites;
     public Image chain;
     public Sprite[] comboChains;
+    public ParticleSystem[] chainParticles;
     BattleSystem battleSystem => FindAnyObjectByType<BattleSystem>();
 
     public AnimationCurve[] bounce;
@@ -29,6 +30,7 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public bool hover;
     public bool drag;
     public bool played;
+    public bool chained;
     public float discardBuffer;
     public float yThreshold;
     public Card card;
@@ -41,6 +43,11 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     // Update is called once per frame
     void Update()
     {
+        for (int i = 0; i < chainParticles.Length; i++)
+        {
+            chainParticles[i].startRotation = -transform.localRotation.z;
+            chainParticles[i].enableEmission = chained;
+        }
         Transform hand = FindAnyObjectByType<Hand>().transform;
         Transform playArea = FindAnyObjectByType<PlayArea>().transform;
         bool playable = battleSystem.player.spirit >= card.spiritCost;
@@ -52,6 +59,7 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         }
         if (transform.position.y < yThreshold && transform.parent == playArea)
         {
+            print(transform.position.y);
             battleSystem.ui.ReparentCard(gameObject, battleSystem.hand.transform);
             battleSystem.ReturnCard(card);
         }

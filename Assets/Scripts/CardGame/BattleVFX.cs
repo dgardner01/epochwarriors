@@ -13,6 +13,7 @@ public class BattleVFX : MonoBehaviour
     public float targetVignetteIntensity, lerpedVignetteIntensity, vignetteSpeed;
     public ParticleSystem[] particleReferences;
     public Dictionary<string, ParticleSystem> particles = new Dictionary<string, ParticleSystem>();
+    public GameObject backgroundCharacterParent;
     // Start is called before the first frame update
     void Start()
     {
@@ -58,5 +59,14 @@ public class BattleVFX : MonoBehaviour
         lerpedVignetteIntensity = intensity;
     }
 
+    public void StartBackgroundCharBounce(float magnitude, float frequency)
+    {
+        for (int i = 0; i < backgroundCharacterParent.transform.childCount; i++)
+        {
+            GameObject characterObject = backgroundCharacterParent.transform.GetChild(i).gameObject;
+            BackgroundCharAnimation animator = characterObject.GetComponent<BackgroundCharAnimation>();
+            animator.StartBounce(magnitude, frequency);
+        }
+    }
 
 }

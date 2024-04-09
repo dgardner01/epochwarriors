@@ -45,6 +45,11 @@ public class PlayerTurn : State
         }
         BattleSystem.AssignEnemyIntent();
         BattleSystem.StartCoroutine(BattleSystem.hand.DrawCard(BattleSystem.player.cardsDrawnPerTurn));
+        if (BattleSystem.player.consecutiveHits > 2 || BattleSystem.player.chain > 0)
+        {
+            yield return new WaitForSeconds(1);
+            BattleSystem.StartCoroutine(BattleSystem.player.ApplyRewards());
+        }
         BattleSystem.player.spirit += BattleSystem.player.spiritPerTurn;
         BattleSystem.player.block = 0;
         BattleSystem.enemy.block = 0;

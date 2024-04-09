@@ -26,9 +26,11 @@ public class Enemy : Fighter
         turnIndex++;
         turnIndex %= turnPattern.Count;
         currentTurn.Clear();
-        for (int i = 0; i < turnPattern[turnIndex].turn.Count; i++)
+        List<EnemyTurn> variants = turnPattern[turnIndex].variants;
+        EnemyTurn turnVariant = variants[Random.Range(0, variants.Count)];
+        for (int i = 0; i < turnVariant.turn.Count; i++)
         {
-            currentTurn.Add(turnPattern[turnIndex].turn[i]);
+            currentTurn.Add(turnVariant.turn[i]);
         }
     }
     public IEnumerator DisplayIntents()
@@ -84,5 +86,11 @@ public class Enemy : Fighter
 [System.Serializable]
 public class TurnPattern
 {
+    public List<EnemyTurn> variants = new List<EnemyTurn>();
+}
+[System.Serializable]
+public class EnemyTurn
+{
     public List<Card> turn = new List<Card>();
 }
+

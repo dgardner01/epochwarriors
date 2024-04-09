@@ -15,4 +15,4 @@ MonoBehaviour:
   symbol: {fileID: -317091624, guid: 90fd1464fad1a2f4db05f2d36e3f52be, type: 3}
   id: Spirit gain
   duration: 0
-  magnitude: 2
+  magnitude: 1
