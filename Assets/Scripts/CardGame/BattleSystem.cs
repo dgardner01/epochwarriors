@@ -58,6 +58,7 @@ public class BattleSystem : StateMachine
         int cards = playArea.cards.Count;
         for (int i = 0; i < cards; i++)
         {
+            playArea.transform.GetChild(0).gameObject.GetComponent<CardDisplay>().chained = false;
             ui.ReparentCard(playArea.transform.GetChild(0).gameObject, ui.playedZone.transform);
             playerCombo.cards.Add(playArea.cards[0]);
             discard.cards.Add(playArea.cards[0]);

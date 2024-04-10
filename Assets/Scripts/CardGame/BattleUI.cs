@@ -258,11 +258,13 @@ public class BattleUI : MonoBehaviour
         if (battleSystem.player.chain > 0)
         {
             rewards[0].gameObject.SetActive(true);
+            chainText.gameObject.SetActive(true);
             chainText.text = "Chain x" + battleSystem.player.chain;
         }
         else
         {
             rewards[0].gameObject.SetActive(false);
+            chainText.gameObject.SetActive(false);
             chainText.text = "";
         }
     }
