@@ -129,7 +129,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Nelly Extra_0
+      name: puff_down
       rect:
         serializedVersion: 2
         x: 290
@@ -537,7 +537,7 @@ TextureImporter:
         boneIndex[2]: 0
         boneIndex[3]: 0
     - serializedVersion: 2
-      name: Nelly Extra_1
+      name: hand_side
       rect:
         serializedVersion: 2
         x: 867
@@ -1755,7 +1755,7 @@ TextureImporter:
         boneIndex[2]: 0
         boneIndex[3]: 0
     - serializedVersion: 2
-      name: Nelly Extra_4
+      name: puff_back
       rect:
         serializedVersion: 2
         x: 338
@@ -2159,11 +2159,11 @@ TextureImporter:
         boneIndex[2]: 0
         boneIndex[3]: 0
     - serializedVersion: 2
-      name: Nelly Extra_5
+      name: handside_flat
       rect:
         serializedVersion: 2
         x: 1600
-        y: 659
+        y: 655
         width: 324
         height: 663
       alignment: 0
@@ -2678,12 +2678,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Nelly Extra_0: 1531556153
-      Nelly Extra_1: 856814299
       Nelly Extra_2: 376889506
       Nelly Extra_3: -435433962
-      Nelly Extra_4: 1018647575
-      Nelly Extra_5: 498078813
+      hand_side: 856814299
+      handside_flat: 498078813
+      puff_back: 1018647575
+      puff_down: 1531556153
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
