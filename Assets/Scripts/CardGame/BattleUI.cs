@@ -60,6 +60,7 @@ public class BattleUI : MonoBehaviour
     public TextMeshProUGUI discardPileCount;
     public TextMeshProUGUI energyCount;
     [Header("VFX")]
+    public GameObject headPosPlayer, headPosEnemy;
     public Transform UIParticleParent;
     public GameObject blockPopUp, statusPopUp, numberPopUp;
     private void Start()
@@ -381,14 +382,14 @@ public class BattleUI : MonoBehaviour
     }
     public Vector2 PuppetPos(Fighter fighter, string bodyPart, Vector3 offset)
     {
-        Transform part;
-        if (!fighter.animator.transform.Find(bodyPart))
+        Transform part = null;
+        if (fighter == battleSystem.player)
         {
-            part = fighter.animator.transform.Find("S " + bodyPart);
+            part = headPosPlayer.transform;
         }
-        else
+        if (fighter == battleSystem.enemy)
         {
-            part = fighter.animator.transform.Find(bodyPart);
+            part = headPosEnemy.transform;
         }
         Vector2 puppetPos = part.position + offset;
         return Camera.main.WorldToScreenPoint(puppetPos);

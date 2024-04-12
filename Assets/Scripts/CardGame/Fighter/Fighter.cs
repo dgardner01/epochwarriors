@@ -82,7 +82,7 @@ public class Fighter : MonoBehaviour
     }
     public IEnumerator DelayedDamage(int damage, Fighter opponent)
     {
-        animator.PlayAnimationClipByName("bite");
+        //animator.PlayAnimationClipByName("bite");
         yield return new WaitForSeconds(.5f);
         opponent.Damage(damage, this); 
     }
