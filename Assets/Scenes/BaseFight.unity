@@ -32768,6 +32768,8 @@ MonoBehaviour:
   drawPileCount: {fileID: 1131414672}
   discardPileCount: {fileID: 931905132}
   energyCount: {fileID: 616608941}
+  headPosPlayer: {fileID: 0}
+  headPosEnemy: {fileID: 0}
   UIParticleParent: {fileID: 630187989}
   blockPopUp: {fileID: 871832024883575666, guid: be3c5fbf49f77154cafceb0839cd1052, type: 3}
   statusPopUp: {fileID: 871832024883575666, guid: 56263b98f381ef646b4d39285b5106ff, type: 3}

@@ -36,14 +36,14 @@ public class Battle : State
         Enemy enemy = BattleSystem.enemy;
         PlayerCombo playerCombo = BattleSystem.playerCombo;
         float waitTime = .75f;
-        if (BattleSystem.playerCombo.cards.Count > 0)
+        if (BattleSystem.playerCombo.cards.Count > 0 && BattleSystem.player.health > 0)
         {
             ui.PlayComboCard(BattleSystem.playerCombo.transform, BattleSystem.playerCombo.cards);
             Card playerCard = playerCombo.cards[0];
             if (playerCard.animation != null)
             {
                 player.animator.PlayAnimationClip(playerCard.animation);
-                yield return new WaitForSeconds(player.animator.GetImpactTimeFromClipName(playerCard.animation.name));
+                yield return new WaitForSeconds(.5f);
             }
             else
             {
@@ -66,7 +66,7 @@ public class Battle : State
                 yield return new WaitForSeconds(waitTime);
             }
         }
-        if (BattleSystem.enemy.currentTurn.Count > 0)
+        if (BattleSystem.enemy.currentTurn.Count > 0 && BattleSystem.enemy.health > 0)
         {
             ui.PlayComboCard(BattleSystem.enemyCombo.transform, BattleSystem.enemy.currentTurn);
             yield return new WaitForSeconds(waitTime / 2);
@@ -91,6 +91,10 @@ public class Battle : State
                 enemy.ApplyStatusEffect(enemyCard.statusEffect.CreateStatusEffect());
                 yield return new WaitForSeconds(waitTime);
             }
+        }
+        if (BattleSystem.player.health <= 0)
+        {
+            BattleSystem.SetState(new Win(BattleSystem));
         }
         if (playerCombo.cards.Count == 0 && BattleSystem.enemy.currentTurn.Count == 0)
         {
