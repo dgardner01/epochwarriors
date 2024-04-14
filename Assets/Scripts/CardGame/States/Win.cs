@@ -11,6 +11,7 @@ public class Win : State
     }
     public override IEnumerator Start()
     {
+        MusicManager.Instance.PlayMusic("Victory");
         BattleSystem.StartCoroutine(BattleSystem.ui.ClearCombo(BattleSystem.playerCombo.transform, BattleSystem.discard.transform));
         BattleSystem.StartCoroutine(BattleSystem.ui.ClearCombo(BattleSystem.enemyCombo.transform, BattleSystem.ui.enemyPlayedZone.transform));
         yield return new WaitForSeconds(0.1f);

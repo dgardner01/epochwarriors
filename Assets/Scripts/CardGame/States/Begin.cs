@@ -9,6 +9,7 @@ public class Begin : State
         }
         public override IEnumerator Start()
         {
+        MusicManager.Instance.PlayMusic("Rocks and Rolls");
             BattleSystem.ui.PrintLog("match begin");
         yield return new WaitForSeconds(2);
             BattleSystem.SetState(new PlayerTurn(BattleSystem));
