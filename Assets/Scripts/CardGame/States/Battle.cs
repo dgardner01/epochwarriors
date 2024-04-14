@@ -92,11 +92,15 @@ public class Battle : State
                 yield return new WaitForSeconds(waitTime);
             }
         }
-        if (BattleSystem.player.health <= 0)
+        if (BattleSystem.enemy.health <= 0)
         {
             BattleSystem.SetState(new Win(BattleSystem));
         }
-        if (playerCombo.cards.Count == 0 && BattleSystem.enemy.currentTurn.Count == 0)
+        else if (BattleSystem.player.health <= 0)
+        {
+            BattleSystem.SetState(new Lose(BattleSystem));
+        }
+        else if (playerCombo.cards.Count == 0 && BattleSystem.enemy.currentTurn.Count == 0)
         {
             BattleSystem.SetState(new PlayerTurn(BattleSystem));
         }
