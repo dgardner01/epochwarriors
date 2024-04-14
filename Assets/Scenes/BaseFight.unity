@@ -23876,7 +23876,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   name: 
-  health: 1
+  health: 100
   turnDamage: 0
   maxHealth: 100
   strength: 0
