@@ -6,9 +6,14 @@ public class PlayArea : MonoBehaviour
 {
     public List<Card> cards;
     public bool chain;
+    public bool hasChained;
     private void Update()
     {
         CheckForChain();
+        if (!chain)
+        {
+            hasChained = false;
+        }
     }
     void CheckForChain()
     {
@@ -50,6 +55,11 @@ public class PlayArea : MonoBehaviour
         chain = comboEnded;
         if (chain)
         {
+            if (!hasChained)
+            {
+                SFXManager.Instance.PlaySound("chainActive");
+                hasChained = true;
+            }
             for (int i = startIndex; i < endIndex + 1; i++)
             {
                 GameObject cardObject = transform.GetChild(i).gameObject;

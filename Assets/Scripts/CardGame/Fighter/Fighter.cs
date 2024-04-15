@@ -18,7 +18,7 @@ public class Fighter : MonoBehaviour
     public int chain;
     public List<StatusEffect> activeStatusEffects = new List<StatusEffect>();
     public FighterAnimator animator;
-    public void Damage(int damage, Fighter opponent)
+    public void Damage(int damage, float knockback, Fighter opponent)
     {
         CameraManager cam = Camera.main.GetComponent<CameraManager>();
         float time = 0.1f;
@@ -55,36 +55,77 @@ public class Fighter : MonoBehaviour
         block -= damage;
         if (block < 0)
         {
-            opponent.consecutiveHits++;
-            opponent.consecutiveDamage += damage;
-            float magModifier = damage;
-            float freqModifier = 1;
-            health += block;
-            battleSystem.ui.TextPopUp("" + Mathf.Abs(block), ui.PuppetPos(this, "head", Vector2.up / 2), ui.numberPopUp);
-            cam.ScreenShake(time * lostComboModifier, magnitude * Mathf.Min(15,Mathf.Abs(block)) * lostComboModifier, decreaseFactor);
-            if (consecutiveHits > 2)
+            if (health + block <= 0)
             {
-                //ui.TextPopUp("C-c-combo breaker!", ui.PuppetPos(opponent, "head", Vector2.up), ui.blockPopUp);
+                animator.PlayAnimationClipByName("defeat");
+                SFXManager.Instance.PlaySound("hitXL");
+                cam.ScreenShake(.5f, magnitude * Mathf.Min(15, Mathf.Abs(block)) * lostComboModifier, decreaseFactor);
+                battleSystem.SetState(new Win(battleSystem));
             }
-            battleSystem.vfx.StartBackgroundCharBounce(bounceMag * magModifier, bounceFreq * freqModifier);
-            consecutiveHits = 0;
-            consecutiveDamage = 0;
-            chain = 0;
-            block = 0;
+            else
+            {
+                if (block < -20)
+                {
+                    SFXManager.Instance.PlaySound("hitXL");
+                }
+                else if (block < -15)
+                {
+                    SFXManager.Instance.PlaySound("hitL");
+                }
+                else if (block < -10)
+                {
+                    SFXManager.Instance.PlaySound("hitM");
+                }
+                else
+                {
+                    SFXManager.Instance.PlaySound("hitS");
+                }
+                animator.hurt = true;
+                print(knockback);
+                StartCoroutine(ResetAnimatorHurt(knockback));
+                animator.ApplyKnockback(knockback);
+                animator.PlayAnimationClipByName("hurt" + Random.Range(1, 3));
+                opponent.consecutiveHits++;
+                if (opponent.consecutiveHits > 2)
+                {
+                    SFXManager.Instance.PlaySound("comboActive");
+                }
+                opponent.consecutiveDamage += damage;
+                float magModifier = damage;
+                float freqModifier = 1;
+                health += block;
+                battleSystem.ui.TextPopUp("" + Mathf.Abs(block), ui.PuppetPos(this, "head", Vector2.up / 2), ui.numberPopUp);
+                cam.ScreenShake(time * lostComboModifier, magnitude * Mathf.Min(15, Mathf.Abs(block)) * lostComboModifier, decreaseFactor);
+                if (consecutiveHits > 2)
+                {
+                    //ui.TextPopUp("C-c-combo breaker!", ui.PuppetPos(opponent, "head", Vector2.up), ui.blockPopUp);
+                }
+                battleSystem.vfx.StartBackgroundCharBounce(bounceMag * magModifier, bounceFreq * freqModifier);
+                consecutiveHits = 0;
+                consecutiveDamage = 0;
+                block = 0;
+            }
         }
         else
         {
             battleSystem.vfx.StartBackgroundCharBounce(bounceMag, bounceFreq);
+            SFXManager.Instance.PlaySound("guard");
             animator.PlayAnimationClipByName("guard");
+            animator.PlayAnimationClipByName("block");
             battleSystem.ui.TextPopUp("Blocked!",ui.PuppetPos(this, "head", Vector2.up), ui.blockPopUp);
             cam.ScreenShake(time, (magnitude/2), decreaseFactor);
         }
     }
+    public IEnumerator ResetAnimatorHurt(float knockback)
+    {
+        yield return new WaitForSeconds(knockback * animator.moveSpeed);
+        animator.hurt = false;
+    }
     public IEnumerator DelayedDamage(int damage, Fighter opponent)
     {
-        animator.PlayAnimationClipByName("bite");
+        //animator.PlayAnimationClipByName("bite");
         yield return new WaitForSeconds(.5f);
-        opponent.Damage(damage, this); 
+        opponent.Damage(damage, -3, this); 
     }
     public void ApplyStatusEffect(StatusEffect statusEffect)
     {

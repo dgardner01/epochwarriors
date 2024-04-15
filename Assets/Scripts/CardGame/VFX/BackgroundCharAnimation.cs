@@ -10,6 +10,7 @@ public class BackgroundCharAnimation : MonoBehaviour
     public float smoothSpeed;
     float _magnitude, _frequency;
     public float excitement;
+    public bool win;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,8 +28,11 @@ public class BackgroundCharAnimation : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        _magnitude = Mathf.Lerp(_magnitude, magnitude, smoothSpeed);
-        _frequency = Mathf.Lerp(_frequency, frequency, smoothSpeed);
+        if (!win)
+        {
+            _magnitude = Mathf.Lerp(_magnitude, magnitude, smoothSpeed);
+            _frequency = Mathf.Lerp(_frequency, frequency, smoothSpeed);
+        }
     }
 
     public void StartBounce(float magnitude, float frequency)

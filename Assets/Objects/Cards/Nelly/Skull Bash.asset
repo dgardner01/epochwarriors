@@ -16,8 +16,8 @@ MonoBehaviour:
   description: Block and reflect half of the damage of the next attack this turn.
   spiritCost: 3
   damage: 0
-  block: 4
+  block: 0
   comboPosition: 0
   cardType: 1
   statusEffect: {fileID: 11400000, guid: b0394a2f9ca53904eb22310929a09982, type: 2}
-  animation: {fileID: 0}
+  animation: {fileID: 7400000, guid: e46ee01e0cf0523439643bbf66a1d1d7, type: 2}

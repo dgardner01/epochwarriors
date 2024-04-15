@@ -69,4 +69,15 @@ public class BattleVFX : MonoBehaviour
         }
     }
 
+    public void BackgroundCharEndBounce()
+    {
+        for (int i = 0; i < backgroundCharacterParent.transform.childCount; i++)
+        {
+            GameObject characterObject = backgroundCharacterParent.transform.GetChild(i).gameObject;
+            BackgroundCharAnimation animator = characterObject.GetComponent<BackgroundCharAnimation>();
+            animator.StartBounce(1, 20);
+            animator.win = true;
+        }
+    }
+
 }
