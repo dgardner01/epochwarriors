@@ -58,9 +58,19 @@ public class BattleSystem : StateMachine
         int cards = playArea.cards.Count;
         for (int i = 0; i < cards; i++)
         {
-            playArea.transform.GetChild(0).gameObject.GetComponent<CardDisplay>().chained = false;
-            ui.ReparentCard(playArea.transform.GetChild(0).gameObject, ui.playedZone.transform);
-            playerCombo.cards.Add(playArea.cards[0]);
+            SFXManager.Instance.PlaySound("cardPickup");
+            CardDisplay display = playArea.transform.GetChild(0).gameObject.GetComponent<CardDisplay>();
+            display.chained = false;
+            if (display.card.name != "Scale Shield")
+            {
+                playerCombo.cards.Add(playArea.cards[0]);
+                ui.ReparentCard(playArea.transform.GetChild(0).gameObject, ui.playedZone.transform);
+            }
+            else
+            {
+                player.block += display.card.block;
+                ui.ReparentCard(playArea.transform.GetChild(0).gameObject, ui.discard.transform);
+            }
             discard.cards.Add(playArea.cards[0]);
             playArea.cards.Remove(playArea.cards[0]);
             yield return new WaitForSeconds(0.1f);
@@ -68,6 +78,7 @@ public class BattleSystem : StateMachine
         cards = hand.cards.Count;
         for (int i = 0; i < cards; i++)
         {
+            SFXManager.Instance.PlaySound("cardPickup");
             ui.ReparentCard(hand.transform.GetChild(0).gameObject, ui.discard.transform);
             discard.cards.Add(hand.cards[0]);
             hand.cards.Remove(hand.cards[0]);

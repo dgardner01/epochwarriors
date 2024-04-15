@@ -13,6 +13,8 @@ public class RageStatus : StatusEffect
     }
     public override void OnApply(Fighter fighter)
     {
+        SFXManager.Instance.PlaySound("rage");
+        fighter.animator.PlayAnimationClipByName("rage");
         fighter.strength += duration;
         magnitude += duration;
         fighter.battleSystem.vfx.SetVignetteIntensity(vignetteIntensity);

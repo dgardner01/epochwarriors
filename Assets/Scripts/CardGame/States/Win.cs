@@ -19,7 +19,7 @@ public class Win : State
         BattleSystem.vfx.particles["Confetti Burst"].Play();
         BattleSystem.vfx.EnableParticleSystem("Confetti Rain", true);
         BattleSystem.enemy.health = 0;
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(4);
         SceneManager.LoadScene("PlayerWin");
     }
 }

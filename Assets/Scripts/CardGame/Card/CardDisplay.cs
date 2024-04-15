@@ -189,8 +189,9 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     }
     public void PlayCard()
     {
+        SFXManager.Instance.PlaySound("cardSetdown");
         bounceTime = 0;
-        if (card != null && card.comboPosition < 0 && transform.parent == battleSystem.playArea.transform)
+        if (card != null && card.name == "Taunt" && transform.parent == battleSystem.playArea.transform)
         {
             battleSystem.ResolveInstantCard(card);
             battleSystem.ui.ReparentCard(gameObject, battleSystem.discard.transform);
@@ -208,6 +209,7 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     }
     public void OnBeginDrag(PointerEventData pointerEventData)
     {
+        SFXManager.Instance.PlaySound("cardPickup");
         drag = true;
     }
     public void OnDrag(PointerEventData pointerEventData)
