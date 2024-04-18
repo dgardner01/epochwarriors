@@ -129,6 +129,7 @@ public class Fighter : MonoBehaviour
     }
     public void ApplyStatusEffect(StatusEffect statusEffect)
     {
+        battleSystem.OnStatusEffectUp.Invoke();
         statusEffect.OnApply(this);
         if (statusEffect.duration < 0)
         {
@@ -159,11 +160,12 @@ public class Fighter : MonoBehaviour
 
     public void RemoveStatusEffect(StatusEffect statusEffect)
     {
+        battleSystem.OnStatusEffectDown.Invoke();
         statusEffect.OnRemove(this);
         activeStatusEffects.Remove(statusEffect);
     }
     
-    public void UpdateStatusEffects()
+    public IEnumerator UpdateStatusEffects()
     {
         if (activeStatusEffects == null)
         {
@@ -180,6 +182,7 @@ public class Fighter : MonoBehaviour
         }
         foreach(StatusEffect statusToRemove in effectsToRemove)
         {
+            yield return new WaitForSeconds(0.5f);
             RemoveStatusEffect(statusToRemove);
         }
     }

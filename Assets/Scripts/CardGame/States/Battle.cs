@@ -35,20 +35,17 @@ public class Battle : State
         Player player = BattleSystem.player;
         Enemy enemy = BattleSystem.enemy;
         PlayerCombo playerCombo = BattleSystem.playerCombo;
-        float waitTime = .75f;
+        float waitTime = 1;
         if (BattleSystem.playerCombo.cards.Count > 0 && BattleSystem.player.health > 0)
         {
-            SFXManager.Instance.PlaySound("cardSetdown");
+            BattleSystem.OnCardPlay.Invoke();
             ui.PlayComboCard(BattleSystem.playerCombo.transform, BattleSystem.playerCombo.cards);
             Card playerCard = playerCombo.cards[0];
+            yield return new WaitForSeconds(waitTime);
             if (playerCard.animation != null)
             {
                 player.animator.PlayAnimationClip(playerCard.animation);
                 yield return new WaitForSeconds(player.animator.GetImpactTimeFromClip(playerCard.animation));
-            }
-            else
-            {
-                yield return new WaitForSeconds(waitTime/2);
             }
             if (playerCard.block > 0)
             {
@@ -69,9 +66,9 @@ public class Battle : State
         }
         if (BattleSystem.enemy.currentTurn.Count > 0 && BattleSystem.enemy.health > 0)
         {
-            SFXManager.Instance.PlaySound("cardSetdown");
+            BattleSystem.OnCardPlay.Invoke();
             ui.PlayComboCard(BattleSystem.enemyCombo.transform, BattleSystem.enemy.currentTurn);
-            yield return new WaitForSeconds(waitTime / 2);
+            yield return new WaitForSeconds(waitTime);
             Card enemyCard = BattleSystem.enemy.currentTurn[0];
             if (enemyCard.animation != null)
             {

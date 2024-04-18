@@ -20,8 +20,8 @@ public class PlayerTurn : State
         yield return new WaitForSeconds(0.5f);
         BattleSystem.enemy.UpdateTurnIndex();
         BattleSystem.enemy.StartCoroutine(BattleSystem.enemy.DisplayIntents());
-        BattleSystem.player.UpdateStatusEffects();
-        BattleSystem.enemy.UpdateStatusEffects();
+        BattleSystem.StartCoroutine(BattleSystem.player.UpdateStatusEffects());
+        BattleSystem.StartCoroutine(BattleSystem.enemy.UpdateStatusEffects());
         if (BattleSystem.enemy.activeStatusEffects.Count > 0)
         {
             StatusEffect status = BattleSystem.enemy.activeStatusEffects[0];

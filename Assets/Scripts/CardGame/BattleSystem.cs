@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class BattleSystem : StateMachine
 {
@@ -14,6 +15,21 @@ public class BattleSystem : StateMachine
     public EnemyPlayArea enemyPlayArea;
     public PlayerCombo playerCombo;
     public EnemyCombo enemyCombo;
+    [Header("Card Events")]
+    public UnityEvent OnCardDraw;
+    public UnityEvent OnCardHover;
+    public UnityEvent OnCardPickup;
+    public UnityEvent OnCardSwap;
+    public UnityEvent OnCardPutdown;
+    public UnityEvent OnCardPlay;
+    public UnityEvent OnCardDiscard;
+    public UnityEvent OnCardShuffle;
+    [Header("Game Events")]
+    public UnityEvent OnStatusEffectUp;
+    public UnityEvent OnStatusEffectDown;
+    public UnityEvent OnSpiritGain;
+    public UnityEvent OnSpiritReduce;
+    public UnityEvent OnNotEnoughSpirit;
     private void Start()
     {
         SetState(new Begin(this));
@@ -21,15 +37,17 @@ public class BattleSystem : StateMachine
 
     public void PlayCard(Card card)
     {
+        OnSpiritReduce.Invoke();
         hand.cards.Remove(card);
         playArea.cards.Add(card);
         player.spirit -= card.spiritCost;
     }
     public void ReturnCard(Card card)
     {
-        player.spirit += card.spiritCost;
+        OnSpiritGain.Invoke();
         playArea.cards.Remove(card);
         hand.cards.Add(card);
+        player.spirit += card.spiritCost;
     }
     public void AssignEnemyIntent()
     {
@@ -58,7 +76,7 @@ public class BattleSystem : StateMachine
         int cards = playArea.cards.Count;
         for (int i = 0; i < cards; i++)
         {
-            SFXManager.Instance.PlaySound("cardPickup");
+            OnCardDiscard.Invoke();
             CardDisplay display = playArea.transform.GetChild(0).gameObject.GetComponent<CardDisplay>();
             display.chained = false;
             if (display.card.name != "Scale Shield")
@@ -78,6 +96,7 @@ public class BattleSystem : StateMachine
         cards = hand.cards.Count;
         for (int i = 0; i < cards; i++)
         {
+            OnCardDiscard.Invoke();
             SFXManager.Instance.PlaySound("cardPickup");
             ui.ReparentCard(hand.transform.GetChild(0).gameObject, ui.discard.transform);
             discard.cards.Add(hand.cards[0]);
