@@ -13,13 +13,9 @@ public class SamplePlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.A))
-        //{
-        //    MusicManager.Instance.PlayMusic("Track1");
-        //}
-        //if (Input.GetKeyDown(KeyCode.B))
-        //{
-        //    MusicManager.Instance.PlayMusic("Track2");
-        //}
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            SFXManager.Instance.StopLoopingSound("cardSetdown");
+        }
     }
 }
