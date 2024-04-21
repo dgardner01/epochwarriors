@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   symbol: {fileID: 1603339386, guid: 90fd1464fad1a2f4db05f2d36e3f52be, type: 3}
   id: Strength
-  duration: 2
+  duration: 1
   magnitude: 0

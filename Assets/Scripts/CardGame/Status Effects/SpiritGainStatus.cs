@@ -10,6 +10,8 @@ public class SpiritGainStatus : StatusEffect
         this.spiritGained = spiritGained;
         this.symbol = symbol;
         id = "Spirit gain";
+        magnitude = 1;
+        description = "You gained x additional spirit this turn. Spirit gain is reset at the start of your turn.";
     }
     public override void OnApply(Fighter fighter)
     {

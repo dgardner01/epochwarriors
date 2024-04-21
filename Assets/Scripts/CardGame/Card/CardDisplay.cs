@@ -60,7 +60,6 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         }
         if (transform.position.y < yThreshold && transform.parent == playArea)
         {
-            print(transform.position.y);
             battleSystem.ui.ReparentCard(gameObject, battleSystem.hand.transform);
             battleSystem.ReturnCard(card);
         }

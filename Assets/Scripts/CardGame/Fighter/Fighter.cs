@@ -16,6 +16,7 @@ public class Fighter : MonoBehaviour
     public int consecutiveHits;
     public int consecutiveDamage;
     public int chain;
+    public int charge;
     public List<StatusEffect> activeStatusEffects = new List<StatusEffect>();
     public FighterAnimator animator;
     public void Damage(int damage, float knockback, Fighter opponent)
@@ -47,48 +48,32 @@ public class Fighter : MonoBehaviour
             ui.TextPopUp("Dodged!",ui.PuppetPos(this, "head", Vector2.up), ui.blockPopUp);
             return;
         }
-        if (parryStatus != null)
-        {
-            StartCoroutine(DelayedDamage(damage/2, opponent));
-            activeStatusEffects.Remove(parryStatus);
-        }
         block -= damage;
         if (block < 0)
         {
             if (health + block <= 0)
             {
                 animator.PlayAnimationClipByName("defeat");
-                SFXManager.Instance.PlaySound("hitXL");
                 cam.ScreenShake(.5f, magnitude * Mathf.Min(15, Mathf.Abs(block)) * lostComboModifier, decreaseFactor);
                 battleSystem.SetState(new Win(battleSystem));
             }
             else
             {
-                if (block < -20)
+                if (parryStatus != null)
                 {
-                    SFXManager.Instance.PlaySound("hitXL");
-                }
-                else if (block < -15)
-                {
-                    SFXManager.Instance.PlaySound("hitL");
-                }
-                else if (block < -10)
-                {
-                    SFXManager.Instance.PlaySound("hitM");
+                    Parry(damage, opponent, parryStatus);
                 }
                 else
                 {
-                    SFXManager.Instance.PlaySound("hitS");
+                    animator.hurt = true;
+                    StartCoroutine(ResetAnimatorHurt(knockback));
+                    animator.ApplyKnockback(knockback);
+                    animator.PlayAnimationClipByName("hurt" + Random.Range(1, 3));
                 }
-                animator.hurt = true;
-                print(knockback);
-                StartCoroutine(ResetAnimatorHurt(knockback));
-                animator.ApplyKnockback(knockback);
-                animator.PlayAnimationClipByName("hurt" + Random.Range(1, 3));
                 opponent.consecutiveHits++;
                 if (opponent.consecutiveHits > 2)
                 {
-                    SFXManager.Instance.PlaySound("comboActive");
+                    opponent.charge++;
                 }
                 opponent.consecutiveDamage += damage;
                 float magModifier = damage;
@@ -96,11 +81,8 @@ public class Fighter : MonoBehaviour
                 health += block;
                 battleSystem.ui.TextPopUp("" + Mathf.Abs(block), ui.PuppetPos(this, "head", Vector2.up / 2), ui.numberPopUp);
                 cam.ScreenShake(time * lostComboModifier, magnitude * Mathf.Min(15, Mathf.Abs(block)) * lostComboModifier, decreaseFactor);
-                if (consecutiveHits > 2)
-                {
-                    //ui.TextPopUp("C-c-combo breaker!", ui.PuppetPos(opponent, "head", Vector2.up), ui.blockPopUp);
-                }
                 battleSystem.vfx.StartBackgroundCharBounce(bounceMag * magModifier, bounceFreq * freqModifier);
+                charge = 0;
                 consecutiveHits = 0;
                 consecutiveDamage = 0;
                 block = 0;
@@ -108,13 +90,25 @@ public class Fighter : MonoBehaviour
         }
         else
         {
+            if (parryStatus != null)
+            {
+                Parry(damage, opponent, parryStatus);
+            }
+            else
+            {
+                animator.PlayAnimationClipByName("guard");
+                animator.PlayAnimationClipByName("block");
+            }
+            battleSystem.OnAttackBlocked.Invoke();
             battleSystem.vfx.StartBackgroundCharBounce(bounceMag, bounceFreq);
-            SFXManager.Instance.PlaySound("guard");
-            animator.PlayAnimationClipByName("guard");
-            animator.PlayAnimationClipByName("block");
             battleSystem.ui.TextPopUp("Blocked!",ui.PuppetPos(this, "head", Vector2.up), ui.blockPopUp);
             cam.ScreenShake(time, (magnitude/2), decreaseFactor);
         }
+    }
+    public void Parry(int damage, Fighter opponent, StatusEffect parryStatus)
+    {
+        StartCoroutine(DelayedDamage(damage / 2, opponent));
+        activeStatusEffects.Remove(parryStatus);
     }
     public IEnumerator ResetAnimatorHurt(float knockback)
     {
@@ -123,8 +117,12 @@ public class Fighter : MonoBehaviour
     }
     public IEnumerator DelayedDamage(int damage, Fighter opponent)
     {
-        //animator.PlayAnimationClipByName("bite");
-        yield return new WaitForSeconds(.5f);
+        animator.PlayAnimationClipByName("bite");
+        yield return new WaitForSeconds(0.3f);
+        if (damage > opponent.block)
+        {
+            SFXManager.Instance.PlaySound("14");
+        }
         opponent.Damage(damage, -3, this); 
     }
     public void ApplyStatusEffect(StatusEffect statusEffect)

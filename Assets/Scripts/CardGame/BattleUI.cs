@@ -52,6 +52,7 @@ public class BattleUI : MonoBehaviour
     public Image spiritFill;
     public Image[] rewards;
     public TextMeshProUGUI chainText;
+    public TextMeshProUGUI chargeText;
     public GameObject chainBonus;
 
     public Color nelly; 
@@ -67,7 +68,7 @@ public class BattleUI : MonoBehaviour
     [Header("VFX")]
     public GameObject headPosPlayer, headPosEnemy;
     public Transform UIParticleParent;
-    public GameObject blockPopUp, statusPopUp, numberPopUp;
+    public GameObject blockPopUp, statusPopUp, numberPopUp, chargePopUp, chainPopUp;
     private void Start()
     {
         InitializeCardDisplayObjects();
@@ -211,7 +212,6 @@ public class BattleUI : MonoBehaviour
         if (cards.Count > 0)
         {
             int index = comboContainer.childCount - cards.Count;
-            print("index is " + index);
             GameObject cardObject = comboContainer.GetChild(index).gameObject;
             CardDisplay cardDisplay = cardObject.GetComponent<CardDisplay>();
             cardDisplay.card = cards[0];
@@ -256,26 +256,10 @@ public class BattleUI : MonoBehaviour
     }
     public void ComboRewardsDisplay()
     {
-        if (battleSystem.player.consecutiveHits > 2)
-        {
-            rewards[1].gameObject.SetActive(true);
-        }
-        else
-        {
-            rewards[1].gameObject.SetActive(false);
-        }
-        if (battleSystem.player.chain > 0)
-        {
-            rewards[0].gameObject.SetActive(true);
-            chainText.gameObject.SetActive(true);
-            chainText.text = "Chain x" + battleSystem.player.chain;
-        }
-        else
-        {
-            rewards[0].gameObject.SetActive(false);
-            chainText.gameObject.SetActive(false);
-            chainText.text = "";
-        }
+        chargeText.gameObject.SetActive(battleSystem.player.charge > 0);
+        chargeText.text = "Charge x" + battleSystem.player.charge;
+        chainText.gameObject.SetActive(battleSystem.player.chain > 0);
+        chainText.text = "Chain x" + battleSystem.player.chain;
     }
     public void StatusEffectDisplay()
     {
