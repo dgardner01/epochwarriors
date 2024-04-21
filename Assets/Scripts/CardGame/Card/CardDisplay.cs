@@ -30,6 +30,7 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public bool hover;
     public bool drag;
     public bool played;
+    public bool playable;
     public bool chained;
     public float discardBuffer;
     public float yThreshold;
@@ -50,7 +51,7 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         }
         Transform hand = FindAnyObjectByType<Hand>().transform;
         Transform playArea = FindAnyObjectByType<PlayArea>().transform;
-        bool playable = battleSystem.player.spirit >= card.spiritCost;
+        playable = battleSystem.player.spirit >= card.spiritCost;
         yThreshold = battleSystem.ui.yThreshold;
         if (transform.position.y > yThreshold && transform.parent == hand && playable)
         {
@@ -59,7 +60,6 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         }
         if (transform.position.y < yThreshold && transform.parent == playArea)
         {
-            print(transform.position.y);
             battleSystem.ui.ReparentCard(gameObject, battleSystem.hand.transform);
             battleSystem.ReturnCard(card);
         }
@@ -189,17 +189,22 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     }
     public void PlayCard()
     {
-        SFXManager.Instance.PlaySound("cardSetdown");
+        battleSystem.OnCardPutdown.Invoke();
         bounceTime = 0;
         if (card != null && card.name == "Taunt" && transform.parent == battleSystem.playArea.transform)
         {
             battleSystem.ResolveInstantCard(card);
             battleSystem.ui.ReparentCard(gameObject, battleSystem.discard.transform);
         }
+        if (!playable && transform.parent == battleSystem.hand.transform)
+        {
+            battleSystem.OnNotEnoughSpirit.Invoke();
+        }
     }
 
     public void OnPointerEnter(PointerEventData pointerEventData)
     {
+        battleSystem.OnCardHover.Invoke();
         hover = true;
     }
 
@@ -209,7 +214,7 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     }
     public void OnBeginDrag(PointerEventData pointerEventData)
     {
-        SFXManager.Instance.PlaySound("cardPickup");
+        battleSystem.OnCardPickup.Invoke();
         drag = true;
     }
     public void OnDrag(PointerEventData pointerEventData)

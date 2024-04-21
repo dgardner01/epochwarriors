@@ -5,12 +5,12 @@ using UnityEngine;
 public class PlayArea : MonoBehaviour
 {
     public List<Card> cards;
-    public bool chain;
+    public int chain;
     public bool hasChained;
     private void Update()
     {
         CheckForChain();
-        if (!chain)
+        if (chain <= 0)
         {
             hasChained = false;
         }
@@ -45,19 +45,19 @@ public class PlayArea : MonoBehaviour
             if (card.comboPosition == 2)
             {
                 //ender card
-                if (comboLinked || comboStarted)
+                if (comboLinked || comboStarted && !comboEnded)
                 {
                     comboEnded = true;
                     endIndex = i;
                 }
             }
         }
-        chain = comboEnded;
-        if (chain)
+        chain = endIndex-startIndex;
+        if (chain > 0)
         {
+            chain++;
             if (!hasChained)
             {
-                SFXManager.Instance.PlaySound("chainActive");
                 hasChained = true;
             }
             for (int i = startIndex; i < endIndex + 1; i++)

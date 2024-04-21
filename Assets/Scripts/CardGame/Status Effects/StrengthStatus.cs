@@ -9,13 +9,13 @@ public class StrengthStatus : StatusEffect
         this.duration = duration;
         this.symbol = symbol;
         id = "Strength";
+        description = "You deal x additional damage.";
     }
     public override void OnApply(Fighter fighter)
     {
-        fighter.strength = duration;
+        fighter.strength++;
     }
     public override void OnTurnUpdate(Fighter fighter)
     {
-        fighter.strength = duration;
     }
 }

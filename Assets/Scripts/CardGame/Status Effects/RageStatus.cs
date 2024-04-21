@@ -10,10 +10,10 @@ public class RageStatus : StatusEffect
         this.duration = duration;
         this.symbol = symbol;
         id = "Rage";
+        description = "Bruttia deals x additional damage.";
     }
     public override void OnApply(Fighter fighter)
     {
-        SFXManager.Instance.PlaySound("rage");
         fighter.animator.PlayAnimationClipByName("rage");
         fighter.strength += duration;
         magnitude += duration;
