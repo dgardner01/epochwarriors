@@ -38,12 +38,13 @@ public class Battle : State
         float waitTime = .75f;
         if (BattleSystem.playerCombo.cards.Count > 0 && BattleSystem.player.health > 0)
         {
+            SFXManager.Instance.PlaySound("cardSetdown");
             ui.PlayComboCard(BattleSystem.playerCombo.transform, BattleSystem.playerCombo.cards);
             Card playerCard = playerCombo.cards[0];
             if (playerCard.animation != null)
             {
                 player.animator.PlayAnimationClip(playerCard.animation);
-                yield return new WaitForSeconds(.5f);
+                yield return new WaitForSeconds(player.animator.GetImpactTimeFromClip(playerCard.animation));
             }
             else
             {
@@ -56,7 +57,7 @@ public class Battle : State
             if (playerCard.damage > 0)
             {
                 int damage = playerCard.damage + player.strength;
-                enemy.Damage(damage, player);
+                enemy.Damage(damage, player.animator.GetKnockbackFromClip(playerCard.animation), player);
                 yield return new WaitForSeconds(waitTime);
             }
             playerCombo.cards.Remove(playerCard);
@@ -68,6 +69,7 @@ public class Battle : State
         }
         if (BattleSystem.enemy.currentTurn.Count > 0 && BattleSystem.enemy.health > 0)
         {
+            SFXManager.Instance.PlaySound("cardSetdown");
             ui.PlayComboCard(BattleSystem.enemyCombo.transform, BattleSystem.enemy.currentTurn);
             yield return new WaitForSeconds(waitTime / 2);
             Card enemyCard = BattleSystem.enemy.currentTurn[0];
@@ -78,7 +80,7 @@ public class Battle : State
             if (enemyCard.damage > 0)
             {
                 int damage = enemyCard.damage + enemy.strength;
-                player.Damage(damage, enemy);
+                player.Damage(damage, enemy.animator.GetKnockbackFromClip(enemyCard.animation),enemy);
                 yield return new WaitForSeconds(waitTime);
             }
             if (enemyCard.block > 0)
@@ -92,13 +94,9 @@ public class Battle : State
                 yield return new WaitForSeconds(waitTime);
             }
         }
-        if (BattleSystem.enemy.health <= 0)
+        if (player.health <= 0 || enemy.health <= 0)
         {
-            BattleSystem.SetState(new Win(BattleSystem));
-        }
-        else if (BattleSystem.player.health <= 0)
-        {
-            BattleSystem.SetState(new Lose(BattleSystem));
+
         }
         else if (playerCombo.cards.Count == 0 && BattleSystem.enemy.currentTurn.Count == 0)
         {

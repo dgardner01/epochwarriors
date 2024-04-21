@@ -42,7 +42,7 @@ public class CameraManager : MonoBehaviour
     public IEnumerator FreezeFrame(float time, float amount)
     {
         Time.timeScale = 0;
-        yield return new WaitForSecondsRealtime(time/2);
+        yield return new WaitForSecondsRealtime(time);
         Time.timeScale = 1;
         Camera.main.orthographicSize = targetSize - (amount / 2);
         shakeTimer = time;

@@ -1,5 +1,5 @@
-using UnityEditor;
 using UnityEngine;
+using UnityEditor;
 
 [CustomEditor(typeof(SFXManager))]
 public class SFXManagerEditor : Editor
@@ -8,7 +8,6 @@ public class SFXManagerEditor : Editor
 
     void OnEnable()
     {
-        // Setup the SerializedProperties.
         soundsProperty = serializedObject.FindProperty("sounds");
     }
 
@@ -16,40 +15,53 @@ public class SFXManagerEditor : Editor
     {
         serializedObject.Update();
 
-        EditorGUILayout.LabelField("SFX Entries", EditorStyles.boldLabel);
-
-        if (soundsProperty != null)
+        for (int i = 0; i < soundsProperty.arraySize; i++)
         {
-            for (int i = 0; i < soundsProperty.arraySize; i++)
+            SerializedProperty soundProperty = soundsProperty.GetArrayElementAtIndex(i);
+            SerializedProperty nameProperty = soundProperty.FindPropertyRelative("name");
+            SerializedProperty clipsProperty = soundProperty.FindPropertyRelative("clips");
+            SerializedProperty volumeProperty = soundProperty.FindPropertyRelative("volume");
+            SerializedProperty minPitchProperty = soundProperty.FindPropertyRelative("minPitch");
+            SerializedProperty maxPitchProperty = soundProperty.FindPropertyRelative("maxPitch");
+            SerializedProperty descriptionProperty = soundProperty.FindPropertyRelative("description");
+            SerializedProperty loopIndefinitelyProperty = soundProperty.FindPropertyRelative("loopIndefinitely");
+
+            EditorGUILayout.BeginVertical(GUI.skin.box);
+            EditorGUILayout.PropertyField(nameProperty);
+            EditorGUILayout.PropertyField(clipsProperty, new GUIContent("Clips"), true);
+            volumeProperty.floatValue = EditorGUILayout.Slider("Volume", volumeProperty.floatValue, 0f, 1f);
+
+            EditorGUILayout.LabelField("Pitch Range");
+            float minPitch = minPitchProperty.floatValue;  // Use temporary float variables
+            float maxPitch = maxPitchProperty.floatValue;  // Use temporary float variables
+            EditorGUILayout.MinMaxSlider(ref minPitch, ref maxPitch, 0.1f, 3.0f);
+            minPitchProperty.floatValue = minPitch;  // Assign the temporary variable back to the SerializedProperty
+            maxPitchProperty.floatValue = maxPitch;  // Assign the temporary variable back to the SerializedProperty
+
+            EditorGUILayout.PropertyField(minPitchProperty);
+            EditorGUILayout.PropertyField(maxPitchProperty);
+
+            EditorGUILayout.PropertyField(descriptionProperty, new GUIContent("Description"), true);
+            EditorGUILayout.PropertyField(loopIndefinitelyProperty, new GUIContent("Loop Indefinitely"));
+            EditorGUILayout.EndVertical();
+
+            if (GUILayout.Button("Remove Sound", GUILayout.MaxWidth(150)))
             {
-                SerializedProperty soundProperty = soundsProperty.GetArrayElementAtIndex(i);
-                SerializedProperty nameProperty = soundProperty.FindPropertyRelative("name");
-                SerializedProperty clipProperty = soundProperty.FindPropertyRelative("clip");
-                SerializedProperty volumeProperty = soundProperty.FindPropertyRelative("volume");
-                SerializedProperty descriptionProperty = soundProperty.FindPropertyRelative("description");
-
-                EditorGUILayout.LabelField($"SFX Entry #{i + 1}", EditorStyles.boldLabel);
-                EditorGUILayout.PropertyField(nameProperty, new GUIContent("Name"));
-                EditorGUILayout.PropertyField(clipProperty, new GUIContent("Clip"));
-                EditorGUILayout.PropertyField(volumeProperty, new GUIContent("Volume"));
-                EditorGUILayout.PropertyField(descriptionProperty, new GUIContent("Description"));
-
-                // Button for removing an element
-                if (GUILayout.Button("-", GUILayout.Width(30)))
-                {
-                    soundsProperty.DeleteArrayElementAtIndex(i);
-                    break; // Break to prevent invalid iteration if an element was removed
-                }
-
-                EditorGUILayout.Space(); // Add some space between elements
+                soundsProperty.DeleteArrayElementAtIndex(i);
+                serializedObject.ApplyModifiedProperties();
+                break; // Exit the loop to avoid index errors after removing an item
             }
 
-            if (GUILayout.Button("Add New Sound"))
-            {
-                soundsProperty.arraySize++;
-            }
+            EditorGUILayout.Space();
         }
 
-        serializedObject.ApplyModifiedProperties();
+
+        if (GUILayout.Button("Add New Sound", GUILayout.MaxWidth(150)))
+        {
+            soundsProperty.arraySize++;
+            serializedObject.ApplyModifiedProperties(); // Apply changes after adding a new sound
+        }
+
+        serializedObject.ApplyModifiedProperties(); // Apply changes made within the loop
     }
 }

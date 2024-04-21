@@ -16,6 +16,7 @@ public class Hand : MonoBehaviour
         {
             if (player.drawPile.Count > 0)
             {
+                SFXManager.Instance.PlaySound("cardPickup");
                 int rand = Random.Range(0, player.drawPile.Count);
                 Card drawnCard = player.drawPile[rand];
                 cards.Add(drawnCard);
@@ -36,6 +37,7 @@ public class Hand : MonoBehaviour
 
     public IEnumerator Shuffle(int numLeft)
     {
+        SFXManager.Instance.PlaySound("cardShuffle");
         for (int i = 0; i < battleSystem.discard.cards.Count; i++)
         {
             Card card = battleSystem.discard.cards[0];
