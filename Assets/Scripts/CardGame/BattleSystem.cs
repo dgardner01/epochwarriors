@@ -35,6 +35,11 @@ public class BattleSystem : StateMachine
     public UnityEvent OnSpiritGain;
     public UnityEvent OnSpiritReduce;
     public UnityEvent OnNotEnoughSpirit;
+    [Header("Misc Events")]
+    public UnityEvent OnChainBegin;
+    public UnityEvent OnChainExtended;
+    public UnityEvent OnChargeBegin;
+    public UnityEvent OnChargeExtended;
     private void Start()
     {
         SetState(new Begin(this));

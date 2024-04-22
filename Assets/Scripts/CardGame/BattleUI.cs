@@ -23,6 +23,7 @@ public class BattleUI : MonoBehaviour
     public GameObject playedZone;
     public GameObject enemyPlayedZone;
     public GameObject drawPile;
+    public GameObject[] pileDisplayRows;
     public float comboSpacing;
     public Hand hand => battleSystem.hand;
     public PlayArea playArea => battleSystem.playArea;
@@ -396,5 +397,34 @@ public class BattleUI : MonoBehaviour
         GameObject instance = Instantiate(prefab, UIParticleParent);
         instance.transform.position = position;
         instance.GetComponent<TextMeshProUGUI>().text = text;
+    }
+    public void ShowDrawDisplay()
+    {
+        UpdatePileDisplay(battleSystem.player.drawPile);
+    }
+    public void ShowDiscardDisplay()
+    {
+        UpdatePileDisplay(battleSystem.discard.cards);
+    }
+    public void UpdatePileDisplay(List<Card> cards)
+    {
+        int cardIndex = 0;
+        for (int i = 0; i < pileDisplayRows.Length; i++)
+        {
+            for (int j = 0; j < pileDisplayRows[i].transform.childCount; j++)
+            {
+                Transform child = pileDisplayRows[i].transform.GetChild(j);
+                if (cardIndex < cards.Count)
+                {
+                    child.gameObject.SetActive(true);
+                    child.GetComponent<CardDisplay>().card = cards[cardIndex];
+                    cardIndex++;
+                }
+                else
+                {
+                    child.gameObject.SetActive(false);
+                }
+            }
+        }
     }
 }

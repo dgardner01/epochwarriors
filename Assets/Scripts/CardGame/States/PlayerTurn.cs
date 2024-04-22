@@ -46,6 +46,14 @@ public class PlayerTurn : State
         }
         if (BattleSystem.player.charge > 0)
         {
+            if (BattleSystem.player.charge > 1)
+            {
+                BattleSystem.OnChargeExtended.Invoke();
+            }
+            else
+            {
+                BattleSystem.OnChargeBegin.Invoke();
+            }
             BattleSystem.ui.TextPopUp("Charge bonus!", BattleSystem.ui.PuppetPos(BattleSystem.player, "head", Vector2.up), ui.chargePopUp);
             yield return new WaitForSeconds(1);
             for (int i = 0; i < 1+Mathf.Floor(BattleSystem.player.charge / 3); i++)
@@ -56,6 +64,14 @@ public class PlayerTurn : State
         }
         if (BattleSystem.player.chain > 1)
         {
+            if (BattleSystem.player.chain > 3)
+            {
+                BattleSystem.OnChainExtended.Invoke();
+            }
+            else
+            {
+                BattleSystem.OnChainBegin.Invoke();
+            }
             BattleSystem.ui.TextPopUp("Chain bonus!", BattleSystem.ui.PuppetPos(BattleSystem.player, "head", Vector2.up), ui.chainPopUp);
             yield return new WaitForSeconds(1);
             for (int i = 0; i < 1+Mathf.Floor(BattleSystem.player.chain/3); i++)
