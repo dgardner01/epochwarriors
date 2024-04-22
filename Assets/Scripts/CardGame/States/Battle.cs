@@ -14,12 +14,7 @@ public class Battle : State
         BattleSystem.ui.PrintLog("battle begin");
         BattleSystem.player.turnDamage = BattleSystem.player.health;
         BattleSystem.enemy.turnDamage = BattleSystem.enemy.health;
-        if (BattleSystem.playArea.chain)
-        {
-            BattleSystem.ui.PrintLog("chain bonus!");
-            BattleSystem.player.chain++;
-        }
-        else
+        if (BattleSystem.playArea.chain <= 0)
         {
             BattleSystem.player.chain = 0;
         }
@@ -35,29 +30,51 @@ public class Battle : State
         Player player = BattleSystem.player;
         Enemy enemy = BattleSystem.enemy;
         PlayerCombo playerCombo = BattleSystem.playerCombo;
-        float waitTime = .75f;
+        float waitTime = 1;
         if (BattleSystem.playerCombo.cards.Count > 0 && BattleSystem.player.health > 0)
         {
-            SFXManager.Instance.PlaySound("cardSetdown");
+            BattleSystem.OnCardPlay.Invoke();
             ui.PlayComboCard(BattleSystem.playerCombo.transform, BattleSystem.playerCombo.cards);
             Card playerCard = playerCombo.cards[0];
+            yield return new WaitForSeconds(waitTime);
             if (playerCard.animation != null)
             {
+                float impactTime = player.animator.GetImpactTimeFromClip(playerCard.animation); 
                 player.animator.PlayAnimationClip(playerCard.animation);
-                yield return new WaitForSeconds(player.animator.GetImpactTimeFromClip(playerCard.animation));
+                float strengthAffectedDamage = playerCard.damage + player.strength;
+                if (strengthAffectedDamage > enemy.block && strengthAffectedDamage > BattleSystem.anticipationMinDamage)
+                {
+                    BattleSystem.OnAnticipation.Invoke();
+                    Time.timeScale = 1 / (2.3f / impactTime);
+                }
+                yield return new WaitForSeconds(impactTime);
+                Time.timeScale = 1;
             }
-            else
+            if (playerCard.SFXClip != null && playerCard.damage > enemy.block)
             {
-                yield return new WaitForSeconds(waitTime/2);
-            }
-            if (playerCard.block > 0)
-            {
-                player.block += playerCard.block;
+                var nameChars = playerCard.SFXClip.name.ToCharArray();
+                string name = "";
+                if (nameChars[1] != '_')
+                {
+                    name = nameChars[0].ToString() + nameChars[1].ToString();
+                }
+                else
+                {
+                    name = nameChars[0].ToString();
+                }
+                SFXManager.Instance.PlaySound(name);
             }
             if (playerCard.damage > 0)
             {
                 int damage = playerCard.damage + player.strength;
                 enemy.Damage(damage, player.animator.GetKnockbackFromClip(playerCard.animation), player);
+                yield return new WaitForSeconds(waitTime);
+            }
+            if (playerCard.block > 0)
+            {
+                player.animator.PlayAnimationClipByName("guard");
+                BattleSystem.OnGainBlock.Invoke();
+                player.block += playerCard.block;
                 yield return new WaitForSeconds(waitTime);
             }
             playerCombo.cards.Remove(playerCard);
@@ -69,13 +86,29 @@ public class Battle : State
         }
         if (BattleSystem.enemy.currentTurn.Count > 0 && BattleSystem.enemy.health > 0)
         {
-            SFXManager.Instance.PlaySound("cardSetdown");
+            BattleSystem.OnCardPlay.Invoke();
             ui.PlayComboCard(BattleSystem.enemyCombo.transform, BattleSystem.enemy.currentTurn);
-            yield return new WaitForSeconds(waitTime / 2);
+            yield return new WaitForSeconds(waitTime);
             Card enemyCard = BattleSystem.enemy.currentTurn[0];
             if (enemyCard.animation != null)
             {
                 enemy.animator.PlayAnimationClip(enemyCard.animation);
+                float impactTime = enemy.animator.GetImpactTimeFromClip(enemyCard.animation);
+                yield return new WaitForSeconds(impactTime);
+            }
+            if (enemyCard.SFXClip != null && enemyCard.damage > player.block)
+            {
+                var nameChars = enemyCard.SFXClip.name.ToCharArray();
+                string name = "";
+                if (nameChars[1] != '_')
+                {
+                    name = nameChars[0].ToString() + nameChars[1].ToString();
+                }
+                else
+                {
+                    name = nameChars[0].ToString();
+                }
+                SFXManager.Instance.PlaySound(name);
             }
             if (enemyCard.damage > 0)
             {
@@ -85,7 +118,9 @@ public class Battle : State
             }
             if (enemyCard.block > 0)
             {
+                BattleSystem.OnGainBlock.Invoke();
                 enemy.block += enemyCard.block;
+                yield return new WaitForSeconds(waitTime);
             }
             BattleSystem.enemy.currentTurn.Remove(enemyCard);
             if (enemyCard.statusEffect != null)

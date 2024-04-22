@@ -9,6 +9,7 @@ public class DodgeStatus : StatusEffect
         this.duration = duration;
         this.symbol = symbol;
         id = "Dodge";
+        description = "Dodge the next attack this turn.";
     }
     public override void OnTurnUpdate(Fighter fighter)
     {

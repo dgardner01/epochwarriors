@@ -23,6 +23,7 @@ public class BattleUI : MonoBehaviour
     public GameObject playedZone;
     public GameObject enemyPlayedZone;
     public GameObject drawPile;
+    public GameObject[] pileDisplayRows;
     public float comboSpacing;
     public Hand hand => battleSystem.hand;
     public PlayArea playArea => battleSystem.playArea;
@@ -48,12 +49,18 @@ public class BattleUI : MonoBehaviour
     public GameObject playerBlockIndicator;
     public GameObject enemyBlockIndicator;
 
+    public Image spiritBG;
     public Image spiritFill;
     public Image[] rewards;
     public TextMeshProUGUI chainText;
+    public TextMeshProUGUI chargeText;
     public GameObject chainBonus;
 
-    public Color nelly, bruttia, block, damage;
+    public Color nelly; 
+    public Color bruttia; 
+    public Color block; 
+    public Color damage;
+    public Color spiritBGColor;
 
     [Header("Text")]
     public TextMeshProUGUI drawPileCount;
@@ -62,7 +69,7 @@ public class BattleUI : MonoBehaviour
     [Header("VFX")]
     public GameObject headPosPlayer, headPosEnemy;
     public Transform UIParticleParent;
-    public GameObject blockPopUp, statusPopUp, numberPopUp;
+    public GameObject blockPopUp, statusPopUp, numberPopUp, chargePopUp, chainPopUp;
     private void Start()
     {
         InitializeCardDisplayObjects();
@@ -126,18 +133,20 @@ public class BattleUI : MonoBehaviour
         for (int i = 0; i < container.childCount; i++)
         {
             Transform cardObject = container.GetChild(i);
+            CardDisplay cardDisplay = cardObject.gameObject.GetComponent<CardDisplay>();
 
             if (i + 1 < container.childCount)
             {
                 Transform nextObject = container.GetChild(i + 1);
-                if (nextObject.position.x < cardObject.position.x)
+                CardDisplay nextDisplay = nextObject.GetComponent<CardDisplay>();
+                if (nextObject.position.x < cardObject.position.x && (cardDisplay.drag || nextDisplay.drag))
                 {
+                    battleSystem.OnCardSwap.Invoke();
                     nextObject.SetSiblingIndex(i);
                     cardObject.SetSiblingIndex(i + 1);
                 }
             }
 
-            CardDisplay cardDisplay = cardObject.gameObject.GetComponent<CardDisplay>();
             cardDisplay.chained = false;
             float hoverHeight = cardDisplay.hover ? hoverMagnitude : 0;
             float angle = startingAngle + spreadAngle * i;
@@ -204,7 +213,6 @@ public class BattleUI : MonoBehaviour
         if (cards.Count > 0)
         {
             int index = comboContainer.childCount - cards.Count;
-            print("index is " + index);
             GameObject cardObject = comboContainer.GetChild(index).gameObject;
             CardDisplay cardDisplay = cardObject.GetComponent<CardDisplay>();
             cardDisplay.card = cards[0];
@@ -225,6 +233,7 @@ public class BattleUI : MonoBehaviour
         int cardsToReparent = comboCards.Count;
         for (int i = 0; i < cardsToReparent; i++)
         {
+            battleSystem.OnCardDiscard.Invoke();
             GameObject cardObject = comboCards[0];
             CardDisplay cardDisplay = cardObject.GetComponent<CardDisplay>();
             cardDisplay.played = false;
@@ -248,26 +257,10 @@ public class BattleUI : MonoBehaviour
     }
     public void ComboRewardsDisplay()
     {
-        if (battleSystem.player.consecutiveHits > 2)
-        {
-            rewards[1].gameObject.SetActive(true);
-        }
-        else
-        {
-            rewards[1].gameObject.SetActive(false);
-        }
-        if (battleSystem.player.chain > 0)
-        {
-            rewards[0].gameObject.SetActive(true);
-            chainText.gameObject.SetActive(true);
-            chainText.text = "Chain x" + battleSystem.player.chain;
-        }
-        else
-        {
-            rewards[0].gameObject.SetActive(false);
-            chainText.gameObject.SetActive(false);
-            chainText.text = "";
-        }
+        chargeText.gameObject.SetActive(battleSystem.player.charge > 0);
+        chargeText.text = "Charge x" + battleSystem.player.charge;
+        chainText.gameObject.SetActive(battleSystem.player.chain > 0);
+        chainText.text = "Chain x" + battleSystem.player.chain;
     }
     public void StatusEffectDisplay()
     {
@@ -336,7 +329,12 @@ public class BattleUI : MonoBehaviour
     {
         energyCount.text = battleSystem.player.spirit + "/" + battleSystem.player.spiritPerTurn;
         float percentage = (float)battleSystem.player.spirit / (float)battleSystem.player.spiritPerTurn;
+        spiritBG.color = Color.Lerp(spiritBG.color, spiritBGColor, 0.1f);
         spiritFill.fillAmount = Mathf.Lerp(spiritFill.fillAmount, percentage, 0.1f);
+    }
+    public void SetSpiritBGRed()
+    {
+        spiritBG.color = damage;
     }
     public void HealthBarDisplay()
     {
@@ -399,5 +397,34 @@ public class BattleUI : MonoBehaviour
         GameObject instance = Instantiate(prefab, UIParticleParent);
         instance.transform.position = position;
         instance.GetComponent<TextMeshProUGUI>().text = text;
+    }
+    public void ShowDrawDisplay()
+    {
+        UpdatePileDisplay(battleSystem.player.drawPile);
+    }
+    public void ShowDiscardDisplay()
+    {
+        UpdatePileDisplay(battleSystem.discard.cards);
+    }
+    public void UpdatePileDisplay(List<Card> cards)
+    {
+        int cardIndex = 0;
+        for (int i = 0; i < pileDisplayRows.Length; i++)
+        {
+            for (int j = 0; j < pileDisplayRows[i].transform.childCount; j++)
+            {
+                Transform child = pileDisplayRows[i].transform.GetChild(j);
+                if (cardIndex < cards.Count)
+                {
+                    child.gameObject.SetActive(true);
+                    child.GetComponent<CardDisplay>().card = cards[cardIndex];
+                    cardIndex++;
+                }
+                else
+                {
+                    child.gameObject.SetActive(false);
+                }
+            }
+        }
     }
 }

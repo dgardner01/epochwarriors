@@ -20,8 +20,8 @@ public class PlayerTurn : State
         yield return new WaitForSeconds(0.5f);
         BattleSystem.enemy.UpdateTurnIndex();
         BattleSystem.enemy.StartCoroutine(BattleSystem.enemy.DisplayIntents());
-        BattleSystem.player.UpdateStatusEffects();
-        BattleSystem.enemy.UpdateStatusEffects();
+        BattleSystem.StartCoroutine(BattleSystem.player.UpdateStatusEffects());
+        BattleSystem.StartCoroutine(BattleSystem.enemy.UpdateStatusEffects());
         if (BattleSystem.enemy.activeStatusEffects.Count > 0)
         {
             StatusEffect status = BattleSystem.enemy.activeStatusEffects[0];
@@ -42,14 +42,46 @@ public class PlayerTurn : State
             BattleSystem.player.RemoveStatusEffect(status);
             BattleSystem.ui.TextPopUp(status.id + " wears off", BattleSystem.ui.PuppetPos(BattleSystem.player, "head", Vector2.up), ui.statusPopUp);
             statusToRemove.RemoveAt(0);
+            yield return new WaitForSeconds(1);
+        }
+        if (BattleSystem.player.charge > 0)
+        {
+            if (BattleSystem.player.charge > 1)
+            {
+                BattleSystem.OnChargeExtended.Invoke();
+            }
+            else
+            {
+                BattleSystem.OnChargeBegin.Invoke();
+            }
+            BattleSystem.ui.TextPopUp("Charge bonus!", BattleSystem.ui.PuppetPos(BattleSystem.player, "head", Vector2.up), ui.chargePopUp);
+            yield return new WaitForSeconds(1);
+            for (int i = 0; i < 1+Mathf.Floor(BattleSystem.player.charge / 3); i++)
+            {
+                BattleSystem.player.ApplyStatusEffect(BattleSystem.player.rewards[1].CreateStatusEffect());
+            }
+            yield return new WaitForSeconds(1);
+        }
+        if (BattleSystem.player.chain > 1)
+        {
+            if (BattleSystem.player.chain > 3)
+            {
+                BattleSystem.OnChainExtended.Invoke();
+            }
+            else
+            {
+                BattleSystem.OnChainBegin.Invoke();
+            }
+            BattleSystem.ui.TextPopUp("Chain bonus!", BattleSystem.ui.PuppetPos(BattleSystem.player, "head", Vector2.up), ui.chainPopUp);
+            yield return new WaitForSeconds(1);
+            for (int i = 0; i < 1+Mathf.Floor(BattleSystem.player.chain/3); i++)
+            {
+                BattleSystem.player.ApplyStatusEffect(BattleSystem.player.rewards[0].CreateStatusEffect());
+            }
+            yield return new WaitForSeconds(1);
         }
         BattleSystem.AssignEnemyIntent();
         BattleSystem.StartCoroutine(BattleSystem.hand.DrawCard(BattleSystem.player.cardsDrawnPerTurn));
-        if (BattleSystem.player.consecutiveHits > 2 || BattleSystem.player.chain > 0)
-        {
-            yield return new WaitForSeconds(1);
-            BattleSystem.StartCoroutine(BattleSystem.player.ApplyRewards());
-        }
         BattleSystem.player.spirit += BattleSystem.player.spiritPerTurn;
         BattleSystem.player.block = 0;
         BattleSystem.enemy.block = 0;

@@ -21,3 +21,4 @@ MonoBehaviour:
   cardType: 0
   statusEffect: {fileID: 11400000, guid: 5da031fc676dc5f4f836840f5fba4712, type: 2}
   animation: {fileID: 7400000, guid: 797e075afb5f099489fcc50fce9af193, type: 2}
+  SFXClip: {fileID: 8300000, guid: c49b6e85c410a97469479f48ac7d04bc, type: 3}

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Muscle Mass
   m_EditorClassIdentifier: 
   name: Muscle Mass
-  description: Gain 2 strength.
+  description: Gain 1 strength.
   spiritCost: 2
   damage: 0
   block: 0
@@ -21,3 +21,4 @@ MonoBehaviour:
   cardType: 2
   statusEffect: {fileID: 11400000, guid: a4e23bd816e706a4883225c1f9587a10, type: 2}
   animation: {fileID: 0}
+  SFXClip: {fileID: 0}

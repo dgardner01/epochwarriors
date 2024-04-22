@@ -9,5 +9,6 @@ public class ParryStatus : StatusEffect
         this.duration = duration;
         this.symbol = symbol;
         this.id = id;
+        description = "Block half of the next attack's damage, then deal that damage to the opponent.";
     }
 }
