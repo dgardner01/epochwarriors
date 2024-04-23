@@ -7450,12 +7450,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   enemy: {fileID: 1328599694}
+  magnitude: 0
+  frequency: 0
+  lensSize: 0
+  zoomSpeed: 0
+  y: 0
+  target: {fileID: 0}
   center: {x: 0, y: 0, z: 0}
-  screenShakeOffset: {x: 0, y: 0, z: 0}
-  targetSize: 0
-  shakeTimer: 0
-  shakeAmount: 0.7
-  decreaseFactor: 1
+  shake: {x: 0, y: 0}
+  cvc: {fileID: 0}
 --- !u!1 &539045845
 GameObject:
   m_ObjectHideFlags: 0
@@ -8617,6 +8620,7 @@ MonoBehaviour:
   consecutiveHits: 0
   consecutiveDamage: 0
   chain: 0
+  charge: 0
   animator: {fileID: 0}
   spirit: 0
   spiritPerTurn: 3
@@ -11958,6 +11962,67 @@ MonoBehaviour:
   enemyPlayArea: {fileID: 0}
   playerCombo: {fileID: 88712276}
   enemyCombo: {fileID: 0}
+  anticipationMinDamage: 0
+  OnCardDraw:
+    m_PersistentCalls:
+      m_Calls: []
+  OnCardHover:
+    m_PersistentCalls:
+      m_Calls: []
+  OnCardPickup:
+    m_PersistentCalls:
+      m_Calls: []
+  OnCardSwap:
+    m_PersistentCalls:
+      m_Calls: []
+  OnCardPutdown:
+    m_PersistentCalls:
+      m_Calls: []
+  OnCardPlay:
+    m_PersistentCalls:
+      m_Calls: []
+  OnCardDiscard:
+    m_PersistentCalls:
+      m_Calls: []
+  OnCardShuffle:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGainBlock:
+    m_PersistentCalls:
+      m_Calls: []
+  OnAttackBlocked:
+    m_PersistentCalls:
+      m_Calls: []
+  OnAnticipation:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStatusEffectUp:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStatusEffectDown:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSpiritGain:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSpiritReduce:
+    m_PersistentCalls:
+      m_Calls: []
+  OnNotEnoughSpirit:
+    m_PersistentCalls:
+      m_Calls: []
+  OnChainBegin:
+    m_PersistentCalls:
+      m_Calls: []
+  OnChainExtended:
+    m_PersistentCalls:
+      m_Calls: []
+  OnChargeBegin:
+    m_PersistentCalls:
+      m_Calls: []
+  OnChargeExtended:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1105590550
 GameObject:
   m_ObjectHideFlags: 0
@@ -13295,6 +13360,7 @@ MonoBehaviour:
   playedZone: {fileID: 0}
   enemyPlayedZone: {fileID: 0}
   drawPile: {fileID: 0}
+  pileDisplayRows: []
   comboSpacing: 0
   playerStatusEffectIcons:
   - {fileID: 1262522561}
@@ -13316,14 +13382,17 @@ MonoBehaviour:
   enemyComboTracker: {fileID: 0}
   playerBlockIndicator: {fileID: 1776159615}
   enemyBlockIndicator: {fileID: 318489274}
+  spiritBG: {fileID: 0}
   spiritFill: {fileID: 1057682826}
   rewards: []
   chainText: {fileID: 0}
+  chargeText: {fileID: 0}
   chainBonus: {fileID: 0}
   nelly: {r: 0.92549026, g: 0.41960788, b: 0.30588236, a: 1}
   bruttia: {r: 0.23529413, g: 0.4666667, b: 0.6039216, a: 1}
   block: {r: 0, g: 0.5294118, b: 0.7137255, a: 1}
   damage: {r: 0.7137255, g: 0.041889552, b: 0, a: 1}
+  spiritBGColor: {r: 0, g: 0, b: 0, a: 0}
   drawPileCount: {fileID: 1131414672}
   discardPileCount: {fileID: 931905132}
   energyCount: {fileID: 616608941}
@@ -13333,6 +13402,8 @@ MonoBehaviour:
   blockPopUp: {fileID: 0}
   statusPopUp: {fileID: 0}
   numberPopUp: {fileID: 0}
+  chargePopUp: {fileID: 0}
+  chainPopUp: {fileID: 0}
 --- !u!1 &1279513085
 GameObject:
   m_ObjectHideFlags: 0
@@ -15871,7 +15942,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1640065179
 Transform:
   m_ObjectHideFlags: 0
@@ -15921,7 +15992,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 82c9242a8a79aac4bb6bb31822701d11, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -17851,6 +17922,7 @@ MonoBehaviour:
   consecutiveHits: 0
   consecutiveDamage: 0
   chain: 0
+  charge: 0
   animator: {fileID: 1328599696}
   battleSystem: {fileID: 1091507260}
   damage: 2

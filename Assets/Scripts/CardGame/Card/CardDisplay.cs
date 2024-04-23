@@ -49,8 +49,13 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             chainParticles[i].startRotation = -transform.localRotation.z;
             chainParticles[i].enableEmission = chained;
         }
-        Transform hand = FindAnyObjectByType<Hand>().transform;
-        Transform playArea = FindAnyObjectByType<PlayArea>().transform;
+        Transform hand = null;
+        Transform playArea = null;
+        if (FindAnyObjectByType<Hand>() && FindAnyObjectByType<PlayArea>())
+        {
+            hand = FindAnyObjectByType<Hand>().transform;
+            playArea = FindAnyObjectByType<PlayArea>().transform;
+        }
         playable = battleSystem.player.spirit >= card.spiritCost;
         yThreshold = battleSystem.ui.yThreshold;
         if (transform.position.y > yThreshold && transform.parent == hand && playable)

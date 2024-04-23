@@ -15,7 +15,8 @@ public class Lose : State
         BattleSystem.StartCoroutine(BattleSystem.ui.ClearCombo(BattleSystem.enemyCombo.transform, BattleSystem.ui.enemyPlayedZone.transform));
         yield return new WaitForSeconds(0.5f);
         BattleSystem.player.health = 0;
-        yield return new WaitForSeconds(5);
-        SceneManager.LoadScene("PlayerLose");
+        yield return new WaitForSeconds(2);
+        PlayerPrefs.SetInt("playerWon", 0);
+        SceneManager.LoadScene("PlayerWin");
     }
 }

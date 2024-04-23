@@ -46,6 +46,11 @@ public class PlayerTurn : State
         }
         if (BattleSystem.player.charge > 0)
         {
+            if (BattleSystem.player.charge > BattleSystem.player.highCharge)
+            {
+                BattleSystem.player.highCharge = BattleSystem.player.charge;
+                PlayerPrefs.SetInt("charge", BattleSystem.player.charge);
+            }
             if (BattleSystem.player.charge > 1)
             {
                 BattleSystem.OnChargeExtended.Invoke();
@@ -56,7 +61,7 @@ public class PlayerTurn : State
             }
             BattleSystem.ui.TextPopUp("Charge bonus!", BattleSystem.ui.PuppetPos(BattleSystem.player, "head", Vector2.up), ui.chargePopUp);
             yield return new WaitForSeconds(1);
-            for (int i = 0; i < 1+Mathf.Floor(BattleSystem.player.charge / 3); i++)
+            for (int i = 0; i < BattleSystem.player.charge; i++)
             {
                 BattleSystem.player.ApplyStatusEffect(BattleSystem.player.rewards[1].CreateStatusEffect());
             }
@@ -64,6 +69,11 @@ public class PlayerTurn : State
         }
         if (BattleSystem.player.chain > 1)
         {
+            if (BattleSystem.player.chain > BattleSystem.player.highChain)
+            {
+                BattleSystem.player.highChain = BattleSystem.player.chain;
+                PlayerPrefs.SetInt("chain", BattleSystem.player.highChain);
+            }
             if (BattleSystem.player.chain > 3)
             {
                 BattleSystem.OnChainExtended.Invoke();

@@ -14,9 +14,12 @@ public class Fighter : MonoBehaviour
     public int block;
     public int cardsDrawnPerTurn;
     public int consecutiveHits;
+    public int highCombo;
     public int consecutiveDamage;
     public int chain;
+    public int highChain;
     public int charge;
+    public int highCharge;
     public List<StatusEffect> activeStatusEffects = new List<StatusEffect>();
     public FighterAnimator animator;
     public void Damage(int damage, float knockback, Fighter opponent)
@@ -53,7 +56,14 @@ public class Fighter : MonoBehaviour
             {
                 animator.PlayAnimationClipByName("defeat");
                 StartCoroutine(cam.ScreenShake(2 * (block/10), cam.magnitude * Mathf.Min(15, Mathf.Abs(block)) * lostComboModifier, cam.frequency));
-                battleSystem.SetState(new Win(battleSystem));
+                if (opponent == battleSystem.player)
+                {
+                    battleSystem.SetState(new Win(battleSystem));
+                }
+                else
+                {
+                    battleSystem.SetState(new Lose(battleSystem));
+                }
             }
             else
             {
@@ -72,6 +82,11 @@ public class Fighter : MonoBehaviour
                 if (opponent.consecutiveHits > 2)
                 {
                     opponent.charge++;
+                }
+                if (opponent.consecutiveHits > opponent.highCombo)
+                {
+                    opponent.highCombo = opponent.consecutiveHits;
+                    PlayerPrefs.SetInt("combo", opponent.highCombo);
                 }
                 opponent.consecutiveDamage += damage;
                 float magModifier = damage;
