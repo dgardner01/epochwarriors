@@ -29,11 +29,11 @@ public class CameraManager : MonoBehaviour
     private void FixedUpdate()
     {
         lerpedLensSize = Mathf.Lerp(lerpedLensSize, lensSize,zoomSpeed);
-        if (shake.x > 0.05f)
+        if (shake.x > 0.025f)
         {
             shake.x /= 1.1f;
         }
-        if (shake.y > 0.025f)
+        if (shake.y > 0.01f)
         {
             shake.y /= 1.1f;
         }

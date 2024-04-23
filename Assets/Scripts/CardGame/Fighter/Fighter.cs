@@ -119,7 +119,7 @@ public class Fighter : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         if (damage > opponent.block)
         {
-            SFXManager.Instance.PlaySound("14");
+            SFXManager.Instance.PlaySound("17");
         }
         opponent.Damage(damage, -20, this); 
     }
