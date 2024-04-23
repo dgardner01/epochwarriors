@@ -74,7 +74,7 @@ public class PlayerTurn : State
             }
             BattleSystem.ui.TextPopUp("Chain bonus!", BattleSystem.ui.PuppetPos(BattleSystem.player, "head", Vector2.up), ui.chainPopUp);
             yield return new WaitForSeconds(1);
-            for (int i = 0; i < 1+Mathf.Floor(BattleSystem.player.chain/3); i++)
+            for (int i = 0; i < 1+Mathf.FloorToInt(BattleSystem.player.chain/5); i++)
             {
                 BattleSystem.player.ApplyStatusEffect(BattleSystem.player.rewards[0].CreateStatusEffect());
             }

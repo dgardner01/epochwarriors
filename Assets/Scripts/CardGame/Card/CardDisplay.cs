@@ -89,7 +89,11 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             case CardType.Attack:
                 bg.sprite = bgs[0];
                 symbols[0].sprite = symbolSprites[0];
-                if (player.strength > 0)
+                if (transform.parent == battleSystem.enemyCombo.transform)
+                {
+                    symbolMagnitudes[0].text = "" + (card.damage + battleSystem.enemy.strength);
+                }
+                else if (player.strength > 0)
                 {
                     symbolMagnitudes[0].text = "" + (card.damage+player.strength);
                 }

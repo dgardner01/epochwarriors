@@ -23,8 +23,6 @@ public class Fighter : MonoBehaviour
     {
         CameraManager cam = Camera.main.GetComponent<CameraManager>();
         float time = 0.1f;
-        float magnitude = 0.1f;
-        float decreaseFactor = 2;
         float bounceMag = 0.05f;
         float bounceFreq = 10;
         float lostComboModifier = consecutiveHits > 2 ? 2 : 1;
@@ -54,7 +52,7 @@ public class Fighter : MonoBehaviour
             if (health + block <= 0)
             {
                 animator.PlayAnimationClipByName("defeat");
-                cam.ScreenShake(.5f, magnitude * Mathf.Min(15, Mathf.Abs(block)) * lostComboModifier, decreaseFactor);
+                StartCoroutine(cam.ScreenShake(2 * (block/10), cam.magnitude * Mathf.Min(15, Mathf.Abs(block)) * lostComboModifier, cam.frequency));
                 battleSystem.SetState(new Win(battleSystem));
             }
             else
@@ -80,7 +78,7 @@ public class Fighter : MonoBehaviour
                 float freqModifier = 1;
                 health += block;
                 battleSystem.ui.TextPopUp("" + Mathf.Abs(block), ui.PuppetPos(this, "head", Vector2.up / 2), ui.numberPopUp);
-                cam.ScreenShake(time * lostComboModifier, magnitude * Mathf.Min(15, Mathf.Abs(block)) * lostComboModifier, decreaseFactor);
+                StartCoroutine(cam.ScreenShake((block/10) * lostComboModifier, cam.magnitude * Mathf.Min(15, Mathf.Abs(block)) * lostComboModifier, cam.frequency));
                 battleSystem.vfx.StartBackgroundCharBounce(bounceMag * magModifier, bounceFreq * freqModifier);
                 charge = 0;
                 consecutiveHits = 0;
@@ -102,7 +100,7 @@ public class Fighter : MonoBehaviour
             battleSystem.OnAttackBlocked.Invoke();
             battleSystem.vfx.StartBackgroundCharBounce(bounceMag, bounceFreq);
             battleSystem.ui.TextPopUp("Blocked!",ui.PuppetPos(this, "head", Vector2.up), ui.blockPopUp);
-            cam.ScreenShake(time, (magnitude/2), decreaseFactor);
+            StartCoroutine(cam.ScreenShake(time, (cam.magnitude/2), cam.frequency));
         }
     }
     public void Parry(int damage, Fighter opponent, StatusEffect parryStatus)
@@ -123,7 +121,7 @@ public class Fighter : MonoBehaviour
         {
             SFXManager.Instance.PlaySound("14");
         }
-        opponent.Damage(damage, -3, this); 
+        opponent.Damage(damage, -20, this); 
     }
     public void ApplyStatusEffect(StatusEffect statusEffect)
     {

@@ -1,50 +1,52 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class CameraManager : MonoBehaviour
 {
     public GameObject player, enemy;
+    public float magnitude;
+    public float frequency;
+    public float lensSize;
+    public float zoomSpeed;
+    float lerpedLensSize;
+    public float y;
+    public Transform target;
     public Vector3 center;
-    public Vector3 screenShakeOffset;
-    public float targetSize;
-    public float shakeTimer;
-    public float shakeAmount;
-    public float decreaseFactor;
+    public Vector2 shake;
+    public CinemachineVirtualCamera cvc;
     private void Update()
     {
-        center = (player.transform.position + enemy.transform.position) / 2;
-        center.y = -268.9f;
-        center.z = -10;
-        transform.position = center + screenShakeOffset;
+        center = (player.transform.position + enemy.transform.position)/2;
+        center.y = y;
+        target.position = center;
+        var perlin = cvc.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        perlin.m_AmplitudeGain = shake.x;
+        perlin.m_FrequencyGain = shake.y;
+        cvc.m_Lens.OrthographicSize = lerpedLensSize;
     }
     private void FixedUpdate()
     {
-        Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, targetSize, 0.1f);
-        if (shakeTimer > 0)
+        lerpedLensSize = Mathf.Lerp(lerpedLensSize, lensSize,zoomSpeed);
+        if (shake.x > 0.05f)
         {
-            screenShakeOffset = Random.insideUnitSphere * shakeAmount;
-            shakeTimer -= Time.deltaTime * decreaseFactor;
+            shake.x /= 1.1f;
         }
-        else
+        if (shake.y > 0.025f)
         {
-            screenShakeOffset = Vector3.zero;
-            shakeTimer = 0;
+            shake.y /= 1.1f;
         }
     }
-    public void ScreenShake(float time, float amount, float decreaseFactor)
+    public IEnumerator ScreenShake(float duration, float magnitude, float frequency)
     {
-        StartCoroutine(FreezeFrame(time, amount));
-        shakeAmount = amount;
-        this.decreaseFactor = decreaseFactor;
-    }
-
-    public IEnumerator FreezeFrame(float time, float amount)
-    {
+        lerpedLensSize = lensSize + duration;
         Time.timeScale = 0;
-        yield return new WaitForSecondsRealtime(time);
-        Time.timeScale = 1;
-        Camera.main.orthographicSize = targetSize - (amount / 2);
-        shakeTimer = time;
+        yield return new WaitForSecondsRealtime(duration);
+        Time.timeScale = 0.5f;
+        yield return new WaitForSecondsRealtime(duration);
+        Time.timeScale = 1f;
+        shake.x = magnitude;
+        shake.y = frequency;
     }
 }
