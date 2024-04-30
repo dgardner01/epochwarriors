@@ -84106,7 +84106,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
       propertyPath: musicTracks.Array.size
-      value: 3
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
       propertyPath: musicTracks.Array.data[0].clip
@@ -84133,6 +84133,22 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
+      propertyPath: musicTracks.Array.data[3].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: a8e918abfb53040ce8afae99d7888113, type: 3}
+    - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
+      propertyPath: musicTracks.Array.data[3].loop
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
+      propertyPath: musicTracks.Array.data[4].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: a6e52d77fed1f4267a8c17b42620a170, type: 3}
+    - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
+      propertyPath: musicTracks.Array.data[4].loop
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
       propertyPath: musicTracks.Array.data[0].volume
       value: 1
       objectReference: {fileID: 0}
@@ -84142,6 +84158,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
       propertyPath: musicTracks.Array.data[2].volume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
+      propertyPath: musicTracks.Array.data[3].volume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
+      propertyPath: musicTracks.Array.data[4].volume
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
@@ -84157,6 +84181,14 @@ PrefabInstance:
       value: C
       objectReference: {fileID: 0}
     - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
+      propertyPath: musicTracks.Array.data[3].trackName
+      value: D
+      objectReference: {fileID: 0}
+    - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
+      propertyPath: musicTracks.Array.data[4].trackName
+      value: E
+      objectReference: {fileID: 0}
+    - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
       propertyPath: musicTracks.Array.data[0].fadeInTime
       value: 1
       objectReference: {fileID: 0}
@@ -84166,6 +84198,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
       propertyPath: musicTracks.Array.data[2].fadeInTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
+      propertyPath: musicTracks.Array.data[3].fadeInTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
+      propertyPath: musicTracks.Array.data[4].fadeInTime
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
@@ -84190,6 +84230,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
       propertyPath: musicTracks.Array.data[2].fadeOutTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
+      propertyPath: musicTracks.Array.data[3].description
+      value: 'Another Base
+
+'
+      objectReference: {fileID: 0}
+    - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
+      propertyPath: musicTracks.Array.data[3].fadeOutTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
+      propertyPath: musicTracks.Array.data[4].description
+      value: 'Another Additive
+
+'
+      objectReference: {fileID: 0}
+    - target: {fileID: 174310965, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}
+      propertyPath: musicTracks.Array.data[4].fadeOutTime
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2279409715243327570, guid: a0c40bfbc503b46eda99108bf330eb74, type: 3}

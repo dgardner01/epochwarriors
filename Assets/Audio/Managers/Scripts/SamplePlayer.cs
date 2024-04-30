@@ -37,5 +37,22 @@ public class SamplePlayer : MonoBehaviour
         {
             MusicManager.Instance.StopMusic("C");
         }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            MusicManager.Instance.PlayMusic("D");
+        }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            MusicManager.Instance.PlayMusicOver("D", "E");
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            MusicManager.Instance.StopMusic("D");
+        }
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            MusicManager.Instance.StopMusic("E");
+        }
     }
 }
