@@ -15,7 +15,44 @@ public class SamplePlayer : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
-            SFXManager.Instance.StopLoopingSound("cardSetdown");
+            MusicManager.Instance.PlayMusic("A");
+        }
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            MusicManager.Instance.PlayMusicOver("A", "B");
+        }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            MusicManager.Instance.PlayMusicOver("A", "C");
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            MusicManager.Instance.StopMusic("A");
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            MusicManager.Instance.StopMusic("B");
+        }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            MusicManager.Instance.StopMusic("C");
+        }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            MusicManager.Instance.PlayMusic("D");
+        }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            MusicManager.Instance.PlayMusicOver("D", "E");
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            MusicManager.Instance.StopMusic("D");
+        }
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            MusicManager.Instance.StopMusic("E");
         }
     }
 }
