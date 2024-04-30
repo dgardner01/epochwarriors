@@ -14,16 +14,18 @@ public class Fighter : MonoBehaviour
     public int block;
     public int cardsDrawnPerTurn;
     public int consecutiveHits;
+    public int highCombo;
     public int consecutiveDamage;
     public int chain;
+    public int highChain;
+    public int charge;
+    public int highCharge;
     public List<StatusEffect> activeStatusEffects = new List<StatusEffect>();
     public FighterAnimator animator;
     public void Damage(int damage, float knockback, Fighter opponent)
     {
         CameraManager cam = Camera.main.GetComponent<CameraManager>();
         float time = 0.1f;
-        float magnitude = 0.1f;
-        float decreaseFactor = 2;
         float bounceMag = 0.05f;
         float bounceFreq = 10;
         float lostComboModifier = consecutiveHits > 2 ? 2 : 1;
@@ -47,60 +49,53 @@ public class Fighter : MonoBehaviour
             ui.TextPopUp("Dodged!",ui.PuppetPos(this, "head", Vector2.up), ui.blockPopUp);
             return;
         }
-        if (parryStatus != null)
-        {
-            StartCoroutine(DelayedDamage(damage/2, opponent));
-            activeStatusEffects.Remove(parryStatus);
-        }
         block -= damage;
         if (block < 0)
         {
             if (health + block <= 0)
             {
                 animator.PlayAnimationClipByName("defeat");
-                SFXManager.Instance.PlaySound("hitXL");
-                cam.ScreenShake(.5f, magnitude * Mathf.Min(15, Mathf.Abs(block)) * lostComboModifier, decreaseFactor);
-                battleSystem.SetState(new Win(battleSystem));
-            }
-            else
-            {
-                if (block < -20)
+                StartCoroutine(cam.ScreenShake(2 * (block/10), cam.magnitude * Mathf.Min(15, Mathf.Abs(block)) * lostComboModifier, cam.frequency));
+                if (opponent == battleSystem.player)
                 {
-                    SFXManager.Instance.PlaySound("hitXL");
-                }
-                else if (block < -15)
-                {
-                    SFXManager.Instance.PlaySound("hitL");
-                }
-                else if (block < -10)
-                {
-                    SFXManager.Instance.PlaySound("hitM");
+                    battleSystem.SetState(new Win(battleSystem));
                 }
                 else
                 {
-                    SFXManager.Instance.PlaySound("hitS");
+                    battleSystem.SetState(new Lose(battleSystem));
                 }
-                animator.hurt = true;
-                print(knockback);
-                StartCoroutine(ResetAnimatorHurt(knockback));
-                animator.ApplyKnockback(knockback);
-                animator.PlayAnimationClipByName("hurt" + Random.Range(1, 3));
+            }
+            else
+            {
+                if (parryStatus != null)
+                {
+                    Parry(damage, opponent, parryStatus);
+                }
+                else
+                {
+                    animator.hurt = true;
+                    StartCoroutine(ResetAnimatorHurt(knockback));
+                    animator.ApplyKnockback(knockback);
+                    animator.PlayAnimationClipByName("hurt" + Random.Range(1, 3));
+                }
                 opponent.consecutiveHits++;
                 if (opponent.consecutiveHits > 2)
                 {
-                    SFXManager.Instance.PlaySound("comboActive");
+                    opponent.charge++;
+                }
+                if (opponent.consecutiveHits > opponent.highCombo)
+                {
+                    opponent.highCombo = opponent.consecutiveHits;
+                    PlayerPrefs.SetInt("combo", opponent.highCombo);
                 }
                 opponent.consecutiveDamage += damage;
                 float magModifier = damage;
                 float freqModifier = 1;
                 health += block;
                 battleSystem.ui.TextPopUp("" + Mathf.Abs(block), ui.PuppetPos(this, "head", Vector2.up / 2), ui.numberPopUp);
-                cam.ScreenShake(time * lostComboModifier, magnitude * Mathf.Min(15, Mathf.Abs(block)) * lostComboModifier, decreaseFactor);
-                if (consecutiveHits > 2)
-                {
-                    //ui.TextPopUp("C-c-combo breaker!", ui.PuppetPos(opponent, "head", Vector2.up), ui.blockPopUp);
-                }
+                StartCoroutine(cam.ScreenShake((block/10) * lostComboModifier, cam.magnitude * Mathf.Min(15, Mathf.Abs(block)) * lostComboModifier, cam.frequency));
                 battleSystem.vfx.StartBackgroundCharBounce(bounceMag * magModifier, bounceFreq * freqModifier);
+                charge = 0;
                 consecutiveHits = 0;
                 consecutiveDamage = 0;
                 block = 0;
@@ -108,13 +103,25 @@ public class Fighter : MonoBehaviour
         }
         else
         {
+            if (parryStatus != null)
+            {
+                Parry(damage, opponent, parryStatus);
+            }
+            else
+            {
+                animator.PlayAnimationClipByName("guard");
+                animator.PlayAnimationClipByName("block");
+            }
+            battleSystem.OnAttackBlocked.Invoke();
             battleSystem.vfx.StartBackgroundCharBounce(bounceMag, bounceFreq);
-            SFXManager.Instance.PlaySound("guard");
-            animator.PlayAnimationClipByName("guard");
-            animator.PlayAnimationClipByName("block");
             battleSystem.ui.TextPopUp("Blocked!",ui.PuppetPos(this, "head", Vector2.up), ui.blockPopUp);
-            cam.ScreenShake(time, (magnitude/2), decreaseFactor);
+            StartCoroutine(cam.ScreenShake(time, (cam.magnitude/2), cam.frequency));
         }
+    }
+    public void Parry(int damage, Fighter opponent, StatusEffect parryStatus)
+    {
+        StartCoroutine(DelayedDamage(damage / 2, opponent));
+        activeStatusEffects.Remove(parryStatus);
     }
     public IEnumerator ResetAnimatorHurt(float knockback)
     {
@@ -123,12 +130,17 @@ public class Fighter : MonoBehaviour
     }
     public IEnumerator DelayedDamage(int damage, Fighter opponent)
     {
-        //animator.PlayAnimationClipByName("bite");
-        yield return new WaitForSeconds(.5f);
-        opponent.Damage(damage, -3, this); 
+        animator.PlayAnimationClipByName("bite");
+        yield return new WaitForSeconds(0.3f);
+        if (damage > opponent.block)
+        {
+            SFXManager.Instance.PlaySound("17");
+        }
+        opponent.Damage(damage, -20, this); 
     }
     public void ApplyStatusEffect(StatusEffect statusEffect)
     {
+        battleSystem.OnStatusEffectUp.Invoke();
         statusEffect.OnApply(this);
         if (statusEffect.duration < 0)
         {
@@ -159,11 +171,12 @@ public class Fighter : MonoBehaviour
 
     public void RemoveStatusEffect(StatusEffect statusEffect)
     {
+        battleSystem.OnStatusEffectDown.Invoke();
         statusEffect.OnRemove(this);
         activeStatusEffects.Remove(statusEffect);
     }
     
-    public void UpdateStatusEffects()
+    public IEnumerator UpdateStatusEffects()
     {
         if (activeStatusEffects == null)
         {
@@ -180,6 +193,7 @@ public class Fighter : MonoBehaviour
         }
         foreach(StatusEffect statusToRemove in effectsToRemove)
         {
+            yield return new WaitForSeconds(0.5f);
             RemoveStatusEffect(statusToRemove);
         }
     }

@@ -30,6 +30,7 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public bool hover;
     public bool drag;
     public bool played;
+    public bool playable;
     public bool chained;
     public float discardBuffer;
     public float yThreshold;
@@ -48,9 +49,14 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             chainParticles[i].startRotation = -transform.localRotation.z;
             chainParticles[i].enableEmission = chained;
         }
-        Transform hand = FindAnyObjectByType<Hand>().transform;
-        Transform playArea = FindAnyObjectByType<PlayArea>().transform;
-        bool playable = battleSystem.player.spirit >= card.spiritCost;
+        Transform hand = null;
+        Transform playArea = null;
+        if (FindAnyObjectByType<Hand>() && FindAnyObjectByType<PlayArea>())
+        {
+            hand = FindAnyObjectByType<Hand>().transform;
+            playArea = FindAnyObjectByType<PlayArea>().transform;
+        }
+        playable = battleSystem.player.spirit >= card.spiritCost;
         yThreshold = battleSystem.ui.yThreshold;
         if (transform.position.y > yThreshold && transform.parent == hand && playable)
         {
@@ -59,7 +65,6 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         }
         if (transform.position.y < yThreshold && transform.parent == playArea)
         {
-            print(transform.position.y);
             battleSystem.ui.ReparentCard(gameObject, battleSystem.hand.transform);
             battleSystem.ReturnCard(card);
         }
@@ -89,7 +94,11 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             case CardType.Attack:
                 bg.sprite = bgs[0];
                 symbols[0].sprite = symbolSprites[0];
-                if (player.strength > 0)
+                if (transform.parent == battleSystem.enemyCombo.transform)
+                {
+                    symbolMagnitudes[0].text = "" + (card.damage + battleSystem.enemy.strength);
+                }
+                else if (player.strength > 0)
                 {
                     symbolMagnitudes[0].text = "" + (card.damage+player.strength);
                 }
@@ -189,17 +198,22 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     }
     public void PlayCard()
     {
-        SFXManager.Instance.PlaySound("cardSetdown");
+        battleSystem.OnCardPutdown.Invoke();
         bounceTime = 0;
         if (card != null && card.name == "Taunt" && transform.parent == battleSystem.playArea.transform)
         {
             battleSystem.ResolveInstantCard(card);
             battleSystem.ui.ReparentCard(gameObject, battleSystem.discard.transform);
         }
+        if (!playable && transform.parent == battleSystem.hand.transform)
+        {
+            battleSystem.OnNotEnoughSpirit.Invoke();
+        }
     }
 
     public void OnPointerEnter(PointerEventData pointerEventData)
     {
+        battleSystem.OnCardHover.Invoke();
         hover = true;
     }
 
@@ -209,7 +223,7 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     }
     public void OnBeginDrag(PointerEventData pointerEventData)
     {
-        SFXManager.Instance.PlaySound("cardPickup");
+        battleSystem.OnCardPickup.Invoke();
         drag = true;
     }
     public void OnDrag(PointerEventData pointerEventData)

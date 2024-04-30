@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public abstract class StatusEffect
 {
     public string id;
+    public string description;
     public int duration;
     public int magnitude;
     public Sprite symbol;

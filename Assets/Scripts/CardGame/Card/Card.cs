@@ -21,4 +21,5 @@ public class Card : ScriptableObject
     public CardType cardType;
     public StatusEffectData statusEffect;
     public AnimationClip animation;
+    public AudioClip SFXClip;
 }

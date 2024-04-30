@@ -16,7 +16,7 @@ public class Hand : MonoBehaviour
         {
             if (player.drawPile.Count > 0)
             {
-                SFXManager.Instance.PlaySound("cardPickup");
+                battleSystem.OnCardDraw.Invoke();
                 int rand = Random.Range(0, player.drawPile.Count);
                 Card drawnCard = player.drawPile[rand];
                 cards.Add(drawnCard);
@@ -37,15 +37,15 @@ public class Hand : MonoBehaviour
 
     public IEnumerator Shuffle(int numLeft)
     {
-        SFXManager.Instance.PlaySound("cardShuffle");
+        battleSystem.OnCardShuffle.Invoke();
         for (int i = 0; i < battleSystem.discard.cards.Count; i++)
         {
             Card card = battleSystem.discard.cards[0];
             battleSystem.player.drawPile.Add(card);
             ui.ReparentCard(ui.discard.transform.GetChild(0).gameObject, ui.drawPile.transform);
             battleSystem.discard.cards.Remove(card);
-            yield return new WaitForSeconds(0.1f);
         }
+        yield return new WaitForSeconds(1);
         StartCoroutine(DrawCard(numLeft));
     }
 }

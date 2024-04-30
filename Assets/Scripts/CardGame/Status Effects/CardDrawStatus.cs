@@ -10,9 +10,11 @@ public class CardDrawStatus : StatusEffect
     {
         this.duration = duration;
         this.symbol = symbol;
+        magnitude = cardsDrawn;
         this.cardsDrawn = cardsDrawn;
         this.rageData = rageData;
         id = "Card draw";
+        description = "You drew x additional cards this turn. Card draw is reset at the start of your turn.";
     }
     public override void OnApply(Fighter fighter)
     {
