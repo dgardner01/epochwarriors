@@ -142,6 +142,10 @@ public class BattleUI : MonoBehaviour
                 if (nextObject.position.x < cardObject.position.x && (cardDisplay.drag || nextDisplay.drag))
                 {
                     battleSystem.OnCardSwap.Invoke();
+                    Card nextCard = cards[i + 1];
+                    Card currentCard = cards[i];
+                    cards[i] = nextCard;
+                    cards[i + 1] = currentCard;
                     nextObject.SetSiblingIndex(i);
                     cardObject.SetSiblingIndex(i + 1);
                 }

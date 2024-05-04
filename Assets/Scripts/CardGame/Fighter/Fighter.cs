@@ -14,17 +14,18 @@ public class Fighter : MonoBehaviour
     public int block;
     public int cardsDrawnPerTurn;
     public int consecutiveHits;
+    public int highCombo;
     public int consecutiveDamage;
     public int chain;
+    public int highChain;
     public int charge;
+    public int highCharge;
     public List<StatusEffect> activeStatusEffects = new List<StatusEffect>();
     public FighterAnimator animator;
     public void Damage(int damage, float knockback, Fighter opponent)
     {
         CameraManager cam = Camera.main.GetComponent<CameraManager>();
         float time = 0.1f;
-        float magnitude = 0.1f;
-        float decreaseFactor = 2;
         float bounceMag = 0.05f;
         float bounceFreq = 10;
         float lostComboModifier = consecutiveHits > 2 ? 2 : 1;
@@ -54,8 +55,15 @@ public class Fighter : MonoBehaviour
             if (health + block <= 0)
             {
                 animator.PlayAnimationClipByName("defeat");
-                cam.ScreenShake(.5f, magnitude * Mathf.Min(15, Mathf.Abs(block)) * lostComboModifier, decreaseFactor);
-                battleSystem.SetState(new Win(battleSystem));
+                StartCoroutine(cam.ScreenShake(2 * (block/10), cam.magnitude * Mathf.Min(15, Mathf.Abs(block)) * lostComboModifier, cam.frequency));
+                if (opponent == battleSystem.player)
+                {
+                    battleSystem.SetState(new Win(battleSystem));
+                }
+                else
+                {
+                    battleSystem.SetState(new Lose(battleSystem));
+                }
             }
             else
             {
@@ -75,12 +83,17 @@ public class Fighter : MonoBehaviour
                 {
                     opponent.charge++;
                 }
+                if (opponent.consecutiveHits > opponent.highCombo)
+                {
+                    opponent.highCombo = opponent.consecutiveHits;
+                    PlayerPrefs.SetInt("combo", opponent.highCombo);
+                }
                 opponent.consecutiveDamage += damage;
                 float magModifier = damage;
                 float freqModifier = 1;
                 health += block;
                 battleSystem.ui.TextPopUp("" + Mathf.Abs(block), ui.PuppetPos(this, "head", Vector2.up / 2), ui.numberPopUp);
-                cam.ScreenShake(time * lostComboModifier, magnitude * Mathf.Min(15, Mathf.Abs(block)) * lostComboModifier, decreaseFactor);
+                StartCoroutine(cam.ScreenShake((block/10) * lostComboModifier, cam.magnitude * Mathf.Min(15, Mathf.Abs(block)) * lostComboModifier, cam.frequency));
                 battleSystem.vfx.StartBackgroundCharBounce(bounceMag * magModifier, bounceFreq * freqModifier);
                 charge = 0;
                 consecutiveHits = 0;
@@ -102,7 +115,7 @@ public class Fighter : MonoBehaviour
             battleSystem.OnAttackBlocked.Invoke();
             battleSystem.vfx.StartBackgroundCharBounce(bounceMag, bounceFreq);
             battleSystem.ui.TextPopUp("Blocked!",ui.PuppetPos(this, "head", Vector2.up), ui.blockPopUp);
-            cam.ScreenShake(time, (magnitude/2), decreaseFactor);
+            StartCoroutine(cam.ScreenShake(time, (cam.magnitude/2), cam.frequency));
         }
     }
     public void Parry(int damage, Fighter opponent, StatusEffect parryStatus)
@@ -121,9 +134,9 @@ public class Fighter : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         if (damage > opponent.block)
         {
-            SFXManager.Instance.PlaySound("14");
+            SFXManager.Instance.PlaySound("17");
         }
-        opponent.Damage(damage, -3, this); 
+        opponent.Damage(damage, -20, this); 
     }
     public void ApplyStatusEffect(StatusEffect statusEffect)
     {

@@ -49,8 +49,13 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             chainParticles[i].startRotation = -transform.localRotation.z;
             chainParticles[i].enableEmission = chained;
         }
-        Transform hand = FindAnyObjectByType<Hand>().transform;
-        Transform playArea = FindAnyObjectByType<PlayArea>().transform;
+        Transform hand = null;
+        Transform playArea = null;
+        if (FindAnyObjectByType<Hand>() && FindAnyObjectByType<PlayArea>())
+        {
+            hand = FindAnyObjectByType<Hand>().transform;
+            playArea = FindAnyObjectByType<PlayArea>().transform;
+        }
         playable = battleSystem.player.spirit >= card.spiritCost;
         yThreshold = battleSystem.ui.yThreshold;
         if (transform.position.y > yThreshold && transform.parent == hand && playable)
@@ -89,7 +94,11 @@ public class CardDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             case CardType.Attack:
                 bg.sprite = bgs[0];
                 symbols[0].sprite = symbolSprites[0];
-                if (player.strength > 0)
+                if (transform.parent == battleSystem.enemyCombo.transform)
+                {
+                    symbolMagnitudes[0].text = "" + (card.damage + battleSystem.enemy.strength);
+                }
+                else if (player.strength > 0)
                 {
                     symbolMagnitudes[0].text = "" + (card.damage+player.strength);
                 }

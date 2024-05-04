@@ -4,8 +4,9 @@ using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
-public class Music
+public class Music 
 {
+    
     public string trackName;
     public AudioClip clip;
     [Range(0f, 1f)]
@@ -18,13 +19,14 @@ public class Music
 }
 
 
-
 public class MusicManager : MonoBehaviour
 {
     public static MusicManager Instance { get; private set; }
     public Music[] musicTracks;
 
     private List<AudioSource> activeSources = new List<AudioSource>();
+
+    private Dictionary<string, AudioSource> namedAudioSources = new Dictionary<string, AudioSource>(); // named!
 
     void Awake()
     {
@@ -48,8 +50,53 @@ public class MusicManager : MonoBehaviour
             return;
         }
 
-        StartCoroutine(ManageMusicPlayback(musicToPlay));
+        if (!namedAudioSources.TryGetValue(trackName, out AudioSource existingSource))
+        {
+            AudioSource newSource = CreateAudioSourceForTrack(musicToPlay);
+            newSource.Play();  // Ensure the source is played
+            StartCoroutine(FadeIn(newSource, musicToPlay.volume, musicToPlay.fadeInTime));  // Ensure the fade-in starts
+            namedAudioSources[trackName] = newSource;
+            activeSources.Add(newSource);
+        }
+        else
+        {
+            Debug.Log("Track already playing: " + trackName);
+        }
     }
+
+
+
+    public void PlayMusicOver(string baseTrackName, string layerTrackName)
+    {
+        Music baseTrack = musicTracks.FirstOrDefault(m => m.trackName == baseTrackName);
+        Music layerTrack = musicTracks.FirstOrDefault(m => m.trackName == layerTrackName);
+
+        if (baseTrack == null || layerTrack == null)
+        {
+            Debug.LogWarning($"Base track or layer track not found: {baseTrackName}, {layerTrackName}");
+            return;
+        }
+
+        if (!namedAudioSources.TryGetValue(baseTrackName, out AudioSource baseSource))
+        {
+            Debug.LogWarning($"Base track not currently playing: {baseTrackName}");
+            return;
+        }
+
+        AudioSource layerSource = CreateAudioSourceForTrack(layerTrack);
+        if (layerSource == null)
+        {
+            Debug.LogError("Failed to create audio source for layer track.");
+            return;
+        }
+
+        layerSource.time = baseSource.time;  // Synchronize starting time with base track
+        layerSource.Play();
+        StartCoroutine(FadeIn(layerSource, layerTrack.volume, layerTrack.fadeInTime));  // Start the fade-in process
+        namedAudioSources[layerTrackName] = layerSource;  // Store reference to this new overlay source
+    }
+
+
 
     private IEnumerator ManageMusicPlayback(Music newTrack)
     {
@@ -73,21 +120,36 @@ public class MusicManager : MonoBehaviour
         AudioSource source = sourceGameObject.AddComponent<AudioSource>();
         source.clip = track.clip;
         source.loop = track.loop;
-        source.volume = 0; // Start muted to fade in
+        source.volume = track.volume; // Ensure the volume is set based on the track's setting
         return source;
     }
 
+
+
     private IEnumerator FadeIn(AudioSource source, float targetVolume, float duration)
     {
-        float timer = 0;
+        if (source == null)
+        {
+            yield break;  // Exit if the source is null
+        }
+
+        float startVolume = 0f;  // Always start from 0 for a fade-in
+        float timer = 0f;
         while (timer < duration)
         {
-            source.volume = Mathf.Lerp(0, targetVolume, timer / duration);
+            if (source == null)
+            {
+                yield break;  // Check if the source is still valid
+            }
+
             timer += Time.deltaTime;
+            source.volume = Mathf.Lerp(startVolume, targetVolume, timer / duration);  // Linear interpolation from startVolume to targetVolume
             yield return null;
         }
-        source.volume = targetVolume;
+
+        source.volume = targetVolume;  // Ensure the volume is exactly the target volume at the end
     }
+
 
     private IEnumerator FadeOutAndDestroy(AudioSource source, float duration)
     {
@@ -113,12 +175,19 @@ public class MusicManager : MonoBehaviour
     }
 
 
-    public void StopMusic()
+    public void StopMusic(string trackName)
     {
-        foreach (var source in activeSources.ToList())
+        if (namedAudioSources.TryGetValue(trackName, out AudioSource source))
         {
-            StartCoroutine(FadeOutAndDestroy(source, 1f));  // Assuming a generic fade out time of 1 second
+            StartCoroutine(FadeOutAndDestroy(source, 1f));
+            namedAudioSources.Remove(trackName);
+            activeSources.Remove(source);
         }
-        activeSources.Clear();
+        else
+        {
+            Debug.LogWarning($"Attempted to stop a non-existing track: {trackName}");
+        }
     }
+
+
 }
