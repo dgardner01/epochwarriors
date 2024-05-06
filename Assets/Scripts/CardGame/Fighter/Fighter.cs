@@ -73,6 +73,12 @@ public class Fighter : MonoBehaviour
                 }
                 else
                 {
+                    int trackLayer = MusicManager.Instance.gameObject.transform.childCount;
+                    print(trackLayer);
+                    if (trackLayer < 6)
+                    {
+                        MusicManager.Instance.PlayMusicOver("0", trackLayer.ToString());
+                    }
                     animator.hurt = true;
                     StartCoroutine(ResetAnimatorHurt(knockback));
                     animator.ApplyKnockback(knockback);

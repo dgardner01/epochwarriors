@@ -10,6 +10,21 @@ public class Battle : State
     BattleUI ui => BattleSystem.ui;
     public override IEnumerator Start()
     {
+        MusicManager.Instance.StopMusic("9");
+        MusicManager.Instance.StopMusic("10");
+        MusicManager.Instance.PlayMusic("0"); 
+        if (BattleSystem.player.chain > 1)
+        {
+            MusicManager.Instance.PlayMusic("6");
+        }
+        if (BattleSystem.player.chain > 4)
+        {
+            MusicManager.Instance.PlayMusic("7");
+        }
+        if (BattleSystem.player.chain > 7)
+        {
+            MusicManager.Instance.PlayMusic("8");
+        }
         BattleSystem.enemy.ClearIntents();
         BattleSystem.ui.PrintLog("battle begin");
         BattleSystem.player.turnDamage = BattleSystem.player.health;
@@ -141,6 +156,5 @@ public class Battle : State
         {
             BattleSystem.StartCoroutine(ResolveCard());
         }
-
     }
 }

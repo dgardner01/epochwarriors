@@ -10,7 +10,16 @@ public class PlayerTurn : State
     BattleUI ui => BattleSystem.ui;
         public override IEnumerator Start()
         {
-            BattleSystem.ui.PrintLog("player turn begin");
+        for (int i = 0; i < 9; i++)
+        {
+            MusicManager.Instance.StopMusic(i.ToString());
+        }
+        MusicManager.Instance.PlayMusic("9");
+        if (BattleSystem.player.health < 100)
+        {
+            MusicManager.Instance.PlayMusic("10");
+        }
+        BattleSystem.ui.PrintLog("player turn begin");
         BattleSystem.player.turnDamage = BattleSystem.player.health;
         BattleSystem.enemy.turnDamage = BattleSystem.enemy.health;
         BattleSystem.ui.lowerThird.GetComponent<Animator>().Play("up");

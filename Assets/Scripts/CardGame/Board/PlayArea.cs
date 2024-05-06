@@ -12,6 +12,8 @@ public class PlayArea : MonoBehaviour
         CheckForChain();
         if (chain <= 0)
         {
+            MusicManager.Instance.StopMusic("11");
+            MusicManager.Instance.StopMusic("12");
             hasChained = false;
         }
     }
@@ -58,6 +60,14 @@ public class PlayArea : MonoBehaviour
             chain++;
             if (!hasChained)
             {
+                if (chain > 2)
+                {
+                    MusicManager.Instance.PlayMusicOver("9", "12");
+                }
+                else
+                {
+                    MusicManager.Instance.PlayMusicOver("9", "11");
+                }
                 hasChained = true;
             }
             for (int i = startIndex; i < endIndex + 1; i++)
