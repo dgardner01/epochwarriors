@@ -8,23 +8,36 @@ public class Battle : State
     {
     }
     BattleUI ui => BattleSystem.ui;
-    public override IEnumerator Start()
+    public void HandleMusic()
     {
+        //stop base card loop music tracks
         MusicManager.Instance.StopMusic("9");
         MusicManager.Instance.StopMusic("10");
-        MusicManager.Instance.PlayMusic("0"); 
+        //stop extra card loop tracks
+        for (int i = 13; i < 21; i++)
+        {
+            MusicManager.Instance.StopMusic(i.ToString());
+        }
+        //play base fight loop
+        MusicManager.Instance.PlayMusic("0");
+        MusicManager.Instance.PlayMusicOver("0", "21");
+        //play global chain fight loops
         if (BattleSystem.player.chain > 1)
         {
-            MusicManager.Instance.PlayMusic("6");
+            MusicManager.Instance.PlayMusicOver("0", "6");
         }
         if (BattleSystem.player.chain > 4)
         {
-            MusicManager.Instance.PlayMusic("7");
+            MusicManager.Instance.PlayMusicOver("0", "7");
         }
         if (BattleSystem.player.chain > 7)
         {
-            MusicManager.Instance.PlayMusic("8");
+            MusicManager.Instance.PlayMusicOver("0", "8");
         }
+    }
+    public override IEnumerator Start()
+    {
+        HandleMusic();
         BattleSystem.enemy.ClearIntents();
         BattleSystem.ui.PrintLog("battle begin");
         BattleSystem.player.turnDamage = BattleSystem.player.health;

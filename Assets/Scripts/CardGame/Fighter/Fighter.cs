@@ -44,7 +44,7 @@ public class Fighter : MonoBehaviour
         }
         if (dodgeStatus != null)
         {
-            animator.PlayAnimationClipByName("dash_backward");
+            animator.PlayAnimationClipByName("afterimage");
             activeStatusEffects.Remove(dodgeStatus);
             ui.TextPopUp("Dodged!",ui.PuppetPos(this, "head", Vector2.up), ui.blockPopUp);
             return;
@@ -54,6 +54,18 @@ public class Fighter : MonoBehaviour
         {
             if (health + block <= 0)
             {
+                for (int i = 0; i < 22; i++)
+                {
+                    MusicManager.Instance.StopMusic(i.ToString());
+                }
+                if (name == "Bruttia")
+                {
+                    SFXManager.Instance.PlaySound("42");
+                }
+                else
+                {
+                    SFXManager.Instance.PlaySound("43");
+                }
                 animator.PlayAnimationClipByName("defeat");
                 StartCoroutine(cam.ScreenShake(2 * (block/10), cam.magnitude * Mathf.Min(15, Mathf.Abs(block)) * lostComboModifier, cam.frequency));
                 if (opponent == battleSystem.player)
@@ -73,12 +85,23 @@ public class Fighter : MonoBehaviour
                 }
                 else
                 {
+                    //add next fight phase track layer loop when hit
                     int trackLayer = MusicManager.Instance.gameObject.transform.childCount;
                     print(trackLayer);
                     if (trackLayer < 6)
                     {
                         MusicManager.Instance.PlayMusicOver("0", trackLayer.ToString());
                     }
+                    //play hit stinger
+                    if (name == "Bruttia")
+                    {
+                        SFXManager.Instance.PlaySound("40");
+                    }
+                    else
+                    {
+                        SFXManager.Instance.PlaySound("41");
+                    }
+                    SFXManager.Instance.PlaySound("32");
                     animator.hurt = true;
                     StartCoroutine(ResetAnimatorHurt(knockback));
                     animator.ApplyKnockback(knockback);
@@ -100,7 +123,7 @@ public class Fighter : MonoBehaviour
                 health += block;
                 battleSystem.ui.TextPopUp("" + Mathf.Abs(block), ui.PuppetPos(this, "head", Vector2.up / 2), ui.numberPopUp);
                 StartCoroutine(cam.ScreenShake((block/10) * lostComboModifier, cam.magnitude * Mathf.Min(15, Mathf.Abs(block)) * lostComboModifier, cam.frequency));
-                battleSystem.vfx.StartBackgroundCharBounce(bounceMag * magModifier, bounceFreq * freqModifier);
+                battleSystem.vfx.StartBackgroundCharBounce(bounceMag * magModifier, 0);
                 charge = 0;
                 consecutiveHits = 0;
                 consecutiveDamage = 0;

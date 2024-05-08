@@ -35,6 +35,7 @@ public class Enemy : Fighter
     }
     public IEnumerator DisplayIntents()
     {
+        bool playStrongIntentMusic = false;
         for (int i = 0; i < intentObjects.Count; i++)
         {
             if (i < currentTurn.Count)
@@ -49,6 +50,10 @@ public class Enemy : Fighter
                     case CardType.Attack:
                         symbol.sprite = displayTemplate.symbolSprites[0];
                         number.text = "" + (card.damage+strength);
+                        if (card.damage+strength > 25)
+                        {
+                            playStrongIntentMusic = true;
+                        }
                         break;
                     case CardType.Block:
                         symbol.sprite = displayTemplate.symbolSprites[1];
@@ -61,6 +66,10 @@ public class Enemy : Fighter
                 }
                 yield return new WaitForSeconds(0.1f);
             }
+        }
+        if (playStrongIntentMusic)
+        {
+            MusicManager.Instance.PlayMusicOver("9", "20");
         }
     }
     public void ClearIntents()

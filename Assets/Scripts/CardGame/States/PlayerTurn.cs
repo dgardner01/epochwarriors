@@ -8,18 +8,42 @@ public class PlayerTurn : State
         {
         }
     BattleUI ui => BattleSystem.ui;
-        public override IEnumerator Start()
-        {
+    public void HandleMusic()
+    {
+        //stop all fight scene music loops
         for (int i = 0; i < 9; i++)
         {
             MusicManager.Instance.StopMusic(i.ToString());
         }
+        MusicManager.Instance.StopMusic("21");
+        //play base card phase loop
         MusicManager.Instance.PlayMusic("9");
+        MusicManager.Instance.PlayMusicOver("9", "16");
+        //play global chain card drum loops
+        int chain = BattleSystem.player.chain;
+        if (chain > 1)
+        {
+            MusicManager.Instance.PlayMusicOver("9", "13");
+        }
+        if (chain > 4)
+        {
+            MusicManager.Instance.PlayMusicOver("9", "14");
+        }
+        if (chain > 7)
+        {
+            MusicManager.Instance.PlayMusicOver("9", "15");
+        }
+        //play initialized (after start turn) card phase loop
         if (BattleSystem.player.health < 100)
         {
-            MusicManager.Instance.PlayMusic("10");
+            MusicManager.Instance.PlayMusicOver("9", "10");
+            MusicManager.Instance.PlayMusicOver("9", "17");
+            MusicManager.Instance.PlayMusicOver("9", "18");
         }
-        BattleSystem.ui.PrintLog("player turn begin");
+    }
+    public override IEnumerator Start()
+        {
+        HandleMusic();
         BattleSystem.player.turnDamage = BattleSystem.player.health;
         BattleSystem.enemy.turnDamage = BattleSystem.enemy.health;
         BattleSystem.ui.lowerThird.GetComponent<Animator>().Play("up");

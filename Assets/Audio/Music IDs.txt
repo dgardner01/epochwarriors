@@ -1,0 +1,63 @@
+Fight Phase
+
+- Main Fight Drum Loop
+0: Layer 0
+1: Layer 1
+2: Layer 2
+3: Layer 3
+4: Layer 4
+5: Layer 5
+
+- Chain Fight Drum Loop
+6: Layer 1
+7: Layer 2
+8: Layer 3
+
+- Main Fight Bass Loop
+21: Layer 0
+
+- Nelly Hit Stingers
+22: Variant 0
+23: Variant 1
+24: Variant 2
+25: Variant 3
+26: Variant 4
+27: Variant 5
+28: Variant 6
+29: Variant 7
+
+- Bruttia Hit Stingers
+30: Variant 0
+31: Variant 1
+32: Variant 2
+33: Variant 3
+34: Variant 4
+35: Variant 5
+36: Variant 6
+37: Variant 7
+
+Card Phase
+
+- Main Card Drum Loop
+9: Layer 0
+10: Layer 1
+
+- Chain Card Drum Loop
+11: Layer 1
+12: (Full Chain) Layer 1
+
+- Global Chain Card Drum Loop
+13: Layer 0
+14: Layer 1
+15: Layer 2
+
+- Main Music Card Loop
+16: Layer 0
+17: Layer 1
+18: Layer 2
+
+- Finished Placement
+19: Layer 0
+
+- Strong Intent
+20: Layer 0

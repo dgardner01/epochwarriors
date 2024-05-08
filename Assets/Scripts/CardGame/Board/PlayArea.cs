@@ -10,7 +10,7 @@ public class PlayArea : MonoBehaviour
     private void Update()
     {
         CheckForChain();
-        if (chain <= 0)
+        if (chain <= 0 && hasChained)
         {
             MusicManager.Instance.StopMusic("11");
             MusicManager.Instance.StopMusic("12");

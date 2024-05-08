@@ -35,8 +35,9 @@ public class BackgroundCharAnimation : MonoBehaviour
         }
     }
 
-    public void StartBounce(float magnitude, float frequency)
+    public IEnumerator StartBounce(float magnitude, float frequency)
     {
+        yield return new WaitForSeconds(0);
         _magnitude = magnitude;
         //_frequency = frequency;
     }

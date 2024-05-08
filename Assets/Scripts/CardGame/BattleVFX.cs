@@ -14,6 +14,7 @@ public class BattleVFX : MonoBehaviour
     public ParticleSystem[] particleReferences;
     public Dictionary<string, ParticleSystem> particles = new Dictionary<string, ParticleSystem>();
     public GameObject backgroundCharacterParent;
+    bool bellHasSparkled;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +28,16 @@ public class BattleVFX : MonoBehaviour
         float gaugeEmissionRate = (float)battleSystem.player.spirit / battleSystem.player.spiritPerTurn;
         SetParticleSystemEmissionRate("Gauge Sparkle", Mathf.Lerp(0, 10, gaugeEmissionRate));
         bool bellSparkleCondition = battleSystem.player.spirit <= 0 && battleSystem.playArea.cards.Count > 0;
+        if (bellSparkleCondition && !bellHasSparkled)
+        {
+            MusicManager.Instance.PlayMusicOver("9", "19");
+            bellHasSparkled = true;
+        }
+        if (bellHasSparkled && !bellSparkleCondition)
+        {
+            MusicManager.Instance.StopMusic("19");
+            bellHasSparkled = false;
+        }
         EnableParticleSystem("Bell Sparkle", bellSparkleCondition);
         float playerComboTrackerEmissionRate = battleSystem.player.consecutiveHits > 2 ? (float)battleSystem.player.consecutiveHits / 10 : 0;
         SetParticleSystemEmissionRate("Nelly Combo Flames", Mathf.Lerp(0,250,playerComboTrackerEmissionRate));
@@ -65,7 +76,7 @@ public class BattleVFX : MonoBehaviour
         {
             GameObject characterObject = backgroundCharacterParent.transform.GetChild(i).gameObject;
             BackgroundCharAnimation animator = characterObject.GetComponent<BackgroundCharAnimation>();
-            animator.StartBounce(magnitude, frequency);
+            StartCoroutine(animator.StartBounce(magnitude, frequency));
         }
     }
 
@@ -75,7 +86,7 @@ public class BattleVFX : MonoBehaviour
         {
             GameObject characterObject = backgroundCharacterParent.transform.GetChild(i).gameObject;
             BackgroundCharAnimation animator = characterObject.GetComponent<BackgroundCharAnimation>();
-            animator.StartBounce(1, 20);
+            StartCoroutine(animator.StartBounce(1, 20));
             animator.win = true;
         }
     }
